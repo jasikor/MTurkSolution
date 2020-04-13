@@ -2,15 +2,24 @@
 
 
 @using MTurk.Data
-@inject ISessionService sessionService
+@using MTurk.UIModels
+
+@inject ISessionService _db
 
 <h3>WorkerId</h3>
+
 @if (sessions == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <EditForm Model="@worker" OnValidSubmit="@InsertWorkerId">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText id="WorkerId" @bind-Value="worker.WorkerID" />
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
     <table class="table">
         <thead>
             <tr>
@@ -35,10 +44,15 @@ else
 
 @code {
     private Session[] sessions;
+    private Worker worker = new Worker();
 
     protected override async Task OnInitializedAsync()
     {
-        sessions = await sessionService.GetAllSessionsAsync();
+        sessions = await _db.GetAllSessionsAsync();
+    }
+    private void InsertWorkerId()
+    {
+
     }
 
 }
