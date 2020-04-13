@@ -1,0 +1,44 @@
+﻿@page "/"
+
+
+@using MTurk.Data
+@inject ISessionService sessionService
+
+<h3>WorkerId</h3>
+@if (sessions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DateTime</th>
+                <th>SessionID</th>
+                <th>WorkerID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var session in sessions)
+            {
+                <tr>
+                    <td>@session.Time.ToString("o")</td>
+                    <td>@session.Id</td>
+                    <td>@session.WorkerId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private Session[] sessions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sessions = await sessionService.GetAllSessionsAsync();
+    }
+
+}
