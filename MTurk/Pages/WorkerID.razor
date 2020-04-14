@@ -54,6 +54,8 @@ else
     {
         Session s = new Session() { WorkerId = worker.WorkerID };
         await _db.StartNewSession(s);
+        sessions.Add(s);
+        worker = new Worker();
     }
 
 }
