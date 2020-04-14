@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTurk.SQLDataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,16 +8,26 @@ namespace MTurk.Data
 {
     public class SessionService : ISessionService
     {
-        private Session[] sessions = new Session[] { new Session(), new Session() };
-        public Task<Session[]> GetAllSessionsAsync()
+        public SessionService(ISqlDataAccess db)
         {
-            return Task.FromResult(sessions);
+            _db = db;
         }
 
+        private readonly ISqlDataAccess _db;
 
-        public Task StartNewSession(string workerId)
+        public Task StartNewSession(Session s)
         {
-            return null;
+            string sql = @"insert into dbo.Sessions (WorkerId, Time)
+                            values (@WorkerId, @Time)";
+
+            return _db.SaveData(sql, s);
+        }
+
+        public Task<List<Session>> GetAllSessionsAsync()
+        {
+            string sql = @"select * from dbo.Sessions";
+            return _db.LoadData<Session, dynamic>(sql, new { });
+
         }
     }
 }

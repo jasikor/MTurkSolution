@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.SQLDataAccess
 {
-    public class SqlDataAccess
+    public class SqlDataAccess : ISqlDataAccess
     {
         private readonly IConfiguration _config;
         public string ConnectionStringName { get; set; } = "Default";

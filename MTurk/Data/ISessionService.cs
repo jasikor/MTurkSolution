@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MTurk.Data
 {
     public interface ISessionService
     {
-        Task<Session[]> GetAllSessionsAsync();
-        Task StartNewSession(string workerId);
+        Task<List<Session>> GetAllSessionsAsync();
+        Task StartNewSession(Session s);
     }
 }

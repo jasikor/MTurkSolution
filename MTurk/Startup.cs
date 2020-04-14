@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MTurk.Data;
+using MTurk.SQLDataAccess;
 
 namespace MTurk
 {
@@ -29,6 +30,7 @@ namespace MTurk
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddTransient<ISqlDataAccess, SqlDataAccess >();
             services.AddTransient<ISessionService, SessionService>();
         }
 

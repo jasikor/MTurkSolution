@@ -43,7 +43,7 @@ else
 
 
 @code {
-    private Session[] sessions;
+    private List<Session> sessions;
     private Worker worker = new Worker();
 
     protected override async Task OnInitializedAsync()
@@ -52,7 +52,8 @@ else
     }
     private async Task InsertWorkerId()
     {
-        await _db.StartNewSession(worker.WorkerID);
+        Session s = new Session() { WorkerId = worker.WorkerID };
+        await _db.StartNewSession(s);
     }
 
 }
