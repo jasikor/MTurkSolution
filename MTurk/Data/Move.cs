@@ -10,7 +10,7 @@ namespace MTurk.Data
         public int Id { get; set; }
         public DateTime Time { get; set; }
         public int GameId { get; set; }
-        public string MovedBy { get; set; }
+        public string MoveBy { get; set; }
         public int ProposedAmount { get; set; }
         public bool OfferAccepted { get; set; }
     }

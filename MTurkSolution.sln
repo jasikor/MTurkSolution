@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTurk", "MTurk\MTurk.csproj", "{8B0CEA7A-7CC5-45A7-981C-C3AE5EA7D661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTurk", "MTurk\MTurk.csproj", "{8B0CEA7A-7CC5-45A7-981C-C3AE5EA7D661}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MTurkDatabase", "MTurkDatabase\MTurkDatabase.sqlproj", "{123EEB70-F66D-4DF7-888F-7CD626FB9883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{8B0CEA7A-7CC5-45A7-981C-C3AE5EA7D661}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B0CEA7A-7CC5-45A7-981C-C3AE5EA7D661}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B0CEA7A-7CC5-45A7-981C-C3AE5EA7D661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123EEB70-F66D-4DF7-888F-7CD626FB9883}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

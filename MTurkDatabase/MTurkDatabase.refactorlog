@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="e0f0ea3d-42ca-40cd-a40a-2cdd4a912f3c" ChangeDateTime="04/14/2020 07:42:41">
+    <Property Name="ElementName" Value="[dbo].[Moves].[SessionId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Moves]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GameId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="63f43b60-e1cc-4688-8467-33ce165b64a3" ChangeDateTime="04/14/2020 07:44:24">
+    <Property Name="ElementName" Value="[dbo].[Moves].[TurksDisValue]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Moves]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MovedBy" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="36f087c4-86d8-4f4c-942a-6a471a2eb15f" ChangeDateTime="04/14/2020 07:45:15">
+    <Property Name="ElementName" Value="[dbo].[Moves].[MovedBy]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Moves]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MoveBy" />
+  </Operation>
+</Operations>

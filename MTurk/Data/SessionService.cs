@@ -12,5 +12,11 @@ namespace MTurk.Data
         {
             return Task.FromResult(sessions);
         }
+
+
+        public Task StartNewSession(string workerId)
+        {
+            return null;
+        }
     }
 }

@@ -50,9 +50,9 @@ else
     {
         sessions = await _db.GetAllSessionsAsync();
     }
-    private void InsertWorkerId()
+    private async Task InsertWorkerId()
     {
-
+        await _db.StartNewSession(worker.WorkerID);
     }
 
 }
