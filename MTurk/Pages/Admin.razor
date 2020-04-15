@@ -1,26 +1,21 @@
-﻿@page "/"
+﻿@page "/araska"
 
 
 @using MTurk.Data
-@using MTurk.UIModels
 
 @inject ISessionService _db
-@inject NavigationManager NavigationManager
 
-<h3>WorkerId</h3>
-
+<h3>Admin</h3>
 @if (sessions == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <EditForm Model="@worker" OnValidSubmit="@InsertWorkerId">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <InputText id="WorkerId" @bind-Value="worker.WorkerID" />
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </EditForm>
+    <a class="btn btn-danger" role="button" href="dwn"
+       download="proposed_file_name">
+        Download
+    </a>
     <table class="table">
         <thead>
             <tr>
@@ -42,22 +37,11 @@ else
     </table>
 }
 
-
 @code {
     private List<Session> sessions;
-    private Worker worker = new Worker();
-
     protected override async Task OnInitializedAsync()
     {
         sessions = await _db.GetAllSessionsAsync();
-    }
-    private async Task InsertWorkerId()
-    {
-        Session s = new Session() { WorkerId = worker.WorkerID };
-        await _db.StartNewSession(s);
-        sessions.Add(s);
-        worker = new Worker();
-        NavigationManager.NavigateTo("fetchdata/cHqiMKxc8f4");
     }
 
 }

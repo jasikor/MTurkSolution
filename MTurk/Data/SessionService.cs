@@ -25,7 +25,7 @@ namespace MTurk.Data
 
         public Task<List<Session>> GetAllSessionsAsync()
         {
-            string sql = @"select * from dbo.Sessions";
+            string sql = @"select * from dbo.Sessions order by Id desc";
             return _db.LoadData<Session, dynamic>(sql, new { });
 
         }
