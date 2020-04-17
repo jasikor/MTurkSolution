@@ -2,93 +2,97 @@
 
 <h3>Game</h3>
 
-<Timer Time="10" TimeOut="@OnTimeOut"/>
-<p>We are in the game ! @gameTimedOut</p>
+@if (gameTimedOut)
+{
+    <p>You could not  agree with your partner in @MaxGameTime seconds, so you get 3 cookies only.</p>
+    <button type="button" class="btn btn-primary mt-4">Next game</button>
+}
+else
+{
+    <div class="container mt-4">
 
-<div class="container mt-4">
+
+        <div class="row d-flex">
 
 
-    <div class="row d-flex">
+            <div class="mb-4 d-flex flex-row-reverse">
 
+                <div class="card chat-room small-chat wide" id="myForm">
+                    <div class="card-header">
+                        <p>
+                            You get <mark> 3 </mark> cookies, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
+                        </p>
 
-        <div class="mb-4 d-flex flex-row-reverse">
-
-            <div class="card chat-room small-chat wide" id="myForm">
-                <div class="card-header">
-                    <p>
-                        You get <mark> 3 </mark> cookies, if you do not reach agreement.
-                    </p>
-
-                </div>
-                <div class="my-custom-scrollbar pre-scrollable" id="message">
-                    <div class="card-body p-3">
-                        <div class="">
-                            <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                <div class="card-body p-2">
-                                    <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 cookies between two of us?.</p>
+                    </div>
+                    <div class="my-custom-scrollbar pre-scrollable" id="message">
+                        <div class="card-body p-3">
+                            <div class="">
+                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+                                    <div class="card-body p-2">
+                                        <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 cookies between two of us?.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
-                                <div class="card-body p-2">
-                                    <p class="card-text text-white">How about 14 cookies for me and 6 for you?</p>
+                                <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
+                                    <div class="card-body p-2">
+                                        <p class="card-text text-white">How about 14 cookies for me and 6 for you?</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                <div class="card-body p-2">
-                                    <p class="card-text black-text">9 for you and 11 for me?</p>
+                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+                                    <div class="card-body p-2">
+                                        <p class="card-text black-text">9 for you and 11 for me?</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
-                                <div class="card-body p-2">
-                                    <p class="card-text text-white">4 cookies for me and 16 for you?</p>
+                                <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
+                                    <div class="card-body p-2">
+                                        <p class="card-text text-white">4 cookies for me and 16 for you?</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                <div class="card-body p-2">
-                                    <p class="card-text black-text">Agreed! 4 cookies for you and 16 for me. Thank you 😀</p>
+                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+                                    <div class="card-body p-2">
+                                        <p class="card-text black-text">Agreed! 4 cookies for you and 16 for me. Thank you 😀</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="container">
+                    <div class="card-footer">
+                        <div class="container">
 
-                        <div class="row justify-content-between">
-                            <div class="col-8">
-                                <input type="number" id="for-me" min="0" max="20" step="1" /> cookies for me (10 cookies for you)
-                                <input type="range" class="custom-range" min="0" max="20" step="1" id="customRange3">
+                            <div class="row justify-content-between">
+                                <div class="col-8">
+                                    <input type="number" id="for-me" min="0" max="20" step="1" /> cookies for me (10 cookies for you)
+                                    <input type="range" class="custom-range" min="0" max="20" step="1" id="customRange3">
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-primary">Send</button>
+                                </div>
                             </div>
-                            <div class="col-2">
-                                <button type="button" class="btn btn-primary">Send</button>
+                            <hr />
+                            <div class="row justify-content-between">
+                                <div class="col-8">
+                                    Or accept the offer and get 10 cookies
+                                </div>
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-primary">Accept</button>
+                                </div>
                             </div>
+
+
+
                         </div>
-                        <hr />
-                        <div class="row justify-content-between">
-                            <div class="col-8">
-                                Or accept the offer and get 10 cookies
-                            </div>
-                            <div class="col-2">
-                                <button type="button" class="btn btn-primary">Accept</button>
-                            </div>
-                        </div>
-
-
-
                     </div>
+
                 </div>
 
             </div>
 
+
         </div>
 
-
     </div>
-
-</div>
-
+}
 
 
 @code {
@@ -96,8 +100,9 @@
     // https://www.nexmo.com/blog/2019/12/18/create-a-simple-messaging-ui-with-bootstrap-dr
 
     private bool gameTimedOut = false;
+    public const int MaxGameTime = 30;
 
-    public  void  OnTimeOut()
+    public void OnTimeOut()
     {
         gameTimedOut = true;
         StateHasChanged();
