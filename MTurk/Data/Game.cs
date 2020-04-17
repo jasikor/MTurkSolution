@@ -12,6 +12,7 @@ namespace MTurk.Data
         public DateTime StartTime { get; set; }
         public int TurksDisValue { get; set; }
         public int MachineDisValue { get; set; }
+        // TODO: Kto zaczyna
 
     }
 }

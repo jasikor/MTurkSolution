@@ -2,7 +2,8 @@
 
 <h3>Game</h3>
 
-
+<Timer Time="10" TimeOut="@OnTimeOut"/>
+<p>We are in the game ! @gameTimedOut</p>
 
 <div class="container mt-4">
 
@@ -93,4 +94,12 @@
 @code {
 
     // https://www.nexmo.com/blog/2019/12/18/create-a-simple-messaging-ui-with-bootstrap-dr
+
+    private bool gameTimedOut = false;
+
+    public  void  OnTimeOut()
+    {
+        gameTimedOut = true;
+        StateHasChanged();
+    }
 }
