@@ -1,27 +1,29 @@
 ﻿@page "/game"
 
-<h3>Game</h3>
+<div class="d-flex justify-content-center">
+    <h3>The Game</h3>
+</div>
 
 @if (gameTimedOut)
 {
-    <p>You could not  agree with your partner in @MaxGameTime seconds, so you get 3 cookies only.</p>
-    <button type="button" class="btn btn-primary mt-4">Next game</button>
+    <div class="d-flex justify-content-center">
+        <div class="p-3 mb-2 bg-warning text-dark">
+            You could not  agree with your partner in @MaxGameTime seconds, so you get 3 cookies only.
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mt-4">Next game</button>
+    </div>
 }
 else
 {
-    <div class="container mt-4">
-
-
-        <div class="row d-flex">
-
-
-            <div class="mb-4 d-flex flex-row-reverse">
+    <div class="row d-flex">
+        <div class="col">
+            <div class="mb-4">
 
                 <div class="card chat-room small-chat wide" id="myForm">
                     <div class="card-header">
-                        <p>
-                            You get <mark> 3 </mark> cookies, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
-                        </p>
+                        You get <mark> 3 </mark> cookies, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
 
                     </div>
                     <div class="my-custom-scrollbar pre-scrollable" id="message">
@@ -78,20 +80,13 @@ else
                                     <button type="button" class="btn btn-primary">Accept</button>
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
-
         </div>
-
     </div>
+
 }
 
 
@@ -100,7 +95,7 @@ else
     // https://www.nexmo.com/blog/2019/12/18/create-a-simple-messaging-ui-with-bootstrap-dr
 
     private bool gameTimedOut = false;
-    public const int MaxGameTime = 330;
+    public const int MaxGameTime = 10;
 
     public void OnTimeOut()
     {
