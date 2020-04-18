@@ -1,4 +1,4 @@
-﻿@page "/game"
+﻿@page "/game/{sessionId}"
 
 <div class="d-flex justify-content-center">
     <h3>The Game</h3>
@@ -96,6 +96,9 @@ else
 
     private bool gameTimedOut = false;
     public const int MaxGameTime = 10;
+
+    [Parameter]
+    public string sessionId { get; set; }
 
     public void OnTimeOut()
     {

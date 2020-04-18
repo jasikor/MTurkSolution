@@ -11,6 +11,6 @@ namespace MTurk.UIModels
         [Required]
         [StringLength(14, ErrorMessage = "Worker ID is too long, should be 14 characters")]
         [MinLength(14, ErrorMessage = "Worker ID is too short, should be 14 characters")]
-        public string WorkerID { get; set; } = "";
+        public string WorkerId { get; set; } = "";
     }
 }
