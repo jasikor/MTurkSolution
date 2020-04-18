@@ -8,7 +8,7 @@
 {
     <div class="d-flex justify-content-center">
         <div class="p-3 mb-2 bg-warning text-dark">
-            You could not  agree with your partner in @MaxGameTime seconds, so you get 3 cookies only.
+            You could not  agree with your partner in @MaxGameTime seconds, so you get 3 Gold Bars only.
         </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -23,7 +23,7 @@ else
 
                 <div class="card chat-room small-chat wide" id="myForm">
                     <div class="card-header">
-                        You get <mark> 3 </mark> cookies, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
+                        You get <mark> 3 </mark> Gold Bars, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
 
                     </div>
                     <div class="my-custom-scrollbar pre-scrollable" id="message">
@@ -31,12 +31,12 @@ else
                             <div class="">
                                 <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
                                     <div class="card-body p-2">
-                                        <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 cookies between two of us?.</p>
+                                        <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 Gold Bars between two of us?.</p>
                                     </div>
                                 </div>
                                 <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
                                     <div class="card-body p-2">
-                                        <p class="card-text text-white">How about 14 cookies for me and 6 for you?</p>
+                                        <p class="card-text text-white">How about 14 Gold Bars for me and 6 for you?</p>
                                     </div>
                                 </div>
 
@@ -47,13 +47,13 @@ else
                                 </div>
                                 <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
                                     <div class="card-body p-2">
-                                        <p class="card-text text-white">4 cookies for me and 16 for you?</p>
+                                        <p class="card-text text-white">4 Gold Bars for me and 16 for you?</p>
                                     </div>
                                 </div>
 
                                 <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
                                     <div class="card-body p-2">
-                                        <p class="card-text black-text">Agreed! 4 cookies for you and 16 for me. Thank you 😀</p>
+                                        <p class="card-text black-text">Agreed! 4 Gold Bars for you and 16 for me. Thank you 😀</p>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@ else
 
                             <div class="row justify-content-between">
                                 <div class="col-8">
-                                    <input type="number" id="for-me" min="0" max="20" step="1" /> cookies for me (10 cookies for you)
+                                    <input type="number" id="for-me" min="0" max="20" step="1" /> Gold Bars for me (10 Gold Bars for you)
                                     <input type="range" class="custom-range" min="0" max="20" step="1" id="customRange3">
                                 </div>
                                 <div class="col-2">
@@ -74,7 +74,7 @@ else
                             <hr />
                             <div class="row justify-content-between">
                                 <div class="col-8">
-                                    Or accept the offer and get 10 cookies
+                                    Or accept the offer and get 10 Gold Bars
                                 </div>
                                 <div class="col-2">
                                     <button type="button" class="btn btn-primary">Accept</button>
@@ -93,6 +93,7 @@ else
 @code {
 
     // https://www.nexmo.com/blog/2019/12/18/create-a-simple-messaging-ui-with-bootstrap-dr
+    // https://stackoverflow.com/questions/59126869/can-the-state-of-the-counter-in-the-example-blazor-project-be-preserved-between
 
     private bool gameTimedOut = false;
     public const int MaxGameTime = 10;
