@@ -7,12 +7,6 @@
 @inject ISessionService _db
 @inject NavigationManager NavigationManager
 
-@if (sessions == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
     <div class="d-flex justify-content-center">
         <h3>Welcome to Gold Bar Game</h3>
     </div>
@@ -35,23 +29,16 @@ else
             </div>
         </div>
     </div>
-}
 
 
 @code {
-    private List<SessionModel> sessions;
     private Worker worker = new Worker();
 
-    protected override async Task OnInitializedAsync()
-    {
-        sessions = await _db.GetAllSessionsAsync();
-    }
     private async Task StartNewSession()
     {
 
-        var s= await _db.StartNewSession(worker.WorkerId);
+        var s = await _db.StartNewSession(worker.WorkerId);
 
-        sessions.Add(s);
         worker = new Worker();
         NavigationManager.NavigateTo($"instructions");
     }
