@@ -20,7 +20,7 @@ namespace MTurk.Data
             string sql = @"insert into dbo.Sessions (WorkerId, Time)
                             values (@WorkerId, @Time)";
 
-            return _db.SaveData(sql, s);
+            return _db.SaveData(sql, new { WorkerId = s.WorkerId, Time = DateTime.UtcNow });
         }
 
         //public Task<GameModel> StartNewGameAsync(int sessionId)
