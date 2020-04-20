@@ -5,40 +5,47 @@
 @using MTurk.UIModels
 
 @inject ISessionService _db
+@inject MTurk.DataAccess.CurrentSessionService currentSession
 @inject NavigationManager NavigationManager
 
-    <div class="d-flex justify-content-center">
-        <h3>Welcome to Gold Bar Game</h3>
-    </div>
+<div class="d-flex justify-content-center">
+    <h3>Welcome to Gold Bar Game</h3>
+</div>
 
-    <div class="d-flex justify-content-center">
-        <div class="card mt-4">
-            <div class="card-header">
-                Please paste below your MTurk Worker ID, so we can pay you.
-            </div>
-            <div class="p-4">
-                <EditForm Model="@worker" OnValidSubmit="@StartNewSession">
-                    <DataAnnotationsValidator />
-                    <div class="form-group">
-                        <label for="WorkerId">Your Worker ID: </label>
-                        <InputText id="WorkerId" @bind-Value="worker.WorkerId" />
-                    </div>
-                    <ValidationSummary />
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </EditForm>
-            </div>
+<div class="d-flex justify-content-center">
+    <div class="card mt-4">
+        <div class="card-header">
+            Please paste below your MTurk Worker ID, so we can pay you.
+        </div>
+        <div class="p-4">
+            <EditForm Model="@worker" OnValidSubmit="@StartNewSession">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="WorkerId">Your Worker ID: </label>
+                    <InputText id="WorkerId" @bind-Value="worker.WorkerId" />
+                </div>
+                <ValidationSummary />
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </EditForm>
         </div>
     </div>
+</div>
 
 
 @code {
     private Worker worker = new Worker();
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (currentSession.CurrentSession != null)
+            NavigationManager.NavigateTo($"instructions");
+    }
+
     private async Task StartNewSession()
     {
-
         var s = await _db.StartNewSession(worker.WorkerId);
-
+        currentSession.CurrentSession = s;
         worker = new Worker();
         NavigationManager.NavigateTo($"instructions");
     }
