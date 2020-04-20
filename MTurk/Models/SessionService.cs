@@ -15,7 +15,7 @@ namespace MTurk.Data
 
         private readonly ISqlDataAccess _db;
 
-        public Task StartNewSession(Session s)
+        public Task StartNewSession(SessionModel s)
         {
             string sql = @"insert into dbo.Sessions (WorkerId, Time)
                             values (@WorkerId, @Time)";
@@ -23,10 +23,24 @@ namespace MTurk.Data
             return _db.SaveData(sql, s);
         }
 
-        public Task<List<Session>> GetAllSessionsAsync()
+        //public Task<GameModel> StartNewGameAsync(int sessionId)
+        //{
+
+        //    GameModel g = new GameModel()
+        //    {
+        //        SessionId = sessionId,
+        //        StartTime = DateTime.UtcNow,
+        //        TurksDisValue = 4,
+        //        MachineDisValue = 8
+        //    };
+
+        //    return g;
+        //}
+
+        public Task<List<SessionModel>> GetAllSessionsAsync()
         {
             string sql = @"select * from dbo.Sessions order by Id desc";
-            return _db.LoadData<Session, dynamic>(sql, new { });
+            return _db.LoadData<SessionModel, dynamic>(sql, new { });
 
         }
     }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.Data
 {
-    public class Game
+    public class GameModel
     {
         public int Id { get; set; }
         public int SessionId { get; set; }

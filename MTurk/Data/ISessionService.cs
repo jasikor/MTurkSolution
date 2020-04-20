@@ -5,7 +5,7 @@ namespace MTurk.Data
 {
     public interface ISessionService
     {
-        Task<List<Session>> GetAllSessionsAsync();
-        Task StartNewSession(Session s);
+        Task<List<SessionModel>> GetAllSessionsAsync();
+        Task StartNewSession(SessionModel s);
     }
 }

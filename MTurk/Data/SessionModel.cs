@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace MTurk.Data
 {
-    public class Session
+    public class SessionModel
     {
         public int Id { get; set; }
         public string WorkerId { get; set; }
         public DateTime Time { get; set; }
-        public Session()
+        public SessionModel()
         {
             WorkerId = "<UNKNOWN>";
             Time = DateTime.UtcNow;

@@ -38,7 +38,7 @@ else
 }
 
 @code {
-    private List<Session> sessions;
+    private List<SessionModel> sessions;
     protected override async Task OnInitializedAsync()
     {
         sessions = await _db.GetAllSessionsAsync();

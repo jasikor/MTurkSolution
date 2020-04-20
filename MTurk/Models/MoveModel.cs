@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.Data
 {
-    public class Move
+    public class MoveModel
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }
