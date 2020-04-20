@@ -32,5 +32,11 @@ namespace MTurk.SQLDataAccess
             await connection.ExecuteAsync(sql, parameters);
 
         }
+        public async Task<U> SaveData<T,U>(string sql, T parameters)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            using IDbConnection connection = new SqlConnection(connectionString);
+            return await connection.QuerySingleAsync<U>(sql, parameters);
+        }
     }
 }

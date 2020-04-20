@@ -6,6 +6,8 @@ namespace MTurk.Data
     public interface ISessionService
     {
         Task<List<SessionModel>> GetAllSessionsAsync();
-        Task StartNewSession(SessionModel s);
+        Task<SessionModel> StartNewSession(string workerId);
+        Task<SessionModel> GetCurrentSession();
+
     }
 }

@@ -15,33 +15,26 @@ namespace MTurk.Data
 
         private readonly ISqlDataAccess _db;
 
-        public Task StartNewSession(SessionModel s)
+        public async Task<SessionModel> StartNewSession(string workerId)
         {
             string sql = @"insert into dbo.Sessions (WorkerId, Time)
-                            values (@WorkerId, @Time)";
+                           output inserted.*
+                           values (@WorkerId, @Time)";
 
-            return _db.SaveData(sql, new { WorkerId = s.WorkerId, Time = DateTime.UtcNow });
+            DateTime utcNow = DateTime.UtcNow;
+            SessionModel sm = new SessionModel() { WorkerId = workerId, Time = utcNow };
+            return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
-
-        //public Task<GameModel> StartNewGameAsync(int sessionId)
-        //{
-
-        //    GameModel g = new GameModel()
-        //    {
-        //        SessionId = sessionId,
-        //        StartTime = DateTime.UtcNow,
-        //        TurksDisValue = 4,
-        //        MachineDisValue = 8
-        //    };
-
-        //    return g;
-        //}
 
         public Task<List<SessionModel>> GetAllSessionsAsync()
         {
             string sql = @"select * from dbo.Sessions order by Id desc";
             return _db.LoadData<SessionModel, dynamic>(sql, new { });
+        }
 
+        public Task<SessionModel> GetCurrentSession()
+        {
+            throw new NotImplementedException();
         }
     }
 }
