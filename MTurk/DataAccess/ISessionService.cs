@@ -7,7 +7,5 @@ namespace MTurk.Data
     {
         Task<List<SessionModel>> GetAllSessionsAsync();
         Task<SessionModel> StartNewSession(string workerId);
-        Task<SessionModel> GetCurrentSession();
-
     }
 }
