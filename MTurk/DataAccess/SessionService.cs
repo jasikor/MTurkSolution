@@ -39,7 +39,8 @@ namespace MTurk.Data
             m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9 });
             m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
             m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 8 });
-            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
+            m.Add(new MoveModel() { MoveBy = "SYST" });
+            //m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
             //m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9, OfferAccepted = true });
 
             var ret = new GameInfo()

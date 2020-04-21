@@ -7,39 +7,35 @@
     <h3>The Game</h3>
 </div>
 
-@if (gameTimedOut)
-{
-    <div class="d-flex justify-content-center">
-        <div class="p-3 mb-2 bg-warning text-dark">
-            You could not  agree with your partner in @MaxGameTime seconds, so you get 3 Gold Bars only.
-        </div>
-    </div>
-    <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mt-4">Next game</button>
-    </div>
-}
-else
-{
-    <div class="row d-flex">
-        <div class="col">
-            <div class="mb-4">
 
-                <div class="card chat-room small-chat wide" id="myForm">
-                    <div class="card-header">
-                        You get <mark> 3 </mark> Gold Bars, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
+<div class="row d-flex">
+    <div class="col">
+        <div class="mb-4">
 
-                    </div>
-                    <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="message">
-                        <div class="card-body p-3">
-                            <div class="">
-                                <Conversation Game="@game"/>
-                                
-                            </div>
+            <div class="card chat-room small-chat wide" id="myForm">
+                <div class="card-header">
+                    You get <mark> 3 </mark> Gold Bars, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
+
+                </div>
+                <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="message">
+                    <div class="card-body p-3">
+                        <div class="">
+                            <Conversation Game="@game" />
+
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="container">
+                </div>
+                <div class="card-footer">
 
+                    <div class="container">
+                        @if (gameTimedOut)
+                        {
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="btn btn-primary mt-4">Next game</button>
+                            </div>
+                        }
+                        else
+                        {
                             <div class="row justify-content-between">
                                 <div class="col-8">
                                     <input type="number" id="for-me" min="0" max="20" step="1" /> Gold Bars for me (10 Gold Bars for you)
@@ -58,14 +54,14 @@ else
                                     <button type="button" class="btn btn-primary">Accept</button>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-}
 
 
 @code {
@@ -74,7 +70,7 @@ else
     // https://stackoverflow.com/questions/59126869/can-the-state-of-the-counter-in-the-example-blazor-project-be-preserved-between
 
     private bool gameTimedOut = false;
-    public const int MaxGameTime = 10000;
+    public const int MaxGameTime = 10;
     private GameInfo game;
 
     [Parameter]
