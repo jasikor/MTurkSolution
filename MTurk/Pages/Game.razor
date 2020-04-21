@@ -29,36 +29,11 @@ else
                         You get <mark> 3 </mark> Gold Bars, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
 
                     </div>
-                    <div class="my-custom-scrollbar pre-scrollable" id="message">
+                    <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="message">
                         <div class="card-body p-3">
                             <div class="">
-                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                    <div class="card-body p-2">
-                                        <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 Gold Bars between two of us?.</p>
-                                    </div>
-                                </div>
-                                <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
-                                    <div class="card-body p-2">
-                                        <p class="card-text text-white">How about 14 Gold Bars for me and 6 for you?</p>
-                                    </div>
-                                </div>
-
-                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                    <div class="card-body p-2">
-                                        <p class="card-text black-text">9 for you and 11 for me?</p>
-                                    </div>
-                                </div>
-                                <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
-                                    <div class="card-body p-2">
-                                        <p class="card-text text-white">4 Gold Bars for me and 16 for you?</p>
-                                    </div>
-                                </div>
-
-                                <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-                                    <div class="card-body p-2">
-                                        <p class="card-text black-text">Agreed! 4 Gold Bars for you and 16 for me. Thank you 😀</p>
-                                    </div>
-                                </div>
+                                <Conversation Game="@game"/>
+                                
                             </div>
                         </div>
                     </div>
@@ -99,7 +74,7 @@ else
     // https://stackoverflow.com/questions/59126869/can-the-state-of-the-counter-in-the-example-blazor-project-be-preserved-between
 
     private bool gameTimedOut = false;
-    public const int MaxGameTime = 10;
+    public const int MaxGameTime = 10000;
     private GameInfo game;
 
     [Parameter]

@@ -34,7 +34,19 @@ namespace MTurk.Data
 
         public Task<GameInfo> GetCurrentGame(string workerId)
         {
-            return Task.FromResult<GameInfo>(null);
+            List<MoveModel> m = new List<MoveModel>();
+            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
+            m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9 });
+            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
+            m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 8 });
+            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
+            //m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9, OfferAccepted = true });
+
+            var ret = new GameInfo()
+            {
+                Moves = m
+            };
+            return Task.FromResult<GameInfo>(ret);
         }
     }
 }

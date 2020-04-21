@@ -1,0 +1,51 @@
+﻿@if (Game.Moves.Count == 0 || Game.Moves[0].MoveBy == "TURK")
+{
+    <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+        <div class="card-body p-2">
+            <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 Gold Bars between two of us?.</p>
+        </div>
+    </div>
+}
+@foreach (var move in Game.Moves)
+{
+    @if (move.MoveBy == "MACH")
+    {
+        <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+            <div class="card-body p-2">
+                @*TODO: zamienic 20 na const*@
+                @if (move.OfferAccepted)
+                {
+                    <p class="card-text black-text">I accept your offer. You get @move.ProposedAmount bars. I will keep @(20-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text">Thank you :)</p>
+                }
+                else
+                {
+                    <p class="card-text black-text">I can give you @move.ProposedAmount bars. I will keep @(20-move.ProposedAmount) bars.</p>
+                }
+            </div>
+        </div>
+    }
+    else if (move.MoveBy == "TURK")
+    {
+        <div class="card bg-primary rounded w-75 float-right z-depth-0 mb-1">
+            <div class="card-body p-2">
+                @if (move.OfferAccepted)
+                {
+                    <p class="card-text text-white">I accept your offer. I keep  @move.ProposedAmount bars and you get @(20 - move.ProposedAmount).</p>
+                    <p class="card-text black-text">Thank you :)</p>
+                }
+                else
+                {
+                    <p class="card-text text-white">I want @move.ProposedAmount bars. You will get @(20 - move.ProposedAmount)</p>
+                }
+            </div>
+        </div>
+    }
+
+}
+
+@code {
+    [Parameter]
+    public GameInfo Game { get; set; }
+
+}
