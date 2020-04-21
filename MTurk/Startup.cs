@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MTurk.Data;
-using MTurk.DataAccess;
 using MTurk.SQLDataAccess;
 
 namespace MTurk
@@ -32,8 +25,6 @@ namespace MTurk
             services.AddServerSideBlazor();
             services.AddTransient<ISqlDataAccess, SqlDataAccess >();
             services.AddTransient<ISessionService, SessionService>();
-            // TODO: to nie działa :
-            services.AddSingleton<CurrentSessionService, CurrentSessionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

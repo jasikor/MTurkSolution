@@ -5,7 +5,6 @@
 @using MTurk.UIModels
 
 @inject ISessionService _db
-@inject MTurk.DataAccess.CurrentSessionService currentSession
 @inject NavigationManager NavigationManager
 
 <div class="d-flex justify-content-center">
@@ -35,19 +34,11 @@
 @code {
     private Worker worker = new Worker();
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        if (currentSession.CurrentSession != null)
-            NavigationManager.NavigateTo($"instructions");
-    }
-
     private async Task StartNewSession()
     {
-        var s = await _db.StartNewSession(worker.WorkerId);
-        currentSession.CurrentSession = s;
+        var id = worker.WorkerId;
         worker = new Worker();
-        NavigationManager.NavigateTo($"instructions");
+        NavigationManager.NavigateTo($"instructions/{id}");
     }
 
 }
