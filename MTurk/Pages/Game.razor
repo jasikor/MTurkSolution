@@ -1,5 +1,8 @@
 ﻿@page "/game/{sessionId}"
 
+@inject ISessionService sessionService
+@inject NavigationManager NavigationManager
+
 <div class="d-flex justify-content-center">
     <h3>The Game</h3>
 </div>
@@ -97,9 +100,17 @@ else
 
     private bool gameTimedOut = false;
     public const int MaxGameTime = 10;
+    private GameInfo game;
 
     [Parameter]
     public string sessionId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        game = await sessionService.GetCurrentGame(sessionId);
+        if (game is null)
+            NavigationManager.NavigateTo($"thankyou/{sessionId}");
+    }
 
     public void OnTimeOut()
     {

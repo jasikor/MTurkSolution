@@ -31,5 +31,10 @@ namespace MTurk.Data
             string sql = @"select * from dbo.Sessions order by Id desc";
             return _db.LoadData<SessionModel, dynamic>(sql, new { });
         }
+
+        public Task<GameInfo> GetCurrentGame(string workerId)
+        {
+            return Task.FromResult<GameInfo>(null);
+        }
     }
 }
