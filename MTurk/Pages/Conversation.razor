@@ -12,15 +12,14 @@
     {
         <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
             <div class="card-body p-2">
-                @*TODO: zamienic 20 na const*@
                 @if (move.OfferAccepted)
                 {
-                    <p class="card-text black-text">I accept your offer. You get @move.ProposedAmount bars. I will keep @(20-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text">I accept your offer. You get @move.ProposedAmount bars. I will keep @(Game.Surplus-move.ProposedAmount) bars.</p>
                     <p class="card-text black-text">Thank you :)</p>
                 }
                 else
                 {
-                    <p class="card-text black-text">I can give you @move.ProposedAmount bars. I will keep @(20-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text">I can give you @move.ProposedAmount bars. I will keep @(Game.Surplus-move.ProposedAmount) bars.</p>
                 }
             </div>
         </div>
@@ -31,12 +30,12 @@
             <div class="card-body p-2">
                 @if (move.OfferAccepted)
                 {
-                    <p class="card-text text-white">I accept your offer. I keep  @move.ProposedAmount bars and you get @(20 - move.ProposedAmount).</p>
+                    <p class="card-text text-white">I accept your offer. I keep  @move.ProposedAmount bars and you get @(Game.Surplus - move.ProposedAmount).</p>
                     <p class="card-text black-text">Thank you :)</p>
                 }
                 else
                 {
-                    <p class="card-text text-white">I want @move.ProposedAmount bars. You will get @(20 - move.ProposedAmount)</p>
+                    <p class="card-text text-white">I want @move.ProposedAmount bars. You will get @(Game.Surplus - move.ProposedAmount)</p>
                 }
             </div>
         </div>
@@ -46,7 +45,7 @@
         <div class="card bg-warning text-dark rounded w-100 float-right z-depth-0 mb-1">
             <div class="card-body p-2">
                 <p class="card-text">
-                    You could not  agree with your partner in 30 seconds, so you get 3 Gold Bars only.
+                    You could not  agree with your partner in @(Game.TimeOut) seconds, so you get @Game.TurksDisValue Gold Bars only.
                 </p>
             </div>
         </div>

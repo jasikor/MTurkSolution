@@ -39,13 +39,19 @@ namespace MTurk.Data
             m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9 });
             m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
             m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 8 });
-            m.Add(new MoveModel() { MoveBy = "SYST" });
+            //m.Add(new MoveModel() { MoveBy = "SYST" });
             //m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
             //m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9, OfferAccepted = true });
 
             var ret = new GameInfo()
             {
-                Moves = m
+                Moves = m,
+                Surplus = 120,
+                TurksDisValue = 15,
+                MachineDisValue = 27,
+                TimeOut = 5,
+                Stubborn = 0.6,
+                MachineStarts = false
             };
             return Task.FromResult<GameInfo>(ret);
         }

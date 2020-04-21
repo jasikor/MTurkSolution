@@ -14,7 +14,7 @@
 
             <div class="card chat-room small-chat wide" id="myForm">
                 <div class="card-header">
-                    You get <mark> 3 </mark> Gold Bars, if you do not reach agreement in <Timer Time="@MaxGameTime" TimeOut="@OnTimeOut" /> seconds.
+                    You get <mark> @game.TurksDisValue </mark> Gold Bars, if you do not reach agreement in <Timer Time="@game.TimeOut" TimeOut="@OnTimeOut" /> seconds.
 
                 </div>
                 <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="message">
@@ -38,22 +38,25 @@
                         {
                             <div class="row justify-content-between">
                                 <div class="col-8">
-                                    <input type="number" id="for-me" min="0" max="20" step="1" /> Gold Bars for me (10 Gold Bars for you)
-                                    <input type="range" class="custom-range" min="0" max="20" step="1" id="customRange3">
+                                    <input type="number" id="for-me" min="0" max="@game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Surplus - myOffer) Gold Bars for you)
+                                    <input type="range" class="custom-range" min="0" max="@game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
                                 </div>
                                 <div class="col-2">
                                     <button type="button" class="btn btn-primary">Send</button>
                                 </div>
                             </div>
                             <hr />
-                            <div class="row justify-content-between">
-                                <div class="col-8">
-                                    Or accept the offer and get 10 Gold Bars
+                            @if (MachinesLastOffer() > 0)
+                            {
+                                <div class="row justify-content-between">
+                                    <div class="col-8">
+                                        Or accept the offer and get @MachinesLastOffer() Gold Bars
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-primary">Accept</button>
+                                    </div>
                                 </div>
-                                <div class="col-2">
-                                    <button type="button" class="btn btn-primary">Accept</button>
-                                </div>
-                            </div>
+                            }
                         }
                     </div>
                 </div>
@@ -70,22 +73,35 @@
     // https://stackoverflow.com/questions/59126869/can-the-state-of-the-counter-in-the-example-blazor-project-be-preserved-between
 
     private bool gameTimedOut = false;
-    public const int MaxGameTime = 10;
     private GameInfo game;
 
     [Parameter]
     public string sessionId { get; set; }
+
+    private int myOffer;
+
 
     protected override async Task OnInitializedAsync()
     {
         game = await sessionService.GetCurrentGame(sessionId);
         if (game is null)
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
+        myOffer = game.Surplus;
     }
 
     public void OnTimeOut()
     {
         gameTimedOut = true;
         StateHasChanged();
+    }
+
+    private int MachinesLastOffer()
+    {
+        int res = 0;
+        if (game.Moves.Count > 0)
+        {
+            res = game.Moves[game.Moves.Count - 1].ProposedAmount;
+        }
+        return res;
     }
 }
