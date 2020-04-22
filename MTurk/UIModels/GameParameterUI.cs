@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace MTurk.UIModels
 {
-    public class GameParameter
+    public class GameParameterUI
     {
+        public int Id;
         [Required]
         public int Surplus;
         [Required]

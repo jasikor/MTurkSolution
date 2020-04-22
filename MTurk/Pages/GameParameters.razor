@@ -1,9 +1,36 @@
 ﻿@page "/gameparameters"
 
+@using MTurk.UIModels
+@using MTurk.Models
+
 @inject IGameParametersService _db
+@inject NavigationManager NavigationManager
+
 
 <h3>Sessions Games</h3>
+@if (gameE != null)
+{
+    <EditForm Model="@gameE" OnValidSubmit="@SaveGame">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label>Surplus:</label>
+        <InputNumber id="surplus" @bind-Value="gameE.Surplus"></InputNumber>
+        <label>TurksDisValue</label>
+        <InputNumber id="turksDisValue" @bind-Value="gameE.TurksDisValue"></InputNumber>
+        <label for="machineDisValue">MachineDisValue</label>
+        <InputNumber id="marchineDisValue" @bind-Value="gameE.MachineDisValue"></InputNumber>
+        <label for="timeOut">TimeOut (secs)</label>
+        <InputNumber id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
+        <label for="stubborn">Stubborn</label>
+        <InputNumber id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
+        <label for="machineStarts">MachineStarts</label>
+        <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
+        <button type="submit" class="btn btn-primary">Submit</button>
 
+    </EditForm>
+}
+else
+{
 @if (parameters == null)
 {
     <div class="alert-info">Loading...</div>
@@ -26,28 +53,47 @@ else
         <tbody>
             @foreach (var p in parameters)
             {
-            <tr>
-                <td>@p.Surplus </td>
-                <td>@p.TurksDisValue </td>
-                <td>@p.MachineDisValue </td>
-                <td>@p.TimeOut </td>
-                <td>@p.Stubborn </td>
-                <td>@p.MachineStarts</td>
-                <td><button class="btn btn-primary btn-sm" @onclick="@(()=> { OnClick(p.Id); })">Edit</button></td>
-            </tr>
+                <tr>
+                    <td>@p.Surplus </td>
+                    <td>@p.TurksDisValue </td>
+                    <td>@p.MachineDisValue </td>
+                    <td>@p.TimeOut </td>
+                    <td>@p.Stubborn </td>
+                    <td>@p.MachineStarts</td>
+                    <td><button class="btn btn-primary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+                </tr>
             }
         </tbody>
     </table>
 }
+}
+
 
 @code {
     private List<MTurk.Models.GameParametersModel> parameters;
+    private GameParameterUI gameE;
 
-    private void OnClick(int Id)
+    private void OnEditGame(int Id)
     {
-
+        GameParametersModel gp = parameters.Find((x) => x.Id == Id);
+        gameE = new GameParameterUI()
+        {
+            Id = gp.Id,
+            Surplus = gp.Surplus,
+            TurksDisValue = gp.TurksDisValue,
+            MachineDisValue = gp.MachineDisValue,
+            TimeOut = gp.TimeOut,
+            Stubborn = gp.Stubborn,
+            MachineStarts = gp.MachineStarts,
+        };
     }
 
+    private async void SaveGame()
+    {
+        
+        parameters = await _db.GetAllParametersAsync();
+        gameE = null;
+    }
     protected override async Task OnInitializedAsync()
     {
         parameters = await _db.GetAllParametersAsync();
