@@ -1,0 +1,56 @@
+﻿@page "/gameparameters"
+
+@inject IGameParametersService _db
+
+<h3>Sessions Games</h3>
+
+@if (parameters == null)
+{
+    <div class="alert-info">Loading...</div>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Surplus</th>
+                <th>TurksDisValue</th>
+                <th>MachineDisValue</th>
+                <th>TimeOut (secs)</th>
+                <th>Stubborn</th>
+                <th>MachnieStarts</th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in parameters)
+            {
+            <tr>
+                <td>@p.Surplus </td>
+                <td>@p.TurksDisValue </td>
+                <td>@p.MachineDisValue </td>
+                <td>@p.TimeOut </td>
+                <td>@p.Stubborn </td>
+                <td>@p.MachineStarts</td>
+                <td><button class="btn btn-primary btn-sm" @onclick="@(()=> { OnClick(p.Id); })">Edit</button></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<MTurk.Models.GameParametersModel> parameters;
+
+    private void OnClick(int Id)
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        parameters = await _db.GetAllParametersAsync();
+    }
+
+}
