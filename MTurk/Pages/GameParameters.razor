@@ -90,9 +90,21 @@ else
 
     private async void SaveGame()
     {
-        
+        GameParametersModel gp = new GameParametersModel()
+        {
+            Id = gameE.Id,
+            Surplus = gameE.Surplus,
+            TurksDisValue = gameE.TurksDisValue,
+            MachineDisValue = gameE.MachineDisValue,
+            TimeOut = gameE.TimeOut,
+            Stubborn = Math.Clamp(gameE.Stubborn, 0.0, 1.0),
+            MachineStarts = gameE.MachineStarts,
+        };
+        await _db.SaveGameParameters(gp);
         parameters = await _db.GetAllParametersAsync();
         gameE = null;
+        StateHasChanged();
+
     }
     protected override async Task OnInitializedAsync()
     {

@@ -7,5 +7,7 @@ namespace MTurk.DataAccess
     public interface IGameParametersService
     {
         Task<List<GameParametersModel>> GetAllParametersAsync();
+        Task SaveGameParameters(GameParametersModel gp);
+
     }
 }

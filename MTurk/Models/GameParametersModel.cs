@@ -7,12 +7,12 @@ namespace MTurk.Models
 {
     public class GameParametersModel
     {
-        public int Id;
-        public int Surplus;
-        public int TurksDisValue;
-        public int MachineDisValue;
-        public int TimeOut;
-        public double Stubborn;
-        public bool MachineStarts;
+        public int Id { get; set; }
+        public int Surplus { get; set; }
+        public int TurksDisValue { get; set; }
+        public int MachineDisValue { get; set; }
+        public int TimeOut { get; set; }
+        public double Stubborn { get; set; }
+        public bool MachineStarts { get; set; }
     }
 }

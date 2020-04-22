@@ -21,5 +21,34 @@ namespace MTurk.DataAccess
             return _db.LoadData<GameParametersModel, dynamic>(sql, new { });
         }
 
+        /*
+         * 
+        public int Id;
+        public int Surplus;
+        public int TurksDisValue;
+        public int MachineDisValue;
+        public int TimeOut;
+        public double Stubborn;
+        public bool MachineStarts;
+         */
+        public async Task SaveGameParameters(GameParametersModel gp)
+        {
+            string sql;
+            if (gp.Id != 0)
+                sql = @"UPDATE [dbo].[GameParameters] 
+                        SET 
+                            Surplus = @Surplus,
+                            TurksDisValue = @TurksDisValue,
+                            MachineDisValue = @MachineDisValue,
+                            TimeOut = @TimeOut,
+                            Stubborn = @Stubborn,
+                            MachineStarts = @MachineStarts
+                        WHERE Id = @Id";
+            else
+                sql = @"INSERT INTO [dbo].[Customer]([FirstName], [LastName], [State], [City], [IsActive], [CreatedOn]) VALUES (@FirstName, @LastName, @State, @City, @IsActive, @CreatedOn)";
+
+            await _db.SaveData<GameParametersModel>(sql, gp);
+        }
+
     }
 }
