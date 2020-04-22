@@ -26,6 +26,7 @@
         <label for="machineStarts">MachineStarts</label>
         <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
 
     </EditForm>
 }
@@ -86,6 +87,12 @@ else
             Stubborn = gp.Stubborn,
             MachineStarts = gp.MachineStarts,
         };
+    }
+
+    private async void CancelEdits()
+    {
+        gameE = null;
+        StateHasChanged();
     }
 
     private async void SaveGame()
