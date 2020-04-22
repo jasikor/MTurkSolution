@@ -13,60 +13,79 @@
     <EditForm Model="@gameE" OnValidSubmit="@SaveGame">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <label>Surplus:</label>
-        <InputNumber id="surplus" @bind-Value="gameE.Surplus"></InputNumber>
-        <label>TurksDisValue</label>
-        <InputNumber id="turksDisValue" @bind-Value="gameE.TurksDisValue"></InputNumber>
-        <label for="machineDisValue">MachineDisValue</label>
-        <InputNumber id="marchineDisValue" @bind-Value="gameE.MachineDisValue"></InputNumber>
-        <label for="timeOut">TimeOut (secs)</label>
-        <InputNumber id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
-        <label for="stubborn">Stubborn</label>
-        <InputNumber id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
-        <label for="machineStarts">MachineStarts</label>
-        <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
+        <div class="form-group">
+            <label>Surplus:</label>
+            <InputNumber class="form-control" id="surplus" @bind-Value="gameE.Surplus"></InputNumber>
+        </div>
+        <div class="form-group">
+            <label>TurksDisValue</label>
+            <InputNumber class="form-control" id="turksDisValue" @bind-Value="gameE.TurksDisValue"></InputNumber>
+        </div>
+        <div class="form-group">
+            <label for="machineDisValue">MachineDisValue</label>
+            <InputNumber class="form-control" id="marchineDisValue" @bind-Value="gameE.MachineDisValue"></InputNumber>
+        </div>
+        <div class="form-group">
 
+            <label for="timeOut">TimeOut (secs)</label>
+            <InputNumber class="form-control"id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
+
+        </div>
+        <div class="form-group">
+
+            <label for="stubborn">Stubborn</label>
+            <InputNumber class="form-control"id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
+
+        </div>
+        <div class="form-group">
+
+            <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
+            <label for="machineStarts">MachineStarts</label>
+
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
+        </div>
     </EditForm>
 }
 else
 {
-@if (parameters == null)
-{
-    <div class="alert-info">Loading...</div>
-}
-else
-{
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Surplus</th>
-                <th>TurksDisValue</th>
-                <th>MachineDisValue</th>
-                <th>TimeOut (secs)</th>
-                <th>Stubborn</th>
-                <th>MachnieStarts</th>
-                <th></th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in parameters)
-            {
+    @if (parameters == null)
+    {
+        <div class="alert-info">Loading...</div>
+    }
+    else
+    {
+        <table class="table table-sm">
+            <thead>
                 <tr>
-                    <td>@p.Surplus </td>
-                    <td>@p.TurksDisValue </td>
-                    <td>@p.MachineDisValue </td>
-                    <td>@p.TimeOut </td>
-                    <td>@p.Stubborn </td>
-                    <td>@p.MachineStarts</td>
-                    <td><button class="btn btn-primary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+                    <th>Surplus</th>
+                    <th>TurksDisValue</th>
+                    <th>MachineDisValue</th>
+                    <th>TimeOut (secs)</th>
+                    <th>Stubborn</th>
+                    <th>MachnieStarts</th>
+                    <th></th>
+
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var p in parameters)
+                {
+                    <tr>
+                        <td>@p.Surplus </td>
+                        <td>@p.TurksDisValue </td>
+                        <td>@p.MachineDisValue </td>
+                        <td>@p.TimeOut </td>
+                        <td>@p.Stubborn </td>
+                        <td>@p.MachineStarts</td>
+                        <td><button class="btn btn-primary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 }
 
 
