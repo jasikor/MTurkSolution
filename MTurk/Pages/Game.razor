@@ -42,7 +42,7 @@
                                     <input type="range" class="custom-range" min="0" max="@game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
                                 </div>
                                 <div class="col-2">
-                                    <button type="button" class="btn btn-primary">Send</button>
+                                    <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
                                 </div>
                             </div>
                             <hr />
@@ -79,7 +79,6 @@
 
     private int myOffer;
 
-
     protected override async Task OnInitializedAsync()
     {
         game = await sessionService.GetCurrentGame(sessionId);
@@ -88,9 +87,27 @@
         myOffer = game.Surplus;
     }
 
+    private void MakeAnOffer()
+    {
+        MakeAnOffer(true, myOffer);
+    }
+
+    private async void MakeAnOffer(bool turksOffer, int amount)
+    {
+        MoveModel m = new MoveModel()
+        {
+            MoveBy = turksOffer ? "TURK" : "SYST",
+            ProposedAmount = amount,
+            OfferAccepted = turksOffer && MachinesLastOffer() == amount,
+            GameId = game.Id,
+        };
+        game = await sessionService.TurksMove(sessionId, m);
+    }
+
     public void OnTimeOut()
     {
         gameTimedOut = true;
+        MakeAnOffer(false, game.TurksDisValue);
         StateHasChanged();
     }
 

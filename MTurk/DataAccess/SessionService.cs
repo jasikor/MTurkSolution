@@ -32,7 +32,18 @@ namespace MTurk.Data
             return _db.LoadData<SessionModel, dynamic>(sql, new { });
         }
 
-        public Task<GameInfo> GetCurrentGame(string workerId)
+        private GameInfo ret = new GameInfo()
+        {
+            Id = 0,
+            Moves = new List<MoveModel>(),
+            Surplus = 20,
+            TurksDisValue = 15,
+            MachineDisValue = 10,
+            TimeOut = 5444,
+            Stubborn = 0.6,
+            MachineStarts = false
+        };
+        public async Task<GameInfo> GetCurrentGame(string workerId)
         {
             List<MoveModel> m = new List<MoveModel>();
             m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
@@ -43,17 +54,47 @@ namespace MTurk.Data
             //m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
             //m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9, OfferAccepted = true });
 
-            var ret = new GameInfo()
+
+            return ret;
+        }
+
+        private async Task SaveMove(string workerId, MoveModel move)
+        {
+            move.Time = DateTime.UtcNow;
+            string sql = @"insert into dbo.Moves 
+                            (Time, GameId, MoveBy, ProposedAmount, OfferAccepted)
+                           values 
+                            (@Time, @GameId, @MoveBy, @ProposedAmount, @OfferAccepted)";
+
+            if (move.Time == DateTime.MinValue)
+                await _db.SaveData<MoveModel>(sql, move);
+            else
+                ret.Moves.Add(move);
+
+        }
+
+        public async Task<GameInfo> TurksMove(string workerId, MoveModel move)
+        {
+            await SaveMove(workerId, move);
+            if (move.MoveBy == "TURK" && !move.OfferAccepted)
             {
-                Moves = m,
-                Surplus = 120,
-                TurksDisValue = 15,
-                MachineDisValue = 27,
-                TimeOut = 5,
-                Stubborn = 0.6,
-                MachineStarts = false
-            };
-            return Task.FromResult<GameInfo>(ret);
+                int machinesOffer = MachinesOffer(ret, move);
+                MoveModel machinesMove = new MoveModel()
+                {
+                    MoveBy = "MACH",
+                    ProposedAmount = machinesOffer,
+                    OfferAccepted = move.MoveBy == "TURK" && move.ProposedAmount == machinesOffer,
+                    GameId = move.GameId,
+                };
+
+                await SaveMove(workerId, machinesMove);
+            }
+            return await GetCurrentGame(workerId);
+        }
+
+        private int MachinesOffer(GameInfo ret, MoveModel move)
+        {
+            return 3;
         }
     }
 }
