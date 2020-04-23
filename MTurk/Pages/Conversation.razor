@@ -1,8 +1,8 @@
-﻿@if (Game.Moves.Count == 0 || Game.Moves[0].MoveBy == "TURK")
+﻿@if (!Game.MachineStarts)
 {
     <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
         <div class="card-body p-2">
-            <p class="card-text black-text">Hello there!<br />So how do you think we can split 20 Gold Bars between two of us?.</p>
+            <p class="card-text black-text">Hello there!<br />So how do you think we can split @Game.Surplus  Gold Bars between two of us?.</p>
         </div>
     </div>
 }
