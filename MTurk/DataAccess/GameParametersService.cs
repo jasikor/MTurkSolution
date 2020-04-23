@@ -15,6 +15,15 @@ namespace MTurk.DataAccess
         {
             _db = db;
         }
+
+        public async Task DeleteGameParameters(int id)
+        {
+            string sql =
+                @"DELETE GameParameters WHERE Id = @Id";
+
+            await _db.SaveData<dynamic>(sql, new { Id = id });
+        }
+
         public Task<List<GameParametersModel>> GetAllParametersAsync()
         {
             string sql = @"select * from dbo.GameParameters order by Id desc";
@@ -45,7 +54,22 @@ namespace MTurk.DataAccess
                             MachineStarts = @MachineStarts
                         WHERE Id = @Id";
             else
-                sql = @"INSERT INTO [dbo].[Customer]([FirstName], [LastName], [State], [City], [IsActive], [CreatedOn]) VALUES (@FirstName, @LastName, @State, @City, @IsActive, @CreatedOn)";
+                sql = @"INSERT INTO [dbo].[GameParameters](
+                            Surplus,
+                            TurksDisValue,
+                            MachineDisValue,
+                            TimeOut,
+                            Stubborn,
+                            MachineStarts
+                            ) 
+                        VALUES (
+                            @Surplus,
+                            @TurksDisValue,
+                            @MachineDisValue,
+                            @TimeOut,
+                            @Stubborn,
+                            @MachineStarts
+                        )";
 
             await _db.SaveData<GameParametersModel>(sql, gp);
         }

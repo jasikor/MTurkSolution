@@ -8,6 +8,7 @@
 
 
 <h3>Sessions Games</h3>
+
 @if (gameE != null)
 {
     <EditForm Model="@gameE" OnValidSubmit="@SaveGame">
@@ -28,13 +29,13 @@
         <div class="form-group">
 
             <label for="timeOut">TimeOut (secs)</label>
-            <InputNumber class="form-control"id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
+            <InputNumber class="form-control" id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
 
         </div>
         <div class="form-group">
 
             <label for="stubborn">Stubborn</label>
-            <InputNumber class="form-control"id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
+            <InputNumber class="form-control" id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
 
         </div>
         <div class="form-group">
@@ -51,6 +52,8 @@
 }
 else
 {
+    <button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnEditGame(0); })">New</button>
+
     @if (parameters == null)
     {
         <div class="alert-info">Loading...</div>
@@ -80,7 +83,8 @@ else
                         <td>@p.TimeOut </td>
                         <td>@p.Stubborn </td>
                         <td>@p.MachineStarts</td>
-                        <td><button class="btn btn-primary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+                        <td><button class="btn btn-secondary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+                        <td><button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnDeleteGame(p.Id); })">Delete</button></td>
                     </tr>
                 }
             </tbody>
@@ -93,9 +97,23 @@ else
     private List<MTurk.Models.GameParametersModel> parameters;
     private GameParameterUI gameE;
 
-    private void OnEditGame(int Id)
+    private void OnEditGame(int id)
     {
-        GameParametersModel gp = parameters.Find((x) => x.Id == Id);
+        GameParametersModel gp;
+        if (id == 0)
+            gp = new GameParametersModel()
+            {
+                Id = 0,
+                Surplus = 20,
+                TurksDisValue = 5,
+                MachineDisValue = 5,
+                TimeOut = 30,
+                Stubborn = 0.1,
+                MachineStarts = false,
+            };
+        else
+            gp = parameters.Find((x) => x.Id == id);
+
         gameE = new GameParameterUI()
         {
             Id = gp.Id,
@@ -108,10 +126,21 @@ else
         };
     }
 
-    private async void CancelEdits()
+    private async void OnDeleteGame(int id)
+    {
+        await _db.DeleteGameParameters(id);
+        parameters = await _db.GetAllParametersAsync();
+        ResetCurrentGame();
+    }
+
+    private void ResetCurrentGame()
     {
         gameE = null;
         StateHasChanged();
+    }
+    private async void CancelEdits()
+    {
+        ResetCurrentGame();
     }
 
     private async void SaveGame()
@@ -128,8 +157,7 @@ else
         };
         await _db.SaveGameParameters(gp);
         parameters = await _db.GetAllParametersAsync();
-        gameE = null;
-        StateHasChanged();
+        ResetCurrentGame();
 
     }
     protected override async Task OnInitializedAsync()

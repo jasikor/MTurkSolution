@@ -8,6 +8,8 @@ namespace MTurk.DataAccess
     {
         Task<List<GameParametersModel>> GetAllParametersAsync();
         Task SaveGameParameters(GameParametersModel gp);
+        Task DeleteGameParameters(int id);
+
 
     }
 }
