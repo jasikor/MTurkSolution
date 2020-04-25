@@ -1,6 +1,7 @@
 ﻿using MTurk.SQLDataAccess;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,24 +38,14 @@ namespace MTurk.Data
             Id = 0,
             Moves = new List<MoveModel>(),
             Surplus = 20,
-            TurksDisValue = 15,
-            MachineDisValue = 10,
+            TurksDisValue = 5,
+            MachineDisValue = 5,
             TimeOut = 5444,
             Stubborn = 0.6,
             MachineStarts = false
         };
         public async Task<GameInfo> GetCurrentGame(string workerId)
         {
-            List<MoveModel> m = new List<MoveModel>();
-            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
-            m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9 });
-            m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 10 });
-            m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 8 });
-            //m.Add(new MoveModel() { MoveBy = "SYST" });
-            //m.Add(new MoveModel() { MoveBy = "TURK", ProposedAmount = 9 , OfferAccepted = true});
-            //m.Add(new MoveModel() { MoveBy = "MACH", ProposedAmount = 9, OfferAccepted = true });
-
-
             return ret;
         }
 
@@ -73,12 +64,24 @@ namespace MTurk.Data
 
         }
 
+        private int GetLastMachineMove(string workerId)
+        {
+            int r;
+            var res = ret.Moves.FindLast((x) => x.MoveBy == "MACH");
+            if (res is null)
+                r = 1;
+            else
+                r = res.ProposedAmount;
+            return r;
+        }
         public async Task<GameInfo> TurksMove(string workerId, MoveModel move)
         {
             await SaveMove(workerId, move);
             if (move.MoveBy == "TURK" && !move.OfferAccepted)
             {
-                int machinesOffer = MachinesOffer(ret, move);
+                int machinesOffer = MachinesOffer(ret.Surplus, ret.Stubborn, ret.MachineDisValue,
+                    move.ProposedAmount, GetLastMachineMove(workerId));
+
                 MoveModel machinesMove = new MoveModel()
                 {
                     MoveBy = "MACH",
@@ -92,9 +95,28 @@ namespace MTurk.Data
             return await GetCurrentGame(workerId);
         }
 
-        private int MachinesOffer(GameInfo ret, MoveModel move)
+        private static Random rnd = new Random();
+        private int RandomInteger(int minInclusive, int maxInclusive)
         {
-            return 3;
+            if (minInclusive > maxInclusive)
+                return minInclusive;
+            Debug.Assert(minInclusive <= maxInclusive + 1);
+            return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
+        }
+       
+        private int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int machineLastOffer)
+        {
+            if (workerLastDemand <= machineLastOffer)
+                return workerLastDemand;
+            int aIDemand;
+            if (rnd.NextDouble() < stubborn)
+                aIDemand = RandomInteger(machineLastOffer - 1, machineLastOffer + 1);
+            else
+                aIDemand = RandomInteger(machineLastOffer,  workerLastDemand);
+
+            var res = Math.Clamp(aIDemand, 0, surplus - machineDisValue);
+            Debug.WriteLine($"   MachinesOffer() = {res}, before clamping = {aIDemand}");
+            return res;
         }
     }
 }
