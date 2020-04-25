@@ -103,20 +103,21 @@ namespace MTurk.Data
             Debug.Assert(minInclusive <= maxInclusive + 1);
             return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
         }
-       
+
         private int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int machineLastOffer)
         {
-            if (workerLastDemand <= machineLastOffer)
+            int aIOffer = Math.Min(machineLastOffer, surplus - machineDisValue);
+            if (workerLastDemand <= aIOffer)
                 return workerLastDemand;
-            int aIDemand;
             if (rnd.NextDouble() < stubborn)
-                aIDemand = RandomInteger(machineLastOffer - 1, machineLastOffer + 1);
+                aIOffer = RandomInteger(aIOffer - 1, aIOffer + 1);
             else
-                aIDemand = RandomInteger(machineLastOffer,  workerLastDemand);
+                aIOffer = RandomInteger(aIOffer, workerLastDemand);
 
-            var res = Math.Clamp(aIDemand, 0, surplus - machineDisValue);
-            Debug.WriteLine($"   MachinesOffer() = {res}, before clamping = {aIDemand}");
+            var res = Math.Clamp(aIOffer, 0, surplus - machineDisValue);
+            Debug.WriteLine($"   MachinesOffer() = {res}, before clamping = {aIOffer}");
             return res;
+
         }
     }
 }
