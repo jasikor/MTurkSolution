@@ -10,5 +10,6 @@
     [Stubborn] FLOAT NOT NULL, 
     [MachineStarts] BIT NOT NULL, 
     [Finished] BIT NOT NULL, 
+    [TurksProfit] INT NULL, 
     CONSTRAINT [FK_Games_ToSessions] FOREIGN KEY ([SessionId]) REFERENCES [Sessions]([Id])
 )

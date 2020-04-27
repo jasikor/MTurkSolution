@@ -17,5 +17,6 @@ namespace MTurk.Data
         public double Stubborn { get; set; }
         public bool MachineStarts { get; set; }
         public bool Finished { get; set; }
+        public int? TurksProfit { get; set; }
     }
 }
