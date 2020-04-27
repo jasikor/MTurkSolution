@@ -9,5 +9,6 @@
     [TimeOut] INT NOT NULL, 
     [Stubborn] FLOAT NOT NULL, 
     [MachineStarts] BIT NOT NULL, 
+    [Finished] BIT NOT NULL, 
     CONSTRAINT [FK_Games_ToSessions] FOREIGN KEY ([SessionId]) REFERENCES [Sessions]([Id])
 )
