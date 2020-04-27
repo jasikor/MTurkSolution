@@ -12,5 +12,6 @@ namespace MTurk.Data
         public int TimeOut;
         public double Stubborn;
         public bool MachineStarts;
+        public bool PartnersAgreed;
     }
 }

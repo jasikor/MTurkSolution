@@ -77,12 +77,13 @@ namespace MTurk.Data
         public async Task<GameInfo> TurksMove(string workerId, MoveModel move)
         {
             await SaveMove(workerId, move);
+            MoveModel machinesMove = new MoveModel();
             if (move.MoveBy == "TURK" && !move.OfferAccepted)
             {
                 int machinesOffer = MachinesOffer(ret.Surplus, ret.Stubborn, ret.MachineDisValue,
                     move.ProposedAmount, GetLastMachineMove(workerId));
 
-                MoveModel machinesMove = new MoveModel()
+                machinesMove = new MoveModel()
                 {
                     MoveBy = "MACH",
                     ProposedAmount = machinesOffer,
@@ -92,7 +93,9 @@ namespace MTurk.Data
 
                 await SaveMove(workerId, machinesMove);
             }
-            return await GetCurrentGame(workerId);
+            var res = await GetCurrentGame(workerId);
+            res.PartnersAgreed = move.OfferAccepted || machinesMove.OfferAccepted;
+            return res;
         }
 
         private static Random rnd = new Random();
