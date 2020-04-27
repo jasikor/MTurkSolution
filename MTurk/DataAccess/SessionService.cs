@@ -44,12 +44,18 @@ namespace MTurk.Data
             Stubborn = 0.6,
             MachineStarts = false
         };
+
+        /// <summary>
+        /// Gets unfinished or new game in session.
+        /// </summary>
+        /// <param name="workerId"></param>
+        /// <returns>null if all games have been played, new game if all games so far are finished, or unfinished game</returns>
         public async Task<GameInfo> GetCurrentGame(string workerId)
         {
             return ret;
         }
 
-        private async Task SaveMove(string workerId, MoveModel move)
+        private async Task SaveMove(MoveModel move)
         {
             move.Time = DateTime.UtcNow;
             string sql = @"insert into dbo.Moves 
@@ -76,7 +82,7 @@ namespace MTurk.Data
         }
         public async Task<GameInfo> TurksMove(string workerId, MoveModel move)
         {
-            await SaveMove(workerId, move);
+            await SaveMove(move);
             MoveModel machinesMove = new MoveModel();
             if (move.MoveBy == "TURK" && !move.OfferAccepted)
             {
@@ -91,7 +97,7 @@ namespace MTurk.Data
                     GameId = move.GameId,
                 };
 
-                await SaveMove(workerId, machinesMove);
+                await SaveMove(machinesMove);
             }
             var res = await GetCurrentGame(workerId);
             res.PartnersAgreed = move.OfferAccepted || machinesMove.OfferAccepted;
@@ -99,7 +105,7 @@ namespace MTurk.Data
         }
 
         private static Random rnd = new Random();
-        private int RandomInteger(int minInclusive, int maxInclusive)
+        private static int RandomInteger(int minInclusive, int maxInclusive)
         {
             if (minInclusive > maxInclusive)
                 return minInclusive;
@@ -107,7 +113,7 @@ namespace MTurk.Data
             return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
         }
 
-        private int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int machineLastOffer)
+        private static int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int machineLastOffer)
         {
             int aIOffer = Math.Min(machineLastOffer, surplus - machineDisValue);
             if (workerLastDemand <= aIOffer)
