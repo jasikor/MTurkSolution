@@ -38,6 +38,7 @@
     {
         var id = worker.WorkerId;
         worker = new Worker();
+        await _db.StartNewSession(id);
         NavigationManager.NavigateTo($"instructions/{id}");
     }
 

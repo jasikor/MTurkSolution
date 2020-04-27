@@ -1,4 +1,5 @@
 ﻿using MTurk.SQLDataAccess;
+using MTurk.UIModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,12 +19,13 @@ namespace MTurk.Data
 
         public async Task<SessionModel> StartNewSession(string workerId)
         {
+             
             string sql = @"insert into dbo.Sessions (WorkerId, Time)
                            output inserted.*
                            values (@WorkerId, @Time)";
 
             DateTime utcNow = DateTime.UtcNow;
-            SessionModel sm = new SessionModel() { WorkerId = workerId, Time = utcNow };
+            SessionModel sm = new SessionModel() { WorkerId = workerId.ToUpper(), Time = utcNow };
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
