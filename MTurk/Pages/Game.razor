@@ -77,22 +77,14 @@
 
     [Parameter]
     public string sessionId { get; set; }
-    
-    int gameId { get; set; }
 
     private int myOffer;
 
     protected override async Task OnInitializedAsync()
     {
-        if (gameId == 0)
-        {
-            game = await sessionService.GetCurrentGame(sessionId);
-        }
-        else
-            game = await sessionService.GetCurrentGame(gameId);
+        game = await sessionService.GetCurrentGame(sessionId);
         if (game is null)
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
-        gameId = game.Id;
         myOffer = game.Surplus;
     }
 

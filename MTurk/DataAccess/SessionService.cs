@@ -123,9 +123,5 @@ namespace MTurk.Data
 
         }
 
-        public async Task<GameInfo> GetCurrentGame(int gameId)
-        {
-            return ret;
-        }
     }
 }
