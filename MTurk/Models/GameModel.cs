@@ -10,9 +10,12 @@ namespace MTurk.Data
         public int Id { get; set; }
         public int SessionId { get; set; }
         public DateTime StartTime { get; set; }
+        public int Surplus { get; set; }
         public int TurksDisValue { get; set; }
         public int MachineDisValue { get; set; }
-        // TODO: Kto zaczyna
-
+        public int TimeOut { get; set; }
+        public double Stubborn { get; set; }
+        public bool MachineStarts { get; set; }
+        public bool Finished { get; set; }
     }
 }
