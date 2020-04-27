@@ -35,7 +35,7 @@ namespace MTurk.Data
 
         private GameInfo ret = new GameInfo()
         {
-            Id = 0,
+            Id = 10,
             Moves = new List<MoveModel>(),
             Surplus = 20,
             TurksDisValue = 5,
@@ -121,6 +121,11 @@ namespace MTurk.Data
             Debug.WriteLine($"   MachinesOffer() = {res}, before clamping = {aIOffer}");
             return res;
 
+        }
+
+        public async Task<GameInfo> GetCurrentGame(int gameId)
+        {
+            return ret;
         }
     }
 }

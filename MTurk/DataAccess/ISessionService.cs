@@ -8,6 +8,7 @@ namespace MTurk.Data
         Task<List<SessionModel>> GetAllSessionsAsync();
         Task<SessionModel> StartNewSession(string workerId);
         Task<GameInfo> GetCurrentGame(string workerId);
+        Task<GameInfo> GetCurrentGame(int gameId);
         Task<GameInfo> TurksMove(string workerId, MoveModel move);
 
     }
