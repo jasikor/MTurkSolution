@@ -85,7 +85,7 @@
         game = await sessionService.GetCurrentGame(sessionId);
         if (game is null)
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
-        myOffer = game.Surplus;
+        myOffer = 0;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -114,6 +114,7 @@
             GameId = game.Id,
         };
         game = await sessionService.TurksMove(sessionId, m);
+        myOffer = 0;
     }
 
     public void OnTimeOut()
