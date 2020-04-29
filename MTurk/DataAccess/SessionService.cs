@@ -19,7 +19,7 @@ namespace MTurk.Data
 
         public async Task<SessionModel> StartNewSession(string workerId)
         {
-             
+
             string sql = @"insert into dbo.Sessions (WorkerId, Time)
                            output inserted.*
                            values (@WorkerId, @Time)";
@@ -42,7 +42,7 @@ namespace MTurk.Data
             Surplus = 20,
             TurksDisValue = 5,
             MachineDisValue = 5,
-            TimeOut = 5444,
+            TimeOut = 40,
             Stubborn = 0.6,
             MachineStarts = false
         };
@@ -54,6 +54,23 @@ namespace MTurk.Data
         /// <returns>null if all games have been played, new game if all games so far are finished, or unfinished game</returns>
         public async Task<GameInfo> GetCurrentGame(string workerId)
         {
+            return ret;
+        }
+
+        public async Task<GameInfo> StartNewGame(string workerId)
+        {
+
+            ret = new GameInfo()
+            {
+                Id = 10,
+                Moves = new List<MoveModel>(),
+                Surplus = 20,
+                TurksDisValue = 5,
+                MachineDisValue = 5,
+                TimeOut = 30,
+                Stubborn = 0.6,
+                MachineStarts = false
+            };
             return ret;
         }
 

@@ -32,7 +32,7 @@
                         @if (gameTimedOut || game.PartnersAgreed)
                         {
                             <div class="d-flex justify-content-center">
-                                <button type="button" class="btn btn-primary mt-4">Next game</button>
+                                <button type="button" class="btn btn-primary mt-4" @onclick="@OnNextGame">Next game</button>
                             </div>
                         }
                         else
@@ -80,18 +80,23 @@
 
     private int myOffer;
 
-    protected override async Task OnInitializedAsync()
+    private void InitializeGame()
     {
-        game = await sessionService.GetCurrentGame(sessionId);
         if (game is null)
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
         myOffer = 0;
+        gameTimedOut = false;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        game = await sessionService.GetCurrentGame(sessionId);
+        InitializeGame();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        ScrollToBottom();
+        await ScrollToBottom();
     }
     private void MakeAnOffer()
     {
@@ -122,6 +127,14 @@
         gameTimedOut = true;
         MakeAnOffer(false, game.TurksDisValue);
         StateHasChanged();
+    }
+    private async void OnNextGame()
+    {
+        game = await sessionService.StartNewGame(sessionId);
+        InitializeGame();
+
+        StateHasChanged();
+        //NavigationManager.NavigateTo($"/game/{sessionId}");
     }
 
     private async Task ScrollToBottom()
