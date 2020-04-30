@@ -42,7 +42,7 @@ namespace MTurk.Data
             Surplus = 20,
             TurksDisValue = 5,
             MachineDisValue = 5,
-            TimeOut = 40,
+            TimeOut = 60,
             Stubborn = 0.6,
             MachineStarts = false
         };
@@ -67,7 +67,7 @@ namespace MTurk.Data
                 Surplus = 20,
                 TurksDisValue = 5,
                 MachineDisValue = 5,
-                TimeOut = 30,
+                TimeOut = 60,
                 Stubborn = 0.6,
                 MachineStarts = false
             };
