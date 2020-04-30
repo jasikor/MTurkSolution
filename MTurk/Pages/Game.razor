@@ -15,8 +15,7 @@
 
             <div class="card chat-room small-chat wide" id="myForm">
                 <div class="card-header">
-                    You will get <mark> @game.TurksDisValue </mark> Gold Bars, if you do not reach agreement in <Timer Time="@game.TimeOut" TimeOut="@OnTimeOut" /> seconds.
-
+                    You will get <mark> @game.TurksDisValue </mark> Gold Bars, if you do not reach agreement in @timeOut  seconds.
                 </div>
                 <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="messageFeed">
                     <div class="card-body p-3">
@@ -79,6 +78,7 @@
     public string sessionId { get; set; }
 
     private int myOffer;
+    private int timeOut;
 
     private void InitializeGame()
     {
@@ -86,6 +86,7 @@
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
         myOffer = 0;
         gameTimedOut = false;
+        StartTimerAsync();
     }
     protected override async Task OnInitializedAsync()
     {
@@ -98,16 +99,9 @@
         base.OnAfterRender(firstRender);
         await ScrollToBottom();
     }
-    private void MakeAnOffer()
-    {
-        MakeAnOffer(true, myOffer);
+    private void MakeAnOffer() => MakeAnOffer(true, myOffer);
 
-    }
-
-    private void AcceptMachinesOffer()
-    {
-        MakeAnOffer(true, MachinesLastOffer());
-    }
+    private void AcceptMachinesOffer() => MakeAnOffer(true, MachinesLastOffer());
 
     private async void MakeAnOffer(bool turksOffer, int amount)
     {
@@ -132,9 +126,6 @@
     {
         game = await sessionService.StartNewGame(sessionId);
         InitializeGame();
-
-        StateHasChanged();
-        //NavigationManager.NavigateTo($"/game/{sessionId}");
     }
 
     private async Task ScrollToBottom()
@@ -150,5 +141,22 @@
             res = game.Moves[game.Moves.Count - 1].ProposedAmount;
         }
         return res;
+    }
+
+    private async void StartTimerAsync()
+    {
+        if (game is null)
+            return;
+        timeOut = game.TimeOut;
+        while (timeOut > 0)
+        {
+            if (game.PartnersAgreed)
+                return;
+            timeOut--;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+        if (!game.PartnersAgreed)
+            OnTimeOut();
     }
 }
