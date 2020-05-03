@@ -1,5 +1,5 @@
 ﻿using MTurk.SQLDataAccess;
-using MTurk.UIModels;
+using MTurk;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -105,7 +105,7 @@ namespace MTurk.Data
             MoveModel machinesMove = new MoveModel();
             if (move.MoveBy == "TURK" && !move.OfferAccepted)
             {
-                int machinesOffer = MachinesOffer(ret.Surplus, ret.Stubborn, ret.MachineDisValue,
+                int machinesOffer = MachineAI.MachinesOffer(ret.Surplus, ret.Stubborn, ret.MachineDisValue,
                     move.ProposedAmount, GetLastMachineMove(workerId));
 
                 machinesMove = new MoveModel()
@@ -123,30 +123,7 @@ namespace MTurk.Data
             return res;
         }
 
-        private static Random rnd = new Random();
-        private static int RandomInteger(int minInclusive, int maxInclusive)
-        {
-            if (minInclusive > maxInclusive)
-                return minInclusive;
-            Debug.Assert(minInclusive <= maxInclusive + 1);
-            return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
-        }
-
-        private static int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int machineLastOffer)
-        {
-            int aIOffer = Math.Min(machineLastOffer, surplus - machineDisValue);
-            if (workerLastDemand <= aIOffer)
-                return workerLastDemand;
-            if (rnd.NextDouble() < stubborn)
-                aIOffer = RandomInteger(aIOffer - 1, aIOffer + 1);
-            else
-                aIOffer = RandomInteger(aIOffer, workerLastDemand);
-
-            var res = Math.Clamp(aIOffer, 0, surplus - machineDisValue);
-            Debug.WriteLine($"   MachinesOffer() = {res}, before clamping = {aIOffer}");
-            return res;
-
-        }
+        
 
     }
 }
