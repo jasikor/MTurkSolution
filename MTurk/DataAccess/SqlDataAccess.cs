@@ -29,7 +29,7 @@ namespace MTurk.SQLDataAccess
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
-            return await connection.QuerySingleAsync<U>(sql, parameters);
+            return await connection.QuerySingleOrDefaultAsync<U>(sql, parameters);
         }
         public async Task SaveData<T>(string sql, T parameters)
         {
