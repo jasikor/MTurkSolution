@@ -59,6 +59,29 @@ namespace MTurk.Data
 
         public async Task<GameInfo> StartNewGame(string workerId)
         {
+            var g = new
+            {
+                WorkerId = workerId,
+                StartTime = DateTime.UtcNow,
+                Surplus = 20,
+                TurksDisValue = 5,
+                MachineDisValue = 5,
+                TimeOut = 60,
+                Stubborn = 0.6,
+                MachineStarts = false,
+                Finished = false,
+
+            };
+            string sql = @"insert into dbo.Games (SessionId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, Finished)
+                           output inserted.*
+                           values ((select Id from Sessions where WorkerId = @WorkerId)
+, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @Finished)";
+
+            await _db.SaveData<dynamic>(sql, g);
+
+
+
+
 
             ret = new GameInfo()
             {
