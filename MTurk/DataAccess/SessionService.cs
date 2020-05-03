@@ -66,7 +66,7 @@ namespace MTurk.Data
                 Surplus = 20,
                 TurksDisValue = 5,
                 MachineDisValue = 5,
-                TimeOut = 60,
+                TimeOut = 66,
                 Stubborn = 0.6,
                 MachineStarts = false,
                 Finished = false,
@@ -77,22 +77,18 @@ namespace MTurk.Data
                            values ((select Id from Sessions where WorkerId = @WorkerId)
 , @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @Finished)";
 
-            await _db.SaveData<dynamic>(sql, g);
-
-
-
-
+            var res = await _db.SaveData<dynamic, GameModel>(sql, g);
 
             ret = new GameInfo()
             {
-                Id = 10,
+                Id = res.Id,
                 Moves = new List<MoveModel>(),
-                Surplus = 20,
-                TurksDisValue = 5,
-                MachineDisValue = 5,
-                TimeOut = 60,
-                Stubborn = 0.6,
-                MachineStarts = false
+                Surplus = res.Surplus,
+                TurksDisValue = res.MachineDisValue,
+                MachineDisValue = res.MachineDisValue,
+                TimeOut = res.TimeOut,
+                Stubborn = res.Stubborn,
+                MachineStarts = res.MachineStarts
             };
             return ret;
         }
