@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using MTurk.Models;
+using MTurk.Pages;
 
 namespace MTurk.Data
 {
@@ -40,18 +41,6 @@ namespace MTurk.Data
             return _db.LoadDataList<SessionModel, dynamic>(sql, new { });
         }
 
-        private GameInfo ret = new GameInfo()
-        {
-            Id = 10,
-            Moves = new List<MoveModel>(),
-            Surplus = 20,
-            TurksDisValue = 5,
-            MachineDisValue = 5,
-            TimeOut = 60,
-            Stubborn = 0.6,
-            MachineStarts = false
-        };
-
         /// <summary>
         /// Gets unfinished or new game in session.
         /// </summary>
@@ -59,7 +48,36 @@ namespace MTurk.Data
         /// <returns>null if all games have been played, new game if all games so far are finished, or unfinished game</returns>
         public async Task<GameInfo> GetCurrentGame(string workerId)
         {
-            return ret;
+            string sql = @"select Top 1 g.* 
+                           from Games g, Sessions s
+                           where g.Finished = 0 
+                                and s.WorkerId = @WorkerId 
+                                and g.SessionId = s.Id";
+            GameModel gm = null;
+            try
+            {
+                gm = await _db.LoadDataSingle<dynamic, GameModel>(sql, new { WorkerId = workerId });
+            }
+            catch (SqlException e)
+            {
+                Debug.WriteLine(e);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                throw;
+            }
+
+            if (gm is null)
+                return await StartNewGame(workerId);
+            else
+                return new GameInfo()
+                {
+                    Game = gm,
+                    Moves = new List<MoveModel>(), // TODO: wczytać liste ruchów z bazy
+                    PartnersAgreed = false,
+                };
         }
 
         /// <summary>
@@ -69,7 +87,7 @@ namespace MTurk.Data
         /// <returns>new game or null if there are no more unused GameParameters</returns>
         public async Task<GameInfo> StartNewGame(string workerId)
         {
-            string sql = 
+            string sql =
                 @"select Top 1 gp.* from GameParameters gp
                   left join (
                      select Games.Id, Games.GameParameterId, Games.SessionId 
@@ -95,6 +113,7 @@ namespace MTurk.Data
                 Debug.WriteLine(e);
                 throw;
             }
+
 
             if (gameParameter is null)
                 return null;
@@ -124,14 +143,8 @@ namespace MTurk.Data
                 var res = await _db.SaveData<dynamic, GameModel>(sql, g);
                 return new GameInfo()
                 {
-                    Id = res.Id,
+                    Game = res,
                     Moves = new List<MoveModel>(),
-                    Surplus = res.Surplus,
-                    TurksDisValue = res.MachineDisValue,
-                    MachineDisValue = res.MachineDisValue,
-                    TimeOut = res.TimeOut,
-                    Stubborn = res.Stubborn,
-                    MachineStarts = res.MachineStarts
                 };
             }
             catch (SqlException)
@@ -140,7 +153,7 @@ namespace MTurk.Data
             }
         }
 
-        private async Task SaveMove(MoveModel move)
+        public async Task SaveMove(MoveModel move)
         {
             move.Time = DateTime.UtcNow;
             string sql = @"insert into dbo.Moves 
@@ -148,48 +161,13 @@ namespace MTurk.Data
                            values 
                             (@Time, @GameId, @MoveBy, @ProposedAmount, @OfferAccepted)";
 
-            if (move.Time == DateTime.MinValue)
-                await _db.SaveData<MoveModel>(sql, move);
-            else
-                ret.Moves.Add(move);
-
+            await _db.SaveData<MoveModel>(sql, move);
         }
 
-        private int GetLastMachineMove(string workerId)
+        public async Task FinishGame(GameModel game)
         {
-            int r;
-            var res = ret.Moves.FindLast((x) => x.MoveBy == "MACH");
-            if (res is null)
-                r = 1;
-            else
-                r = res.ProposedAmount;
-            return r;
+            // TODO: update game record in the database
+            await Task.Delay(0);
         }
-        public async Task<GameInfo> TurksMove(string workerId, MoveModel move)
-        {
-            await SaveMove(move);
-            MoveModel machinesMove = new MoveModel();
-            if (move.MoveBy == "TURK" && !move.OfferAccepted)
-            {
-                int machinesOffer = MachineAI.MachinesOffer(ret.Surplus, ret.Stubborn, ret.MachineDisValue,
-                    move.ProposedAmount, GetLastMachineMove(workerId));
-
-                machinesMove = new MoveModel()
-                {
-                    MoveBy = "MACH",
-                    ProposedAmount = machinesOffer,
-                    OfferAccepted = move.MoveBy == "TURK" && move.ProposedAmount == machinesOffer,
-                    GameId = move.GameId,
-                };
-
-                await SaveMove(machinesMove);
-            }
-            var res = await GetCurrentGame(workerId);
-            res.PartnersAgreed = move.OfferAccepted || machinesMove.OfferAccepted;
-            return res;
-        }
-
-
-
     }
 }
