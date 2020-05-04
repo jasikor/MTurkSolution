@@ -9,7 +9,9 @@ namespace MTurk.Data
         Task<SessionModel> StartNewSession(string workerId);
         Task<GameInfo> GetCurrentGame(string workerId);
         Task<GameInfo> StartNewGame(string workerId);
-        Task<GameInfo> TurksMove(string workerId, MoveModel move);
+        Task SaveMove(MoveModel move);
+        Task FinishGame(GameModel game);
+
 
     }
 }
