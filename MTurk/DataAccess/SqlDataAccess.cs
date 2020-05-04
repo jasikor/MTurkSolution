@@ -17,7 +17,7 @@ namespace MTurk.SQLDataAccess
         {
             _config = config;
         }
-        public async Task<List<T>> LoadData<T, U>(string sql, U parameters)
+        public async Task<List<T>> LoadDataList<T, U>(string sql, U parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
@@ -25,19 +25,19 @@ namespace MTurk.SQLDataAccess
             return data.ToList();
 
         }
+        public async Task<U> LoadDataSingle<T, U>(string sql, T parameters)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            using IDbConnection connection = new SqlConnection(connectionString);
+            return await connection.QuerySingleOrDefaultAsync<U>(sql, parameters);
+        }
         public async Task SaveData<T>(string sql, T parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
-            try
-            {
-                await connection.ExecuteAsync(sql, parameters);
-            } catch (Exception e)
-            {
-
-            }
+            await connection.ExecuteAsync(sql, parameters);
         }
-        public async Task<U> SaveData<T,U>(string sql, T parameters)
+        public async Task<U> SaveData<T, U>(string sql, T parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);

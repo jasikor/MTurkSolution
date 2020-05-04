@@ -9,6 +9,7 @@ namespace MTurk.Data
     {
         public int Id { get; set; }
         public int SessionId { get; set; }
+        public int GameParameterId { get; set; }
         public DateTime StartTime { get; set; }
         public int Surplus { get; set; }
         public int TurksDisValue { get; set; }

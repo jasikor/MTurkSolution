@@ -27,7 +27,7 @@ namespace MTurk.DataAccess
         public Task<List<GameParametersModel>> GetAllParametersAsync()
         {
             string sql = @"select * from dbo.GameParameters order by Id desc";
-            return _db.LoadData<GameParametersModel, dynamic>(sql, new { });
+            return _db.LoadDataList<GameParametersModel, dynamic>(sql, new { });
         }
 
         /*
