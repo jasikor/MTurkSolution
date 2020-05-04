@@ -160,7 +160,8 @@
     }
     private async void OnNextGame()
     {
-        game = await sessionService.StartNewGame(sessionId);
+        var g =  await sessionService.StartNewGame(sessionId);
+        game = g;
         InitializeGame();
     }
 
@@ -179,7 +180,10 @@
         while (timeOut > 0)
         {
             if (game.PartnersAgreed)
+            {
+                StateHasChanged();
                 return;
+            }
             timeOut--;
             StateHasChanged();
             await Task.Delay(1000);
