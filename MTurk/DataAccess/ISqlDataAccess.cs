@@ -8,6 +8,7 @@ namespace MTurk.SQLDataAccess
         string ConnectionStringName { get; set; }
 
         Task<List<T>> LoadData<T, U>(string sql, U parameters);
+        Task<U> LoadData<T, U>(string sql, T parameters);
         Task SaveData<T>(string sql, T parameters);
         Task<U> SaveData<T, U>(string sql, T parameters);
 

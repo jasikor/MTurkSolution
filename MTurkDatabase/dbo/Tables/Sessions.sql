@@ -7,4 +7,4 @@
 
 GO
 
-CREATE INDEX [WorkerId] ON [dbo].[Sessions] ([WorkerId])
+CREATE UNIQUE INDEX [WorkerId] ON [dbo].[Sessions] ([WorkerId])

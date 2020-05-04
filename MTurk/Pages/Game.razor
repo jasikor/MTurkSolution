@@ -125,6 +125,8 @@
     private async void OnNextGame()
     {
         game = await sessionService.StartNewGame(sessionId);
+        if (game is null)
+            NavigationManager.NavigateTo($"thankyou/{sessionId}");
         InitializeGame();
     }
 
