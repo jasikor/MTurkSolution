@@ -22,19 +22,22 @@ namespace MTurk.Data
         public async Task<SessionModel> StartNewSession(string workerId)
         {
 
-            string sql = @"insert into dbo.Sessions (WorkerId, Time)
+            string sql = @"select * from Sessions where WorkerId = @WorkerId";
+            SessionModel sm = await _db.LoadDataSingle<dynamic, SessionModel>(sql, new { WorkerId = workerId });
+            if (sm != null)
+                return sm;
+            sql = @"insert into dbo.Sessions (WorkerId, Time)
                            output inserted.*
                            values (@WorkerId, @Time)";
-
             DateTime utcNow = DateTime.UtcNow;
-            SessionModel sm = new SessionModel() { WorkerId = workerId.ToUpper(), Time = utcNow };
+            sm = new SessionModel() { WorkerId = workerId.ToUpper(), Time = utcNow };
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
         public Task<List<SessionModel>> GetAllSessionsAsync()
         {
             string sql = @"select * from dbo.Sessions order by Id desc";
-            return _db.LoadData<SessionModel, dynamic>(sql, new { });
+            return _db.LoadDataList<SessionModel, dynamic>(sql, new { });
         }
 
         private GameInfo ret = new GameInfo()
@@ -86,7 +89,7 @@ namespace MTurk.Data
             GameParametersModel gameParameter = null;
             try
             {
-                gameParameter = await _db.LoadData<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
+                gameParameter = await _db.LoadDataSingle<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
             }
             catch (SqlException e)
             {
@@ -115,7 +118,7 @@ namespace MTurk.Data
                 MachineStarts = gameParameter.MachineStarts,
                 Finished = false,
             };
-           sql = @"insert into dbo.Games 
+            sql = @"insert into dbo.Games 
                               (SessionId,
                                GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, Finished)
                            output inserted.*
@@ -124,7 +127,7 @@ namespace MTurk.Data
                                @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @Finished)";
             try
             {
-               var res = await _db.SaveData<dynamic, GameModel>(sql, g);
+                var res = await _db.SaveData<dynamic, GameModel>(sql, g);
                 return new GameInfo()
                 {
                     Id = res.Id,
@@ -137,9 +140,9 @@ namespace MTurk.Data
                     MachineStarts = res.MachineStarts
                 };
             }
-            catch (SqlException) 
+            catch (SqlException)
             {
-               return null;
+                return null;
             }
         }
 
@@ -192,7 +195,7 @@ namespace MTurk.Data
             return res;
         }
 
-        
+
 
     }
 }
