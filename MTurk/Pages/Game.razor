@@ -15,7 +15,7 @@
 
             <div class="card chat-room small-chat wide" id="myForm">
                 <div class="card-header">
-                    You will get <mark> @game.TurksDisValue </mark> Gold Bars, if you do not reach agreement in @timeOut  seconds.
+                    You will get <mark> @game.Game.TurksDisValue </mark> Gold Bars, if you do not reach agreement in @timeOut  seconds.
                 </div>
                 <div class="my-custom-scrollbar pre-scrollable" style="height: 25rem;" id="messageFeed">
                     <div class="card-body p-3">
@@ -38,8 +38,8 @@
                         {
                             <div class="row justify-content-between">
                                 <div class="col-8">
-                                    <input type="number" id="for-me" min="0" max="@game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Surplus - myOffer) Gold Bars for you)
-                                    <input type="range" class="custom-range" min="0" max="@game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
+                                    <input type="number" id="for-me" min="0" max="@game.Game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Game.Surplus - myOffer) Gold Bars for you)
+                                    <input type="range" class="custom-range" min="0" max="@game.Game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
                                 </div>
                                 <div class="col-2">
                                     <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
@@ -72,7 +72,11 @@
     // https://www.nexmo.com/blog/2019/12/18/create-a-simple-messaging-ui-with-bootstrap-dr
 
     private bool gameTimedOut = false;
-    private GameInfo game;
+    private GameInfo game = new GameInfo()
+    {
+        Game = new GameModel(),
+        Moves = new List<MoveModel>(),
+    };
 
     [Parameter]
     public string sessionId { get; set; }
@@ -88,6 +92,7 @@
         gameTimedOut = false;
         StartTimerAsync();
     }
+
     protected override async Task OnInitializedAsync()
     {
         game = await sessionService.GetCurrentGame(sessionId);
@@ -99,38 +104,42 @@
         base.OnAfterRender(firstRender);
         await ScrollToBottom();
     }
+
     private void MakeAnOffer() => MakeAnOffer(true, myOffer);
 
     private void AcceptMachinesOffer() => MakeAnOffer(true, MachinesLastOffer());
 
     private async void MakeAnOffer(bool turksOffer, int amount)
     {
-        MoveModel m = new MoveModel()
+        MoveModel move = new MoveModel()
         {
             MoveBy = turksOffer ? "TURK" : "SYST",
             ProposedAmount = amount,
             OfferAccepted = turksOffer && MachinesLastOffer() == amount,
-            GameId = game.Id,
+            GameId = game.Game.Id,
         };
-        game = await sessionService.TurksMove(sessionId, m);
+        await sessionService.SaveMove(move);
+        game.Moves.Add(move);
+        if (move.MoveBy == "TURK" && !move.OfferAccepted)
+        {
+            int machinesOffer = MachineAI.MachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
+            MoveModel machinesMove = new MoveModel()
+            {
+                MoveBy = "MACH",
+                ProposedAmount = machinesOffer,
+                OfferAccepted = machinesOffer == amount,
+                GameId = game.Game.Id,
+            };
+            await sessionService.SaveMove(machinesMove);
+            game.Moves.Add(machinesMove);
+        }
+        game.PartnersAgreed = game.Moves[game.Moves.Count - 1].OfferAccepted;
+        if (game.PartnersAgreed)
+        {
+            await sessionService.FinishGame(game.Game);
+        }
+
         myOffer = 0;
-    }
-
-    public void OnTimeOut()
-    {
-        gameTimedOut = true;
-        MakeAnOffer(false, game.TurksDisValue);
-        StateHasChanged();
-    }
-    private async void OnNextGame()
-    {
-        game = await sessionService.StartNewGame(sessionId);
-        InitializeGame();
-    }
-
-    private async Task ScrollToBottom()
-    {
-        await JSRuntime.InvokeVoidAsync("scrollFeedToBottom", "Hello world");
     }
 
     private int MachinesLastOffer()
@@ -143,15 +152,38 @@
         return res;
     }
 
+    public void OnTimeOut()
+    {
+        gameTimedOut = true;
+        MakeAnOffer(false, game.Game.TurksDisValue);
+        StateHasChanged();
+    }
+    private async void OnNextGame()
+    {
+        var g =  await sessionService.StartNewGame(sessionId);
+        game = g;
+        InitializeGame();
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await JSRuntime.InvokeVoidAsync("scrollFeedToBottom", "Hello world");
+    }
+
+
+
     private async void StartTimerAsync()
     {
         if (game is null)
             return;
-        timeOut = game.TimeOut;
+        timeOut = game.Game.TimeOut;
         while (timeOut > 0)
         {
             if (game.PartnersAgreed)
+            {
+                StateHasChanged();
                 return;
+            }
             timeOut--;
             StateHasChanged();
             await Task.Delay(1000);
