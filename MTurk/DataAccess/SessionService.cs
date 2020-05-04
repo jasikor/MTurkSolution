@@ -69,22 +69,16 @@ namespace MTurk.Data
         /// <returns>new game or null if there are no more unused GameParameters</returns>
         public async Task<GameInfo> StartNewGame(string workerId)
         {
-            string sql = @"select top 1  * from GameParameters
-                            left join Games 
-                            on GameParameters.Id = Games.GameParameterId
-                            where Games.SessionId is null";
-
-
-            sql = @"select Top 1 gp.* from GameParameters gp
-                    left join (
-                        select Games.Id, Games.GameParameterId, Games.SessionId 
-                        from Games
-                        left join Sessions
-                        on Sessions.Id = Games.SessionId
-                        where Sessions.WorkerId = @WorkerId) AS G
-                    on gp.Id = G.GameParameterId
-                    where G.SessionId is null;";
-
+            string sql = 
+                @"select Top 1 gp.* from GameParameters gp
+                  left join (
+                     select Games.Id, Games.GameParameterId, Games.SessionId 
+                     from Games
+                     left join Sessions
+                     on Sessions.Id = Games.SessionId
+                     where Sessions.WorkerId = @WorkerId) AS G
+                  on gp.Id = G.GameParameterId
+                  where G.SessionId is null;";
 
             GameParametersModel gameParameter = null;
             try
