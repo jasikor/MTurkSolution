@@ -23,7 +23,7 @@ namespace MTurk
             if (rnd.NextDouble() < stubborn)
                 aIOffer = RandomInteger(aIOffer - 1, aIOffer + 1);
             else
-                aIOffer = RandomInteger(aIOffer, workerLastDemand);
+                aIOffer = RandomInteger(aIOffer, workerLastDemand - 1);
 
             var res = Math.Clamp(aIOffer, 0, surplus - machineDisValue);
             return res;
