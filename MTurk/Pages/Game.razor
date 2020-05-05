@@ -140,7 +140,7 @@ else
             game.Moves.Add(machinesMove);
         }
         game.PartnersAgreed = game.Moves[game.Moves.Count - 1].OfferAccepted;
-        if (game.PartnersAgreed)
+        if (game.PartnersAgreed || move.MoveBy == "SYST")
         {
             await sessionService.FinishGame(game.Game);
         }
