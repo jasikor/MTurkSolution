@@ -111,11 +111,11 @@ else
         await ScrollToBottom();
     }
 
-    private void MakeAnOffer() => MakeAnOffer(true, myOffer);
+    private async Task MakeAnOffer() => await MakeAnOffer(true, myOffer);
 
-    private void AcceptMachinesOffer() => MakeAnOffer(true, MachinesLastOffer());
+    private async Task AcceptMachinesOffer() => await MakeAnOffer(true, MachinesLastOffer());
 
-    private async void MakeAnOffer(bool turksOffer, int amount)
+    private async Task MakeAnOffer(bool turksOffer, int amount)
     {
         MoveModel move = new MoveModel()
         {
@@ -158,10 +158,10 @@ else
         return res;
     }
 
-    public void OnTimeOut()
+    public async Task OnTimeOut()
     {
         gameTimedOut = true;
-        MakeAnOffer(false, game.Game.TurksDisValue);
+        await MakeAnOffer(false, game.Game.TurksDisValue);
         StateHasChanged();
     }
     private async void OnNextGame()
