@@ -20,7 +20,7 @@ namespace MTurk.Controllers
             var stream = new MemoryStream(buffer);
 
             var result = new FileStreamResult(stream, "text/plain");
-            result.FileDownloadName = $"test.csv";
+            result.FileDownloadName = $"TurkSessions {DateTime.Now}.txt";
             return result;
         }
 
