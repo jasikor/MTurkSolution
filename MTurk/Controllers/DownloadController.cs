@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace MTurk.Controllers
 {
-    [ApiController, Route("dwn")]
+    [ApiController, Route("dwn/{counter}")]
     public class DownloadController : ControllerBase
     {
 
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult Get(int counter)
         {
 
             var buffer = Encoding.UTF8.GetBytes("Hello! Content is here.");
