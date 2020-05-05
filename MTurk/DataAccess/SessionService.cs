@@ -50,7 +50,7 @@ namespace MTurk.Data
         {
             string sql = @"select Top 1 g.* 
                            from Games g, Sessions s
-                           where g.Finished = 0 
+                           where g.EndTime is null 
                                 and s.WorkerId = @WorkerId 
                                 and g.SessionId = s.Id";
             GameModel gm = null;
@@ -129,15 +129,14 @@ namespace MTurk.Data
                 TimeOut = gameParameter.TimeOut,
                 Stubborn = gameParameter.Stubborn,
                 MachineStarts = gameParameter.MachineStarts,
-                Finished = false,
             };
             sql = @"insert into dbo.Games 
                               (SessionId,
-                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, Finished)
+                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts)
                            output inserted.*
                            values 
                               ((select Id from Sessions where WorkerId = @WorkerId), 
-                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @Finished)";
+                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts)";
             try
             {
                 var res = await _db.SaveData<dynamic, GameModel>(sql, g);
