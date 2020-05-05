@@ -165,8 +165,12 @@ namespace MTurk.Data
 
         public async Task FinishGame(GameModel game)
         {
-            // TODO: update game record in the database
-            await Task.Delay(0);
+            var endTime = DateTime.UtcNow;
+            string sql = @"update Games
+                           set EndTime = @EndTime
+                           where Id = @GameId";
+
+            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id } );
         }
     }
 }
