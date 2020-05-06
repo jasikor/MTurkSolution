@@ -6,7 +6,7 @@ namespace MTurk.Data
 {
     public interface ISessionService
     {
-        Task<List<SessionModel>> GetAllSessionsAsync();
+        Task<List<SessionModel>> GetAHandfullOfLastSessionsAsync();
         Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames); 
         Task<SessionModel> StartNewSession(string workerId);
         Task<GameInfo> GetCurrentGame(string workerId);

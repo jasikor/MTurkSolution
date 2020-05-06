@@ -35,9 +35,9 @@ namespace MTurk.Data
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
-        public Task<List<SessionModel>> GetAllSessionsAsync()
+        public Task<List<SessionModel>> GetAHandfullOfLastSessionsAsync()
         {
-            string sql = @"select * from dbo.Sessions order by Id desc";
+            string sql = @"select top 30 * from dbo.Sessions order by Id desc";
             return _db.LoadDataList<SessionModel, dynamic>(sql, new { });
         }
 
