@@ -172,5 +172,26 @@ namespace MTurk.Data
 
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id } );
         }
+
+        public async Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames)
+        {
+            string sql = @"select g.*, s.WorkerId, m.ProposedAmount 
+                           from(
+                            select * 
+                            from games 
+                            where EndTime is not null 
+                            order by id desc
+                            offset 0 rows 
+                            fetch first @NumberOfGames row only) as g
+                           left join Sessions s 
+                            on s.Id = g.SessionId
+                           left join moves m 
+                            on m.GameId = g.Id
+                            order by g.Id desc, m.Id";
+
+            
+            return await _db.LoadDataList<QueryRows, dynamic>(sql, new { NumberOfGames = numberOfGames});
+        }
     }
+    
 }
