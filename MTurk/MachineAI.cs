@@ -19,7 +19,7 @@ namespace MTurk
         public static int GetMachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int? machineLastOffer)
         {
             if (machineLastOffer is null)
-                machineLastOffer = 0;
+                machineLastOffer = 1;
             int aIOffer = Math.Min((int)machineLastOffer, surplus - machineDisValue);
             if (workerLastDemand <= aIOffer)
                 return workerLastDemand;
