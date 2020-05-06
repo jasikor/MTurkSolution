@@ -128,7 +128,7 @@ else
         game.Moves.Add(move);
         if (move.MoveBy == "TURK" && !move.OfferAccepted)
         {
-            int machinesOffer = MachineAI.MachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
+            int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
             MoveModel machinesMove = new MoveModel()
             {
                 MoveBy = "MACH",
@@ -150,10 +150,12 @@ else
 
     private int? MachinesLastOffer()
     {
-        if (game.Moves.Count > 0)
-            return game.Moves[game.Moves.Count - 1].ProposedAmount;
-        else
-            return null;
+        for (int i = game.Moves.Count - 1; i >= 0; i--)
+        {
+            if (game.Moves[i].MoveBy == "MACH")
+                return game.Moves[i].ProposedAmount;
+        }
+        return null;
     }
 
     public async Task OnTimeOut()
