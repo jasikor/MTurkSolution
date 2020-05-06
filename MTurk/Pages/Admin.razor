@@ -41,7 +41,7 @@ else
     private List<SessionModel> sessions;
     protected override async Task OnInitializedAsync()
     {
-        sessions = await _db.GetAllSessionsAsync();
+        sessions = await _db.GetAHandfullOfLastSessionsAsync();
     }
 
 }
