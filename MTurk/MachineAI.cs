@@ -16,7 +16,7 @@ namespace MTurk
             return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
         }
 
-        public static int MachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int? machineLastOffer)
+        public static int GetMachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int? machineLastOffer)
         {
             if (machineLastOffer is null)
                 machineLastOffer = 0;
