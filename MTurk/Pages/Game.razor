@@ -113,7 +113,7 @@ else
 
     private async Task MakeAnOffer() => await MakeAnOffer(true, myOffer);
 
-    private async Task AcceptMachinesOffer() => await MakeAnOffer(true, MachinesLastOffer());
+    private async Task AcceptMachinesOffer() => await MakeAnOffer(true, (int)MachinesLastOffer());
 
     private async Task MakeAnOffer(bool turksOffer, int amount)
     {
@@ -128,7 +128,7 @@ else
         game.Moves.Add(move);
         if (move.MoveBy == "TURK" && !move.OfferAccepted)
         {
-            int machinesOffer = MachineAI.MachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
+            int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
             MoveModel machinesMove = new MoveModel()
             {
                 MoveBy = "MACH",
@@ -148,14 +148,14 @@ else
         myOffer = 0;
     }
 
-    private int MachinesLastOffer()
+    private int? MachinesLastOffer()
     {
-        int res = -1;
-        if (game.Moves.Count > 0)
+        for (int i = game.Moves.Count - 1; i >= 0; i--)
         {
-            res = game.Moves[game.Moves.Count - 1].ProposedAmount;
+            if (game.Moves[i].MoveBy == "MACH")
+                return game.Moves[i].ProposedAmount;
         }
-        return res;
+        return null;
     }
 
     public async Task OnTimeOut()
@@ -195,6 +195,6 @@ else
             await Task.Delay(1000);
         }
         if (!game.PartnersAgreed)
-            OnTimeOut();
+            await OnTimeOut();
     }
 }
