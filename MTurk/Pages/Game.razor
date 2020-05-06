@@ -113,7 +113,7 @@ else
 
     private async Task MakeAnOffer() => await MakeAnOffer(true, myOffer);
 
-    private async Task AcceptMachinesOffer() => await MakeAnOffer(true, MachinesLastOffer());
+    private async Task AcceptMachinesOffer() => await MakeAnOffer(true, (int)MachinesLastOffer());
 
     private async Task MakeAnOffer(bool turksOffer, int amount)
     {
@@ -148,14 +148,12 @@ else
         myOffer = 0;
     }
 
-    private int MachinesLastOffer()
+    private int? MachinesLastOffer()
     {
-        int res = -1;
         if (game.Moves.Count > 0)
-        {
-            res = game.Moves[game.Moves.Count - 1].ProposedAmount;
-        }
-        return res;
+            return game.Moves[game.Moves.Count - 1].ProposedAmount;
+        else
+            return null;
     }
 
     public async Task OnTimeOut()
@@ -195,6 +193,6 @@ else
             await Task.Delay(1000);
         }
         if (!game.PartnersAgreed)
-            OnTimeOut();
+            await OnTimeOut();
     }
 }
