@@ -44,8 +44,12 @@ else
                             {
                                 <div class="row justify-content-between">
                                     <div class="col-8">
-                                        I want <input type="number" id="for-me" min="0" max="@game.Game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Game.Surplus - myOffer) Gold Bars for you)
-                                        <input type="range" class="custom-range" min="0" max="@game.Game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
+                                        I want
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>ChangeMyOffer(-1))">-</button>
+                                        <input type="number" id="for-me" min="0" max="@game.Game.Surplus" step="1" @bind-value="myOffer" />
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>ChangeMyOffer(+1))">+</button>
+
+                                        gold bars and you will get @(game.Game.Surplus - myOffer).
                                     </div>
                                     <div class="col-2">
                                         <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
@@ -219,5 +223,9 @@ else
         }
         if (!game.PartnersAgreed)
             await OnTimeOut();
+    }
+    private void ChangeMyOffer(int increment)
+    {
+        myOffer = Math.Clamp(myOffer + increment, 0, game.Game.Surplus);
     }
 }
