@@ -90,19 +90,24 @@ else
     private int myOffer;
     private int timeOut;
 
-    private void InitializeGame()
+    private async Task InitializeGame()
     {
         if (game is null)
+        {
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
+            return;
+        }
         myOffer = 0;
         gameTimedOut = false;
+        if (game.Game.MachineStarts)
+            await MakeFirstOffer();
         StartTimerAsync();
     }
 
     protected override async Task OnInitializedAsync()
     {
         game = await sessionService.GetCurrentGame(sessionId);
-        InitializeGame();
+        await InitializeGame();
     }
 
     protected override async void OnAfterRender(bool firstRender)
@@ -111,9 +116,29 @@ else
         await ScrollToBottom();
     }
 
+    private async Task MakeFirstOffer()
+    {
+        int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, null, MachinesLastOffer());
+
+        MoveModel move = new MoveModel()
+        {
+            MoveBy = "MACH",
+            ProposedAmount = machinesOffer,
+            OfferAccepted = false,
+            GameId = game.Game.Id,
+        };
+        await SaveMove(move);
+    }
+
     private async Task MakeAnOffer() => await MakeAnOffer(true, myOffer);
 
     private async Task AcceptMachinesOffer() => await MakeAnOffer(true, (int)MachinesLastOffer());
+
+    private async Task SaveMove(MoveModel move)
+    {
+        game.Moves.Add(move);
+        await sessionService.SaveMove(move);
+    }
 
     private async Task MakeAnOffer(bool turksOffer, int amount)
     {
@@ -124,8 +149,7 @@ else
             OfferAccepted = turksOffer && MachinesLastOffer() == amount,
             GameId = game.Game.Id,
         };
-        await sessionService.SaveMove(move);
-        game.Moves.Add(move);
+        await SaveMove(move);
         if (move.MoveBy == "TURK" && !move.OfferAccepted)
         {
             int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
@@ -136,8 +160,7 @@ else
                 OfferAccepted = machinesOffer == amount,
                 GameId = game.Game.Id,
             };
-            await sessionService.SaveMove(machinesMove);
-            game.Moves.Add(machinesMove);
+            await SaveMove(machinesMove);
         }
         game.PartnersAgreed = game.Moves[game.Moves.Count - 1].OfferAccepted;
         if (game.PartnersAgreed || move.MoveBy == "SYST")
@@ -168,7 +191,7 @@ else
     {
         var g = await sessionService.StartNewGame(sessionId);
         game = g;
-        InitializeGame();
+        await InitializeGame();
     }
 
     private async Task ScrollToBottom()

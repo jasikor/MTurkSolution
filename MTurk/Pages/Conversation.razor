@@ -1,12 +1,17 @@
-﻿@if (!Game.Game.MachineStarts)
-{
-    <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
-        <div class="card-body p-2">
+﻿<div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+    <div class="card-body p-2">
+        @if (!Game.Game.MachineStarts)
+        {
             <p class="card-text black-text">Hello there!<br />So how do you think we can split up @Game.Game.Surplus  Gold Bars between two of us?</p>
             <p class="card-text black-text">How many bars do you want?</p>
-        </div>
+        }
+        else
+        {
+            <p class="card-text black-text">Hello there!</p>
+        }
     </div>
-}
+</div>
+
 @foreach (var move in Game.Moves)
 {
     @if (move.MoveBy == "MACH")
@@ -46,7 +51,7 @@
         <div class="card bg-warning text-dark rounded w-100 float-right z-depth-0 mb-1">
             <div class="card-body p-2">
                 <p class="card-text">
-                    Time is up! <br/>You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get @Game.Game.TurksDisValue Gold Bars only.
+                    Time is up! <br />You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get @Game.Game.TurksDisValue Gold Bars only.
                 </p>
             </div>
         </div>
