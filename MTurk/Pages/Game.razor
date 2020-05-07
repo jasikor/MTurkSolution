@@ -44,7 +44,7 @@ else
                             {
                                 <div class="row justify-content-between">
                                     <div class="col-8">
-                                        <input type="number" id="for-me" min="0" max="@game.Game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Game.Surplus - myOffer) Gold Bars for you)
+                                        I want <input type="number" id="for-me" min="0" max="@game.Game.Surplus" step="1" @bind-value="myOffer" /> Gold Bars for me (@(game.Game.Surplus - myOffer) Gold Bars for you)
                                         <input type="range" class="custom-range" min="0" max="@game.Game.Surplus" @bind-value="myOffer" step="1" id="customRange3">
                                     </div>
                                     <div class="col-2">
