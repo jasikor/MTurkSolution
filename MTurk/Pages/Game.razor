@@ -73,7 +73,10 @@ else
                                         <span>.</span>
                                     </div>
                                     <div class="col-2">
-                                        <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
+                                        @if (myOffer != null)
+                                        {
+                                            <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
+                                        }
                                     </div>
                                 </div>
                                 @if (MachinesLastOffer() > 0)
