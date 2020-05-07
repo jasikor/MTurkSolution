@@ -44,26 +44,37 @@ else
                             {
                                 <div class="row justify-content-between">
                                     <div class="col-8">
-                                            I want
+                                        I want
+                                        @if (myOffer is null)
+                                        {
+                                            <span style="font-size:4rem;" class="ml-2"> ?? </span>
+                                        }
+                                        else
+                                        {
                                             <span style="font-size:4rem;" class="ml-2"> @myOffer </span>
-
-                                            <span class="btn-group-vertical align-text-bottom mr-4">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>ChangeMyOffer(+1))">
-                                                    <svg class="bi bi-caret-up-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z" />
-                                                    </svg>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>ChangeMyOffer(-1))">
-                                                    <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z" />
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                            gold bars and you will get @(game.Game.Surplus - myOffer).
-                                        </div>
-                                        <div class="col-2">
-                                            <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
-                                        </div>
+                                        }
+                                        <span class="btn-group-vertical align-text-bottom mr-4">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(+1))">
+                                                <svg class="bi bi-caret-up-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z" />
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(-1))">
+                                                <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z" />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                        <span> gold bars</span>
+                                        @if (myOffer != null)
+                                        {
+                                            <span> and you will get @(game.Game.Surplus - (int)myOffer)</span>
+                                        }
+                                        <span>.</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
+                                    </div>
                                 </div>
                                 @if (MachinesLastOffer() > 0)
                                 {
@@ -101,7 +112,7 @@ else
     [Parameter]
     public string sessionId { get; set; }
 
-    private int myOffer;
+    private int? myOffer;
     private int timeOut;
 
     private async Task InitializeGame()
@@ -111,7 +122,7 @@ else
             NavigationManager.NavigateTo($"thankyou/{sessionId}");
             return;
         }
-        myOffer = 0;
+        myOffer = null;
         gameTimedOut = false;
         if (game.Game.MachineStarts)
             await MakeFirstOffer();
@@ -144,7 +155,7 @@ else
         await SaveMove(move);
     }
 
-    private async Task MakeAnOffer() => await MakeAnOffer(true, myOffer);
+    private async Task MakeAnOffer() => await MakeAnOffer(true, (int)myOffer);
 
     private async Task AcceptMachinesOffer() => await MakeAnOffer(true, (int)MachinesLastOffer());
 
@@ -181,8 +192,6 @@ else
         {
             await sessionService.FinishGame(game.Game);
         }
-
-        myOffer = 0;
     }
 
     private int? MachinesLastOffer()
@@ -236,6 +245,8 @@ else
     }
     private void ChangeMyOffer(int increment)
     {
-        myOffer = Math.Clamp(myOffer + increment, 0, game.Game.Surplus);
+        if (myOffer is null)
+            myOffer = 10;
+        myOffer = Math.Clamp((int)myOffer + increment, 0, game.Game.Surplus);
     }
 }
