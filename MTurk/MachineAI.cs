@@ -16,17 +16,19 @@ namespace MTurk
             return rnd.Next(minInclusive, maxInclusive + 1); // rnd.Next(min, max), min inclusive, max exclusive
         }
 
-        public static int GetMachinesOffer(int surplus, double stubborn, int machineDisValue, int workerLastDemand, int? machineLastOffer)
+        public static int GetMachinesOffer(int surplus, double stubborn, int machineDisValue, int? workerLastDemand, int? machineLastOffer)
         {
             if (machineLastOffer is null)
                 machineLastOffer = 1;
+            if (workerLastDemand is null)
+                workerLastDemand = surplus;
             int aIOffer = Math.Min((int)machineLastOffer, surplus - machineDisValue);
             if (workerLastDemand <= aIOffer)
-                return workerLastDemand;
+                return (int)workerLastDemand;
             if (rnd.NextDouble() < stubborn)
                 aIOffer = RandomInteger(aIOffer - 1, aIOffer + 1);
             else
-                aIOffer = RandomInteger(aIOffer, workerLastDemand - 1);
+                aIOffer = RandomInteger(aIOffer, (int)workerLastDemand - 1);
 
             var res = Math.Clamp(aIOffer, 0, surplus - machineDisValue);
             return res;
