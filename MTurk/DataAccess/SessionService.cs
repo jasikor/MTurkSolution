@@ -167,10 +167,10 @@ namespace MTurk.Data
         {
             var endTime = DateTime.UtcNow;
             string sql = @"update Games
-                           set EndTime = @EndTime
+                           set EndTime = @EndTime, TurksProfit = @TurksProfit
                            where Id = @GameId";
 
-            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id } );
+            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit } );
         }
 
         public async Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames)
