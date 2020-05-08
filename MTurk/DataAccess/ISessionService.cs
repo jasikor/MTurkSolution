@@ -1,4 +1,5 @@
-﻿using MTurk.Models;
+﻿using MTurk.DataAccess;
+using MTurk.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace MTurk.Data
 {
     public interface ISessionService
     {
-        Task<List<SessionModel>> GetAHandfullOfLastSessionsAsync();
+        Task<List<SessionInfo>> GetAHandfullOfLastSessionsAsync();
         Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames); 
         Task<SessionModel> StartNewSession(string workerId);
         Task<GameInfo> GetCurrentGame(string workerId);
