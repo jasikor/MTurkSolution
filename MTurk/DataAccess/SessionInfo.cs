@@ -12,10 +12,6 @@ namespace MTurk.DataAccess
         public DateTime Time;
         public int TotalProfit;
         public int GamesPlayed;
-        /// <summary>
-        ///  zarobki = Max( Nr_skonczonych_gier * 3 * x, zebrane_bars * x)
-        ///  X = $/bar(do ustalenia, narazie zakladam x = $0.05)
-        /// </summary>
-        public double TurksPayment { get => Math.Max(GamesPlayed * 3 * DollarsPerBar, TotalProfit * DollarsPerBar); }
+        public double TurksPayment { get => Math.Max(GamesPlayed * 2 * DollarsPerBar, TotalProfit * DollarsPerBar); }
     }
 }
