@@ -1,8 +1,11 @@
 ﻿@page "/game/{sessionId}"
 
+
 @inject ISessionService sessionService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+
+@using System.Diagnostics
 
 @if (game is null)
 {
@@ -190,7 +193,10 @@ else
             };
             await SaveMove(machinesMove);
         }
-        game.PartnersAgreed = game.Moves[game.Moves.Count - 1].OfferAccepted;
+        Debug.Assert(game.Moves.Count > 0);
+        var lastMove = game.Moves[game.Moves.Count - 1];
+        game.PartnersAgreed = lastMove.OfferAccepted;
+        game.Game.TurksProfit = lastMove.ProposedAmount;
         if (game.PartnersAgreed || move.MoveBy == "SYST")
         {
             await sessionService.FinishGame(game.Game);
