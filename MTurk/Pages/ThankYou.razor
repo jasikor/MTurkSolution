@@ -1,4 +1,4 @@
-﻿@page "/thankyou/{sessionId}"
+﻿@page "/thankyou/{sessionId}/{totalBarsNegotiated:int}"
 
 <div class="d-flex justify-content-center">
     <h3>Thank you</h3>
@@ -8,10 +8,18 @@
         <div class="p-4">
             Thank you for participation in our Gold Bar Game.
         </div>
+        @if (totalBarsNegotiated >= 0)
+        {
+            <div class="p-4">
+                <p>You won @totalBarsNegotiated gold bars in total.</p>
+            </div>
+        }
     </div>
 </div>
 
 @code {
     [Parameter]
     public string sessionId { get; set; }
+    [Parameter]
+    public int totalBarsNegotiated { get; set; } = -1;
 }
