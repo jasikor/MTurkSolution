@@ -58,9 +58,9 @@ else
                 <tr>
                     <td>@session.Time.ToString() </td>
                     <td>@session.WorkerId</td>
-                    <td class="text-right">9</td>
-                    <td class="text-right">34</td>
-                    <td class="text-right">12.45 zł</td>
+                    <td class="text-right">@session.GamesPlayed</td>
+                    <td class="text-right">@session.TotalProfit</td>
+                    <td class="text-right">@session.TurksPayment zł</td>
                 </tr>
             }
         </tbody>
@@ -69,7 +69,7 @@ else
 }
 
 @code {
-    private List<SessionModel> sessions;
+    private List<SessionInfo> sessions;
     protected override async Task OnInitializedAsync()
     {
         sessions = await _db.GetAHandfullOfLastSessionsAsync();

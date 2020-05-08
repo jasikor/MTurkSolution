@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using MTurk.Models;
 using MTurk.Pages;
+using MTurk.DataAccess;
 
 namespace MTurk.Data
 {
@@ -35,10 +36,18 @@ namespace MTurk.Data
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
-        public Task<List<SessionModel>> GetAHandfullOfLastSessionsAsync()
+        public Task<List<SessionInfo>> GetAHandfullOfLastSessionsAsync()
         {
-            string sql = @"select top 30 * from dbo.Sessions order by Id desc";
-            return _db.LoadDataList<SessionModel, dynamic>(sql, new { });
+            string sql =
+                  @"select s.[Time], s.WorkerId, g.totalProfit, g.gamesPlayed from sessions s
+                    inner join 
+                        (select Games.SessionId, sum(Games.TurksProfit) as totalProfit, count(Id) as gamesPlayed 
+                        from games 
+                        where games.TurksProfit is not null  
+                        group by Games.SessionId) g
+                    on s.Id = g.SessionId
+                    order by s.Id desc";
+            return _db.LoadDataList<SessionInfo, dynamic>(sql, new { });
         }
 
         /// <summary>
@@ -170,7 +179,7 @@ namespace MTurk.Data
                            set EndTime = @EndTime, TurksProfit = @TurksProfit
                            where Id = @GameId";
 
-            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit } );
+            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
         public async Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames)
@@ -189,9 +198,9 @@ namespace MTurk.Data
                             on m.GameId = g.Id
                             order by g.Id desc, m.Id";
 
-            
-            return await _db.LoadDataList<QueryRows, dynamic>(sql, new { NumberOfGames = numberOfGames});
+
+            return await _db.LoadDataList<QueryRows, dynamic>(sql, new { NumberOfGames = numberOfGames });
         }
     }
-    
+
 }
