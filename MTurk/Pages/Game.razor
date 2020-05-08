@@ -231,7 +231,14 @@ else
 
     private async Task ScrollToBottom()
     {
-        await JSRuntime.InvokeVoidAsync("scrollFeedToBottom", "Hello world");
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("scrollFeedToBottom", "Hello world");
+        }
+        catch (Exception)
+        {
+            // ignore all exceptions, they are not very important here
+        }
     }
 
 
