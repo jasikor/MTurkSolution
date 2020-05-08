@@ -60,7 +60,7 @@ else
                     <td>@session.WorkerId</td>
                     <td class="text-right">@session.GamesPlayed</td>
                     <td class="text-right">@session.TotalProfit</td>
-                    <td class="text-right">@session.TurksPayment zł</td>
+                    <td class="text-right">@session.TurksPayment.ToString("0.00") zł</td>
                 </tr>
             }
         </tbody>
