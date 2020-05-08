@@ -272,7 +272,7 @@ else
     private void ChangeMyOffer(int increment)
     {
         if (myOffer is null)
-            myOffer = 10;
+            myOffer = game.Game.Surplus / 2;
         myOffer = Math.Clamp((int)myOffer + increment, 0, game.Game.Surplus);
     }
 }
