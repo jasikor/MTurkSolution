@@ -44,10 +44,10 @@ else
                         <div class="container">
                             @if (gameTimedOut || game.PartnersAgreed)
                             {
-                                <div class="d-flex justify-content-center">
-                                    <p>You won @totalBarsNegotiated gold bars so far.</p>
-                                    <button type="button" class="btn btn-primary ml-4" @onclick="@OnNextGame">Next game</button>
-                                </div>
+                            <div class="d-flex justify-content-center">
+                                <p>You have collected @totalBarsNegotiated bars so far.</p>
+                                <button type="button" class="btn btn-primary ml-4" @onclick="@OnNextGame">Next game</button>
+                            </div>
                             }
                             else
                             {
