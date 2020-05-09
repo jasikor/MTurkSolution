@@ -49,19 +49,21 @@ else
                 <th>WorkerID</th>
                 <th>Games Finished</th>
                 <th>Bars Collected</th>
+                <th>Dollars/Bar</th>
                 <th>Payment</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var session in sessions)
             {
-                <tr>
-                    <td>@session.Time.ToString() </td>
-                    <td>@session.WorkerId</td>
-                    <td class="text-right">@session.GamesPlayed</td>
-                    <td class="text-right">@session.TotalProfit</td>
-                    <td class="text-right">@session.TurksPayment.ToString("0.00") zł</td>
-                </tr>
+            <tr>
+                <td>@session.Time.ToString() </td>
+                <td>@session.WorkerId</td>
+                <td class="text-right">@session.GamesPlayed</td>
+                <td class="text-right">@session.TotalProfit</td>
+                <td class="text-right">@session.DollarsPerBar.ToString("0.00")</td>
+                <td class="text-right">@session.TurksPayment.ToString("0.00") zł</td>
+            </tr>
             }
         </tbody>
     </table>
