@@ -1,4 +1,4 @@
-﻿@page "/instructions/{sessionId}"
+﻿@page "/screenshot/{sessionId}"
 
 <div class="d-flex justify-content-center">
     <h3>Gold Bar Game Rules</h3>
@@ -6,11 +6,10 @@
 <div class="d-flex justify-content-center">
     <div class="card mt-4">
         <div class="p-4">
-            <Rules/>
+            <img class="w-75" src="/SampleDialog.png" />
         </div>
         <div class="card-footer">
-            Next page shows a sample screenshot of the negotiation dialogue. 
-            <a class="btn btn-primary" href="/screenshot/@sessionId">Next</a>
+            <a class="btn btn-primary" href="/game/@sessionId">Start playing</a>
         </div>
     </div>
 </div>
