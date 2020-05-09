@@ -20,12 +20,12 @@
             <div class="card-body p-2">
                 @if (move.OfferAccepted)
                 {
-                    <p class="card-text black-text"><small>Partner:</small><br />I accept your offer. You get @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text"><small>Partner:</small><br />I accept your offer. You get <span class="badge badge-success" style="font-size:1.5rem">@move.ProposedAmount</span> bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
                     <p class="card-text black-text">Thank you :)</p>
                 }
                 else
                 {
-                    <p class="card-text black-text"><small>Partner:</small><br /> I can give you @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text"><small>Partner:</small><br /> I can give you <span class="badge badge-success" style="font-size:1.5rem">@move.ProposedAmount</span> bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
                 }
             </div>
         </div>
@@ -51,8 +51,8 @@
         <div class="card bg-warning text-dark rounded w-100 float-right z-depth-0 mb-1">
             <div class="card-body p-2">
                 <p class="card-text">
-                    <small>System:</small><br /> Time is up! <br />You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get @Game.Game.TurksDisValue gold bars only.
-                </p>
+                    <small>System:</small><br /> Time is up! <br />You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get <span class="badge badge-success" style="font-size:1.5rem">@Game.Game.TurksDisValue</span> gold bars only.
+</p>
             </div>
         </div>
 
