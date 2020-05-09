@@ -2,12 +2,12 @@
     <div class="card-body p-2">
         @if (!Game.Game.MachineStarts)
         {
-            <p class="card-text black-text">Hello there!<br />So how do you think we can split up @Game.Game.Surplus  gold bars between two of us?</p>
+            <p class="card-text black-text"><small>Partner:</small><br /> Hello there!<br />So how do you think we can split up @Game.Game.Surplus  gold bars between two of us?</p>
             <p class="card-text black-text">How many bars do you want?</p>
         }
         else
         {
-            <p class="card-text black-text">Hello there!</p>
+            <p class="card-text black-text"><small>Partner:</small><br /> Hello there!</p>
         }
     </div>
 </div>
@@ -20,12 +20,12 @@
             <div class="card-body p-2">
                 @if (move.OfferAccepted)
                 {
-                    <p class="card-text black-text">I accept your offer. You get @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text"><small>Partner:</small><br />I accept your offer. You get @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
                     <p class="card-text black-text">Thank you :)</p>
                 }
                 else
                 {
-                    <p class="card-text black-text">I can give you @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
+                    <p class="card-text black-text"><small>Partner:</small><br /> I can give you @move.ProposedAmount bars. I will keep @(Game.Game.Surplus-move.ProposedAmount) bars.</p>
                 }
             </div>
         </div>
@@ -36,12 +36,12 @@
             <div class="card-body p-2">
                 @if (move.OfferAccepted)
                 {
-                    <p class="card-text text-white">I accept your offer. I keep  @move.ProposedAmount bars and you get @(Game.Game.Surplus - move.ProposedAmount).</p>
+                    <p class="card-text text-white"><small>Me:</small><br /> I accept your offer. I keep  @move.ProposedAmount bars and you get @(Game.Game.Surplus - move.ProposedAmount).</p>
                     <p class="card-text black-text">Thank you :)</p>
                 }
                 else
                 {
-                    <p class="card-text text-white">I want @move.ProposedAmount bars. You will get @(Game.Game.Surplus - move.ProposedAmount)</p>
+            <p class="card-text text-white"><small>Me:</small><br /> I want @move.ProposedAmount bars. You will get @(Game.Game.Surplus - move.ProposedAmount)</p>
                 }
             </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="card bg-warning text-dark rounded w-100 float-right z-depth-0 mb-1">
             <div class="card-body p-2">
                 <p class="card-text">
-                    Time is up! <br />You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get @Game.Game.TurksDisValue gold bars only.
+                    <small>System:</small><br /> Time is up! <br />You could not  agree with your partner in @(Game.Game.TimeOut) seconds, so you get @Game.Game.TurksDisValue gold bars only.
                 </p>
             </div>
         </div>
