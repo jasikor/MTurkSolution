@@ -14,7 +14,5 @@ namespace MTurk.Data
         Task<GameInfo> StartNewGame(string workerId);
         Task SaveMove(MoveModel move);
         Task FinishGame(GameModel game);
-
-
     }
 }
