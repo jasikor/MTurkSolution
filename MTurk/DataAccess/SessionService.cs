@@ -39,7 +39,7 @@ namespace MTurk.Data
         public Task<List<SessionInfo>> GetAHandfullOfLastSessionsAsync()
         {
             string sql =
-                  @"select s.[Time], s.WorkerId, g.totalProfit, g.gamesPlayed from sessions s
+                  @"select s.[Time], s.WorkerId, s.DollarsPerBar, g.totalProfit, g.gamesPlayed from sessions s
                     inner join 
                         (select Games.SessionId, sum(Games.TurksProfit) as totalProfit, count(Id) as gamesPlayed 
                         from games 

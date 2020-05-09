@@ -10,6 +10,7 @@ namespace MTurk.Data
         public int Id { get; set; }
         public string WorkerId { get; set; }
         public DateTime Time { get; set; }
+        public double DollarsPerBar { get; set; }
         public SessionModel()
         {
             WorkerId = "<UNKNOWN>";
