@@ -23,16 +23,17 @@ namespace MTurk.Data
 
         public async Task<SessionModel> StartNewSession(string workerId)
         {
-
             string sql = @"select * from Sessions where WorkerId = @WorkerId";
             SessionModel sm = await _db.LoadDataSingle<dynamic, SessionModel>(sql, new { WorkerId = workerId });
             if (sm != null)
                 return sm;
-            sql = @"insert into dbo.Sessions (WorkerId, Time)
+            var dollarsPerBar = await GetDollarsPerBar();
+
+            sql = @"insert into dbo.Sessions (WorkerId, Time, DollarsPerBar)
                            output inserted.*
-                           values (@WorkerId, @Time)";
+                           values (@WorkerId, @Time, @DollarsPerBar)";
             DateTime utcNow = DateTime.UtcNow;
-            sm = new SessionModel() { WorkerId = workerId.ToUpper(), Time = utcNow };
+            sm = new SessionModel() { WorkerId = workerId.ToUpper(), Time = utcNow , DollarsPerBar = dollarsPerBar};
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
@@ -200,6 +201,18 @@ namespace MTurk.Data
 
 
             return await _db.LoadDataList<QueryRows, dynamic>(sql, new { NumberOfGames = numberOfGames });
+        }
+
+        private async Task<double> GetDollarsPerBar()
+        {
+            string sql = @"select * from Settings where [Key] = 'DollarsPerBar'";
+            var dollarsPerBar = await _db.LoadDataSingle<dynamic, SettingsModel>(sql, new {  });
+            double res;
+            if (Double.TryParse(dollarsPerBar.Value, out res))
+                return res;
+            else
+                return 0.05;
+
         }
     }
 
