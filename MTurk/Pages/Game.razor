@@ -55,26 +55,28 @@ else
                                 <div class="row justify-content-between">
                                     <div class="col-8">
                                         I want
-                                        @if (myOffer is null)
-                                        {
-                                            <span style="font-size:4rem;" class="ml-2"> ?? </span>
-                                        }
-                                        else
-                                        {
-                                            <span style="font-size:4rem;" class="ml-2"> @myOffer </span>
-                                        }
-                                        <span class="btn-group-vertical align-text-bottom mr-4">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(+1))">
-                                                <svg class="bi bi-caret-up-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z" />
-                                                </svg>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(-1))">
-                                                <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z" />
-                                                </svg>
-                                            </button>
-                                        </span>
+                                        <div class="badge badge-light" style="font-size:1.5rem">
+                                            @if (myOffer is null)
+                                            {
+                                                <span style="font-size:4rem;" class="ml-2"> ?? </span>
+                                            }
+                                            else
+                                            {
+                                                <span style="font-size:4rem;" class="ml-2"> @myOffer </span>
+                                            }
+                                            <span class="btn-group-vertical align-text-bottom mr-4">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(+1))">
+                                                    <svg class="bi bi-caret-up-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z" />
+                                                    </svg>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(() => ChangeMyOffer(-1))">
+                                                    <svg class="bi bi-caret-down-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z" />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </div>
                                         <span> gold bars</span>
                                         @if (myOffer != null)
                                         {
