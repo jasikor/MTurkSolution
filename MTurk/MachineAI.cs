@@ -32,7 +32,7 @@ namespace MTurk
             var first = Math.Min((int)machineLastOffer, surplus - machineDisValue);
             var last = Math.Min((int)workerLastDemand, surplus - machineDisValue);
 
-            var dist = new double[last - first];
+            var dist = new double[last - first + 1];
 
             for (int i = 0; i < dist.Length; i++)
             {
@@ -47,7 +47,7 @@ namespace MTurk
 
             Debug.Assert(Math.Abs(dist.Sum() - 1.0) < 0.00000001);
 
-            var cumDist = new double[last - first];
+            var cumDist = new double[dist.Length];
             double prob = 0.0;
             for (int i = 0; i < cumDist.Length; i++)
             {
