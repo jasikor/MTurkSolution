@@ -36,7 +36,7 @@ namespace MTurk
 
             for (int i = 0; i < dist.Length; i++)
             {
-                var val = Math.Exp(-stubborn * (first + last) * (i + first) / last);
+                var val = Math.Exp(-stubborn * (machineDisValue + first + last) * (i + first) / last);
                 Debug.WriteLine($"val = {val}");
                 dist[i] = val;
             }
@@ -65,7 +65,7 @@ namespace MTurk
 
             Debug.Assert(aIOffer >= 0 && aIOffer <= surplus);
 
-            if (rnd.NextDouble() < 0.1 && machineLastOffer >= 1)
+            if (rnd.NextDouble() < 0.2 && machineLastOffer >= 1)
                 aIOffer = (int)machineLastOffer - 1;
 
             return aIOffer;
