@@ -8,9 +8,11 @@ namespace MTurk.UIModels
 {
     public class Worker
     {
+        private const string errorMessage = "Worker ID is too short, should be between 13 and 14 characters";
+
         [Required]
-        [StringLength(14, ErrorMessage = "Worker ID is too long, should be 14 characters")]
-        [MinLength(14, ErrorMessage = "Worker ID is too short, should be 14 characters")]
+        [StringLength(14, ErrorMessage = errorMessage)]
+        [MinLength(13, ErrorMessage = errorMessage)]
         public string WorkerId { get; set; } = "";
     }
 }
