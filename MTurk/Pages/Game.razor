@@ -46,6 +46,7 @@ else
                             @if (gameTimedOut || game.PartnersAgreed)
                             {
                             <div class="d-flex justify-content-center">
+                                <p>You have collected @totalBarsNegotiated bars so far.</p>
                                 <button type="button" class="btn btn-primary ml-4" @onclick="@OnNextGame">Next game</button>
                             </div>
                             }
@@ -129,12 +130,13 @@ else
 
     private int? myOffer;
     private int timeOut;
+    private int totalBarsNegotiated = 0;
 
     private async Task InitializeGame()
     {
         if (game is null)
         {
-            NavigationManager.NavigateTo($"thankyou/{sessionId}");
+            NavigationManager.NavigateTo($"thankyou/{sessionId}/{totalBarsNegotiated}");
             return;
         }
         myOffer = null;
@@ -206,6 +208,8 @@ else
         var lastMove = game.Moves[game.Moves.Count - 1];
         game.PartnersAgreed = lastMove.OfferAccepted;
         game.Game.TurksProfit = lastMove.ProposedAmount;
+        if (game.PartnersAgreed)
+            totalBarsNegotiated += (int)game.Game.TurksProfit;
         if (game.PartnersAgreed || move.MoveBy == "SYST")
         {
             await sessionService.FinishGame(game.Game);
