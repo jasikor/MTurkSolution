@@ -87,7 +87,7 @@ else
                                     <div class="col-2">
                                         @if (myOffer != null)
                                         {
-                                            <button type="button" class="btn btn-primary" @onclick="@MakeAnOffer">Send</button>
+                                            <button type="button" class="btn btn-primary" disabled="@isDisabled" @onclick="@MakeAnOffer">Send</button>
                                         }
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@ else
                                             Or accept the offer and get @MachinesLastOffer() gold bars
                                         </div>
                                         <div class="col-2">
-                                            <button type="button" class="btn btn-primary" @onclick="@AcceptMachinesOffer">Accept</button>
+                                            <button type="button" class="btn btn-primary" disabled="@isDisabled" @onclick="@AcceptMachinesOffer">Accept</button>
                                         </div>
                                     </div>
                                 }
@@ -131,6 +131,8 @@ else
     private int? myOffer;
     private int timeOut;
     private int totalBarsNegotiated = 0;
+
+    private bool isDisabled = false;
 
     private async Task InitializeGame()
     {
@@ -184,6 +186,7 @@ else
 
     private async Task MakeAnOffer(bool turksOffer, int amount)
     {
+        isDisabled = true;
         MoveModel move = new MoveModel()
         {
             MoveBy = turksOffer ? "TURK" : "SYST",
@@ -214,6 +217,7 @@ else
         {
             await sessionService.FinishGame(game.Game);
         }
+        isDisabled = false;
     }
 
     private int? MachinesLastOffer()
