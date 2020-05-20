@@ -45,10 +45,10 @@ else
                         <div class="container">
                             @if (gameTimedOut || game.PartnersAgreed)
                             {
-                            <div class="d-flex justify-content-center">
-                                <p>You have collected @totalBarsNegotiated bars so far.</p>
-                                <button type="button" class="btn btn-primary ml-4" @onclick="@OnNextGame">Next game</button>
-                            </div>
+                                <div class="d-flex justify-content-center">
+                                    <p>You have collected @totalBarsNegotiated bars so far.</p>
+                                    <button type="button" class="btn btn-primary ml-4" @onclick="@OnNextGame">Next game</button>
+                                </div>
                             }
                             else
                             {
@@ -103,6 +103,16 @@ else
                                         </div>
                                     </div>
                                 }
+
+                                <hr />
+                                <div class="row justify-content-between">
+                                    <div class="col-8">
+                                        Or stop negotiating now and get <span class="badge badge-secondary" style="font-size:1.5rem">@game.Game.TurksDisValue</span> gold bars
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-primary" disabled="@isDisabled" @onclick="@TerminateGame">Stop</button>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>
@@ -177,6 +187,7 @@ else
     private async Task MakeAnOffer() => await MakeAnOffer(true, (int)myOffer);
 
     private async Task AcceptMachinesOffer() => await MakeAnOffer(true, (int)MachinesLastOffer());
+    private async Task TerminateGame() => await MakeAnOffer(true, -2);
 
     private async Task SaveMove(MoveModel move)
     {
@@ -191,7 +202,7 @@ else
         {
             MoveBy = turksOffer ? "TURK" : "SYST",
             ProposedAmount = amount,
-            OfferAccepted = turksOffer && MachinesLastOffer() == amount || amount == -1,
+            OfferAccepted = turksOffer && MachinesLastOffer() == amount || amount < 0,
             GameId = game.Game.Id,
         };
         await SaveMove(move);
@@ -210,7 +221,7 @@ else
         Debug.Assert(game.Moves.Count > 0);
         var lastMove = game.Moves[game.Moves.Count - 1];
         game.PartnersAgreed = lastMove.OfferAccepted;
-        game.Game.TurksProfit = lastMove.ProposedAmount == -1 ? game.Game.TurksDisValue : lastMove.ProposedAmount;
+        game.Game.TurksProfit = lastMove.ProposedAmount < 0 ? game.Game.TurksDisValue : lastMove.ProposedAmount;
         if (game.PartnersAgreed)
             totalBarsNegotiated += (int)game.Game.TurksProfit;
         if (game.PartnersAgreed || move.MoveBy == "SYST")
