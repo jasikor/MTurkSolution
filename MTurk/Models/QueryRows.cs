@@ -18,6 +18,8 @@ namespace MTurk.Models
         public bool MachineStarts;
         public string WorkerId;
         public int ProposedAmount;
+        public string MoveBy;
+
         public override string ToString()
         {
             return $"{Id} {WorkerId} {StartTime} {EndTime} {Surplus} {TurksDisValue} {MachineDisValue} {TimeOut} {Stubborn} {(MachineStarts ? 1 : 0)} ";

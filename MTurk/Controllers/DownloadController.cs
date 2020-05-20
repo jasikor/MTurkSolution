@@ -54,7 +54,7 @@ namespace MTurk.Controllers
                     if (i >= rows.Count)
                         return res.ToString();
                     if (rows[currentGame].Id == rows[i].Id)
-                        res.Append($"{rows[i].ProposedAmount} ");
+                        res.Append($"{{{rows[i].MoveBy[0]},{rows[i].ProposedAmount}}} ");
                     else
                     {
                         res.AppendLine();
