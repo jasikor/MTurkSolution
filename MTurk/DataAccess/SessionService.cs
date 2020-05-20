@@ -185,7 +185,7 @@ namespace MTurk.Data
 
         public async Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames)
         {
-            string sql = @"select g.*, s.WorkerId, m.ProposedAmount 
+            string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
                            from(
                             select * 
                             from games 
