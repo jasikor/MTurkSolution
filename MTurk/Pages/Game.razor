@@ -191,7 +191,7 @@ else
         {
             MoveBy = turksOffer ? "TURK" : "SYST",
             ProposedAmount = amount,
-            OfferAccepted = turksOffer && MachinesLastOffer() == amount,
+            OfferAccepted = turksOffer && MachinesLastOffer() == amount || amount == -1,
             GameId = game.Game.Id,
         };
         await SaveMove(move);
@@ -210,7 +210,7 @@ else
         Debug.Assert(game.Moves.Count > 0);
         var lastMove = game.Moves[game.Moves.Count - 1];
         game.PartnersAgreed = lastMove.OfferAccepted;
-        game.Game.TurksProfit = lastMove.ProposedAmount;
+        game.Game.TurksProfit = lastMove.ProposedAmount == -1 ? game.Game.TurksDisValue : lastMove.ProposedAmount;
         if (game.PartnersAgreed)
             totalBarsNegotiated += (int)game.Game.TurksProfit;
         if (game.PartnersAgreed || move.MoveBy == "SYST")
@@ -233,7 +233,7 @@ else
     public async Task OnTimeOut()
     {
         gameTimedOut = true;
-        await MakeAnOffer(false, game.Game.TurksDisValue);
+        await MakeAnOffer(false, -1);
         StateHasChanged();
     }
     private async void OnNextGame()
