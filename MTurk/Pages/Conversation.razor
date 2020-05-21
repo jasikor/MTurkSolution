@@ -12,8 +12,9 @@
     </div>
 </div>
 
-@foreach (var move in Game.Moves)
+@for (int i = 0; i < Game.Moves.Count; i++)
 {
+    var move = Game.Moves[i];
     @if (move.MoveBy == "MACH")
     {
         <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
@@ -52,6 +53,14 @@
                 }
             </div>
         </div>
+        @if (i == Game.Moves.Count - 1 && !Game.PartnersAgreed)
+        {
+            <div class="card bg-light rounded w-75 z-depth-0 mb-1 message-text">
+                <div class="card-body p-2">
+                    <p class="card-text black-text">...</p>
+                </div>
+            </div>
+        }
     }
     else if (move.MoveBy == "SYST")
     {
