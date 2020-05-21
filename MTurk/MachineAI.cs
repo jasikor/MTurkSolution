@@ -20,7 +20,7 @@ namespace MTurk
         public static int GetMachinesOffer(int surplus, double stubborn, int machineDisValue, int? workerLastDemand, int? machineLastOffer)
         {
             if (machineLastOffer is null)
-                machineLastOffer = 1;
+                machineLastOffer = RandomInteger(1, 5);
             if (workerLastDemand is null)
                 workerLastDemand = surplus;
             Debug.Assert(machineLastOffer >= 0 && machineLastOffer <= surplus);
