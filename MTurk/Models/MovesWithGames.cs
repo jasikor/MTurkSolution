@@ -8,6 +8,7 @@ namespace MTurk.Models
     public class MovesWithGames
     {
         public int Id;
+        public int SessionId;
         public DateTime StartTime;
         public DateTime EndTime;
         public int Surplus;
@@ -16,6 +17,7 @@ namespace MTurk.Models
         public int TimeOut;
         public double Stubborn;
         public bool MachineStarts;
+        public int? TurksProfit;
         public string WorkerId;
         public int ProposedAmount;
         public string MoveBy;
