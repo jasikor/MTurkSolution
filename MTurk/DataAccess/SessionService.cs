@@ -183,7 +183,7 @@ namespace MTurk.Data
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
-        public async Task<List<QueryRows>> GetGamesWithMoves(int numberOfGames)
+        public async Task<List<MovesWithGames>> GetMovesWithGames(int numberOfGames)
         {
             string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
                            from(
@@ -200,7 +200,7 @@ namespace MTurk.Data
                             order by g.Id desc, m.Id";
 
 
-            return await _db.LoadDataList<QueryRows, dynamic>(sql, new { NumberOfGames = numberOfGames });
+            return await _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames });
         }
 
         private async Task<double> GetDollarsPerBar()

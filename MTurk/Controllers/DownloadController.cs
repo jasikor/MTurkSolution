@@ -41,7 +41,7 @@ namespace MTurk.Controllers
 
         private async Task<string> GetContent(int numberOfGames)
         {
-            List<QueryRows> rows = await _sessionService.GetGamesWithMoves(numberOfGames);
+            List<MovesWithGames> rows = await _sessionService.GetMovesWithGames(numberOfGames);
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             StringBuilder res = new StringBuilder();

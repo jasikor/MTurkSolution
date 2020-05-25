@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.Models
 {
-    public class QueryRows
+    public class MovesWithGames
     {
         public int Id;
         public DateTime StartTime;
