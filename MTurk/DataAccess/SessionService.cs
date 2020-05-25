@@ -183,7 +183,7 @@ namespace MTurk.Data
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
-        public async Task<List<MovesWithGames>> GetMovesWithGames(int numberOfGames)
+        public async Task<List<MovesWithGames>> GetMovesWithGames(int numberOfGames, int firstRow = 0)
         {
             string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
                            from(
@@ -191,7 +191,7 @@ namespace MTurk.Data
                             from games 
                             where EndTime is not null 
                             order by id desc
-                            offset 0 rows 
+                            offset @FirstRow rows 
                             fetch first @NumberOfGames row only) as g
                            left join Sessions s 
                             on s.Id = g.SessionId
@@ -200,7 +200,7 @@ namespace MTurk.Data
                             order by g.Id desc, m.Id";
 
 
-            return await _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames });
+            return await _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames, FirstRow = firstRow });
         }
 
         private async Task<double> GetDollarsPerBar()
@@ -214,6 +214,7 @@ namespace MTurk.Data
                 return 0.05;
 
         }
+
     }
 
 }
