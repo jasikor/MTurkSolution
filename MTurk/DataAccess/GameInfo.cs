@@ -9,6 +9,12 @@ namespace MTurk.Data
         public List<MoveModel> Moves;
         public GameModel Game;
         public bool PartnersAgreed;
+        public bool AreLastTwoMovesEqual()
+        {
+            if (Moves.Count < 2)
+                return false;
+            return Moves[Moves.Count - 1].ProposedAmount == Moves[Moves.Count - 2].ProposedAmount;
+        }
         public bool IsValid()
         {
             if (Game.TurksProfit is null)
@@ -16,6 +22,8 @@ namespace MTurk.Data
             if (Moves.Count == 0)
                 return false;
             if (Moves.Count == 1 && !Game.MachineStarts)
+                return false;
+            if (Game.TurksProfit is null)
                 return false;
             for (int i = 0; i < Moves.Count - 1; i++)
             {

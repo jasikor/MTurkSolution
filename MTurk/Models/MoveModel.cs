@@ -13,5 +13,9 @@ namespace MTurk.Data
         public string MoveBy { get; set; }
         public int ProposedAmount { get; set; }
         public bool OfferAccepted { get; set; }
+        public override string ToString()
+        {
+            return $"{MoveBy[0]}:{ProposedAmount}";
+        }
     }
 }

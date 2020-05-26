@@ -50,6 +50,11 @@ namespace MTurk.Controllers
                 if (!row.IsValid())
                     continue;
                 res.Append($"GameId:{row.Game.Id} ");
+                int machProfit = row.AreLastTwoMovesEqual() ?
+                                    row.Game.Surplus - (int)row.Game.TurksProfit :
+                                    row.Game.MachineDisValue;
+                res.Append($"MProfit:{machProfit} ");
+
                 res.Append($"MDis:{row.Game.MachineDisValue} ");
                 res.Append($"MStarts:{(row.Game.MachineStarts ? 1 : 0)} ");
                 res.Append($"NOfMoves:{row.Moves.Count} ");
@@ -63,14 +68,14 @@ namespace MTurk.Controllers
                 res.AppendLine("TConc    MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast");
                 Debug.Assert(row.Moves.Count > 0);
                 i = row.Game.MachineStarts ? 0 : 1;
-                for(; i < row.Moves.Count; i+=2)
+                for (; i < row.Moves.Count; i += 2)
                 {
                     res.AppendFormat("{0,7}", row.TurksLastConcession(i));
-                    res.AppendFormat("{0,7}",  row.MachinesLastConcession(i));
+                    res.AppendFormat("{0,7}", row.MachinesLastConcession(i));
                     res.AppendFormat("{0,7}", row.TurksFirst());
                     res.AppendFormat("{0,7}", row.MachinesFirst());
                     res.AppendFormat("{0,7}", row.TurksLast1(i));
-                    res.AppendFormat("{0,7}",  row.MachinesLast1(i));
+                    res.AppendFormat("{0,7}", row.MachinesLast1(i));
                     res.AppendFormat("{0,7}", row.TurksLast(i));
                     res.AppendFormat("{0,7}", row.MachinesLast(i));
                     res.AppendLine();
