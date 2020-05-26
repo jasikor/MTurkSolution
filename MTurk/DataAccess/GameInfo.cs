@@ -28,8 +28,34 @@ namespace MTurk.Data
             if (index >= 0)
                 Moves.RemoveRange(index, Moves.Count - index);
         }
-        public int TurksLastConcession(int upToMove) => -3;
-        public int MachinesLastConcession(int upToMove) => -5;
+        public int TurksLastConcession(int i)
+        {
+            i--;
+            int res = -1;
+            for (; i - 2 >= 0; i -= 2)
+            {
+                if (Moves[i].ProposedAmount < Moves[i - 2].ProposedAmount)
+                {
+                    res = i;
+                    break;
+                }
+            }
+            return res;
+        }
+
+        public int MachinesLastConcession(int i)
+        {
+            int res = -1;
+            for(; i-2 >= 0; i -= 2)
+            {
+                if (Moves[i].ProposedAmount > Moves[i - 2].ProposedAmount)
+                {
+                    res = i;
+                    break;
+                }
+            }
+            return res;
+        }
 
         public int TurksFirst()
         {
