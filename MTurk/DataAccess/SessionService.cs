@@ -215,6 +215,7 @@ namespace MTurk.Data
                 var row = movesWithGames[currentGame];
                 res.Add(new GameInfo()
                 {
+                    WorkerId = row.WorkerId,
                     Game = new GameModel()
                     {
                         Id = row.Id,
@@ -230,7 +231,7 @@ namespace MTurk.Data
                         TurksProfit = row.TurksProfit
                     },
                     Moves = new List<MoveModel>(),
-                });
+                });;
 
                 for (int i = currentGame; ; i++)
                 {

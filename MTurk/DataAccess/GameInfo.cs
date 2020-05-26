@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTurk.UIModels;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace MTurk.Data
 {
     public class GameInfo
     {
+        public string WorkerId;
         public List<MoveModel> Moves;
         public GameModel Game;
         public bool PartnersAgreed;
@@ -25,11 +27,14 @@ namespace MTurk.Data
                 return false;
             if (Game.TurksProfit is null)
                 return false;
+            if (WorkerId[0] != 'A')
+                return false;
             for (int i = 0; i < Moves.Count - 1; i++)
             {
                 if (Moves[i].MoveBy == Moves[i + 1].MoveBy)
                     return false;
             }
+
             return true;
         }
         public void TrimMoves()
