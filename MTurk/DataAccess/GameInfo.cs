@@ -15,6 +15,8 @@ namespace MTurk.Data
                 return false;
             if (Moves.Count == 0)
                 return false;
+            if (Moves.Count == 1 && !Game.MachineStarts)
+                return false;
             for (int i = 0; i < Moves.Count - 1; i++)
             {
                 if (Moves[i].MoveBy == Moves[i + 1].MoveBy)
