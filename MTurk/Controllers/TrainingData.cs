@@ -46,8 +46,10 @@ namespace MTurk.Controllers
             StringBuilder res = new StringBuilder();
             foreach (var row in rows)
             {
+                row.TrimMoves();
                 if (!row.IsValid())
                     continue;
+                res.Append($"GameId:{row.Game.Id} ");
                 res.Append($"MDis:{row.Game.MachineDisValue} ");
                 res.Append($"MStarts:{(row.Game.MachineStarts ? 1 : 0)} ");
                 res.Append($"NOfMoves:{row.Moves.Count} ");
