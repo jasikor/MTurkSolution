@@ -57,7 +57,6 @@ namespace MTurk.Controllers
 
                 res.Append($"MDis:{row.Game.MachineDisValue} ");
                 res.Append($"MStarts:{(row.Game.MachineStarts ? 1 : 0)} ");
-                res.Append($"NOfMoves:{row.Moves.Count} ");
                 int i;
                 for (i = 0; i < row.Moves.Count; i++)
                 {
@@ -65,12 +64,13 @@ namespace MTurk.Controllers
                     res.Append($"{move.MoveBy[0]}:{move.ProposedAmount} ");
                 }
                 res.AppendLine();
-                res.AppendLine("TConc    MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast");
+                res.AppendLine("Moves TConc  MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast");
                 Debug.Assert(row.Moves.Count > 0);
                 i = row.Game.MachineStarts ? 0 : 1;
                 for (; i < row.Moves.Count; i += 2)
                 {
-                    res.AppendFormat("{0,7}", row.TurksLastConcession(i));
+                    res.AppendFormat("{0,4}", i);
+                    res.AppendFormat("{0,6}", row.TurksLastConcession(i));
                     res.AppendFormat("{0,7}", row.MachinesLastConcession(i));
                     res.AppendFormat("{0,7}", row.TurksFirst());
                     res.AppendFormat("{0,7}", row.MachinesFirst());
