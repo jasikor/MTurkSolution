@@ -60,18 +60,19 @@ namespace MTurk.Controllers
                     res.Append($"{move.MoveBy[0]}:{move.ProposedAmount} ");
                 }
                 res.AppendLine();
+                res.AppendLine("TConc    MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast");
                 Debug.Assert(row.Moves.Count > 0);
                 i = row.Game.MachineStarts ? 0 : 1;
                 for(; i < row.Moves.Count; i+=2)
                 {
-                    res.Append($"  TConc:{row.TurksLastConcession(i)} ");
-                    res.Append($"MConc:{row.MachinesLastConcession(i)} ");
-                    res.Append($"TFirst:{row.TurksFirst()} ");
-                    res.Append($"MFirst:{row.MachinesFirst()} ");
-                    res.Append($"TLast1:{row.TurksLast1(i)} ");
-                    res.Append($"MLast1:{row.MachinesLast1(i)} ");
-                    res.Append($"TLast:{row.TurksLast(i)} ");
-                    res.Append($"MLast:{row.MachinesLast(i)} ");
+                    res.AppendFormat("{0,7}", row.TurksLastConcession(i));
+                    res.AppendFormat("{0,7}",  row.MachinesLastConcession(i));
+                    res.AppendFormat("{0,7}", row.TurksFirst());
+                    res.AppendFormat("{0,7}", row.MachinesFirst());
+                    res.AppendFormat("{0,7}", row.TurksLast1(i));
+                    res.AppendFormat("{0,7}",  row.MachinesLast1(i));
+                    res.AppendFormat("{0,7}", row.TurksLast(i));
+                    res.AppendFormat("{0,7}", row.MachinesLast(i));
                     res.AppendLine();
 
                 }
