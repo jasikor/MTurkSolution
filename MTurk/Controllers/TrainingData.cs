@@ -53,13 +53,28 @@ namespace MTurk.Controllers
                 res.Append($"MDis:{row.Game.MachineDisValue} ");
                 res.Append($"MStarts:{(row.Game.MachineStarts ? 1 : 0)} ");
                 res.Append($"NOfMoves:{row.Moves.Count} ");
-
-                for (int i = 0; i < row.Moves.Count; i++)
+                int i;
+                for (i = 0; i < row.Moves.Count; i++)
                 {
                     var move = row.Moves[i];
                     res.Append($"{move.MoveBy[0]}:{move.ProposedAmount} ");
                 }
                 res.AppendLine();
+                Debug.Assert(row.Moves.Count > 0);
+                i = row.Game.MachineStarts ? 0 : 1;
+                for(; i < row.Moves.Count; i+=2)
+                {
+                    res.Append($"  TConc:{row.TurksLastConcession(i)} ");
+                    res.Append($"MConc:{row.MachinesLastConcession(i)} ");
+                    res.Append($"TFirst:{row.TurksFirst()} ");
+                    res.Append($"MFirst:{row.MachinesFirst()} ");
+                    res.Append($"TLast1:{row.TurksLast1(i)} ");
+                    res.Append($"MLast1:{row.MachinesLast1(i)} ");
+                    res.Append($"TLast:{row.TurksLast(i)} ");
+                    res.Append($"MLast:{row.MachinesLast(i)} ");
+                    res.AppendLine();
+
+                }
             }
             return res.ToString();
         }
