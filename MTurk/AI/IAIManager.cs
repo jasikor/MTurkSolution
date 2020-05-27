@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.AI
 {
-    interface IAIManager
+    public interface IAIManager
     {
         INeuralNetwork GetNetwork();
         Task<TrainingSessionResult> TrainAsync(ITrainingDataset data, ITestDataset testData);

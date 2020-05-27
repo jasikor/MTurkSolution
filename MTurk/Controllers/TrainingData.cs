@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MTurk.AI;
 using MTurk.Data;
 using MTurk.Models;
+using NeuralNetworkNET.APIs.Interfaces.Data;
+using NeuralNetworkNET.APIs.Results;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,10 +18,21 @@ namespace MTurk.Controllers
     public class TrainingData : ControllerBase
     {
         private readonly ISessionService _sessionService;
+        private readonly ITrainingDataLoader _trainingDataLoader;
+        private readonly IAIManager _aIManager;
+
+        public TrainingData(ISessionService sessionService, ITrainingDataLoader trainingDataLoader, IAIManager aIManager)
+        {
+            _sessionService = sessionService;
+            _trainingDataLoader = trainingDataLoader;
+            _aIManager = aIManager;
+        }
 
         [HttpGet]
         public async Task<ActionResult> Get(int counter)
         {
+            ITrainingDataset trainingDataset = await _trainingDataLoader.GetTrainingDatasetAsync(counter);
+            TrainingSessionResult res = await _aIManager.TrainAsync(trainingDataset, null);
 
             var content = await GetContent(counter);
             var stream = GenerateStreamFromString(content);
@@ -85,9 +99,6 @@ namespace MTurk.Controllers
             return res.ToString();
         }
 
-        public TrainingData(ISessionService sessionService)
-        {
-            _sessionService = sessionService;
-        }
+        
     }
 }
