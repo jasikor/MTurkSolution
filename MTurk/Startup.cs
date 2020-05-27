@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MTurk.AI;
 using MTurk.Data;
 using MTurk.DataAccess;
 using MTurk.SQLDataAccess;
+using System.IO;
 
 namespace MTurk
 {
@@ -24,6 +26,8 @@ namespace MTurk
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddTransient<INetworkStorage, DiskNetworkStorage>();
+            services.AddSingleton<IAIManager, AIManager>();
             services.AddTransient<ISqlDataAccess, SqlDataAccess >();
             services.AddTransient<ISessionService, SessionService>();
             services.AddTransient<IGameParametersService, GameParametersService>();
