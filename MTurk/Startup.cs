@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MTurk.AI;
+using MTurk.Algo;
 using MTurk.Data;
 using MTurk.DataAccess;
 using MTurk.SQLDataAccess;
@@ -26,6 +27,7 @@ namespace MTurk
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddTransient<IMoveEngine, NeuralNetworkMoveEngine>();
             services.AddTransient<ITrainingDataLoader, TrainingDataLoader>();
             services.AddTransient<INetworkStorage, DiskNetworkStorage>();
             services.AddSingleton<IAIManager, AIManager>();
