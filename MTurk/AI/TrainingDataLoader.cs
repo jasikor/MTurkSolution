@@ -32,9 +32,9 @@ namespace MTurk.AI
         {
             await LoadData();
 
-            float[,] X = new float[data.Count,11];
+            float[,] X = new float[data.Count, 11];
             float[,] Y = new float[data.Count, 21];
-            for(int i = 0; i < data.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
                 for (int j = 0; j < 11; j++)
                     X[i, j] = data[i].Item1[j];
@@ -42,16 +42,17 @@ namespace MTurk.AI
                     Y[i, j] = data[i].Item2[j];
             }
             (float[,] X, float[,] Y) d = (X, Y);
+            int batchSize = 512;
             return d.X == null || d.Y == null
                 ? null
-                : DatasetLoader.Training(d, size);
+                : DatasetLoader.Training(d, batchSize);
         }
 
         private async Task LoadData()
         {
             if (data.Count == 0)
             {
-                var rows = await _sessionService.GetGameInfosAsync(1000);
+                var rows = await _sessionService.GetGameInfosAsync(100000);
                 if (rows.Count == 0)
                     return;
                 foreach (var row in rows)
@@ -63,31 +64,32 @@ namespace MTurk.AI
 
                     int i;
                     Debug.Assert(row.Moves.Count > 0);
-                    i = row.Game.MachineStarts ? 0 : 1;
-                    float[] x = new float[11];
-                    for (; i < row.Moves.Count; i += 2)
-                    {
-                         x = new float[11] {
-                                row.Game.MachineDisValue,
-                                row.Game.MachineStarts ? 1 : 0,
-                                i,
-                                row.TurksLastConcession(i),
-                                row.MachinesLastConcession(i),
-                                row.TurksFirst(),
-                                row.MachinesFirst(),
-                                row.TurksLast1(i),
-                                row.MachinesLast1(i),
-                                row.TurksLast(i),
-                                row.MachinesLast(i),
-                         };
-                    }
                     float[] y = new float[21];
                     int machProfit = row.AreLastTwoMovesEqual() ?
                                         row.Game.Surplus - (int)row.Game.TurksProfit :
                                         row.Game.MachineDisValue;
-                    Debug.Assert(machProfit >= 0 && machProfit <= 20, $"machProfit is incorrect in row:{row.Game.Id} subhistory:{i}");
+                    Debug.Assert(machProfit >= 0 && machProfit <= 20, $"machProfit is incorrect in row:{row.Game.Id}");
                     y[machProfit] = 1f;
-                    data.Add((x, y));
+                    i = row.Game.MachineStarts ? 0 : 1;
+                    float[] x = new float[11];
+                    for (; i < row.Moves.Count; i += 2)
+                    {
+                        x = new float[11] {
+                                row.Game.MachineDisValue / 20f,
+                                row.Game.MachineStarts ? 1 : 0,
+                                i / row.Moves.Count,
+                                (row.TurksLastConcession(i)+1) / row.Moves.Count,
+                                (row.MachinesLastConcession(i)+1) / row.Moves.Count,
+                                (row.TurksFirst()+1)/21,
+                                (row.MachinesFirst()+1)/ 21,
+                                (row.TurksLast1(i) + 1)/ 21,
+                                (row.MachinesLast1(i) + 1)/ 21,
+                                (row.TurksLast(i) + 1)/ 21,
+                                (row.MachinesLast(i) + 1)/ 21,
+                         };
+                        data.Add((x, y));
+                    }
+
 
                 }
             }

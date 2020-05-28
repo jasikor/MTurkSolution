@@ -32,11 +32,12 @@ namespace MTurk.AI
         {
             INeuralNetwork net = NetworkManager.NewSequential(TensorInfo.Linear(11),
                 NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
+                NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
                 NetworkLayers.Softmax(21));
             TrainingSessionResult result = await NetworkManager.TrainNetworkAsync(net,
                 data,
                 TrainingAlgorithms.AdaDelta(),
-                1, 0.5f,
+                10, 0.9f,
                 null,
                 testDataset: testData);
             _network = net;
