@@ -61,7 +61,7 @@ namespace MTurk.Data
         public int MachinesLastConcession(int i)
         {
             int res = -1;
-            for(; i-2 >= 0; i -= 2)
+            for (; i - 2 >= 0; i -= 2)
             {
                 if (Moves[i].ProposedAmount > Moves[i - 2].ProposedAmount)
                 {
@@ -98,6 +98,23 @@ namespace MTurk.Data
                 return -1;
             else
                 return Moves[i - 1].ProposedAmount;
+        }
+
+        internal float[] GetSubHistory(int i)
+        {
+            var x = new float[11];
+            x[0] = Game.MachineDisValue / 20f;
+            x[1] = Game.MachineStarts ? 1f : 0f;
+            x[2] = (float)i / Moves.Count;
+            x[3] = (float)(TurksLastConcession(i) + 1) / Moves.Count;
+            x[4] = (float)(MachinesLastConcession(i) + 1) / Moves.Count;
+            x[5] = (float)(TurksFirst() + 1) / 21f;
+            x[6] = (float)(MachinesFirst() + 1) / 21f;
+            x[7] = (float)(TurksLast1(i) + 1) / 21f;
+            x[8] = (float)(MachinesLast1(i) + 1) / 21f;
+            x[9] = (float)(TurksLast(i) + 1) / 21f;
+            x[10] = (float)(MachinesLast(i) + 1) / 21f;
+            return x;
         }
 
         public int MachinesLast1(int i)

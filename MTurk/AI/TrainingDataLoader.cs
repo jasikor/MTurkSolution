@@ -71,22 +71,9 @@ namespace MTurk.AI
                     Debug.Assert(machProfit >= 0 && machProfit <= 20, $"machProfit is incorrect in row:{row.Game.Id}");
                     y[machProfit] = 1f;
                     i = row.Game.MachineStarts ? 0 : 1;
-                    float[] x = new float[11];
                     for (; i < row.Moves.Count; i += 2)
                     {
-                        x = new float[11] {
-                                row.Game.MachineDisValue / 20f,
-                                row.Game.MachineStarts ? 1 : 0,
-                                i / row.Moves.Count,
-                                (row.TurksLastConcession(i)+1) / row.Moves.Count,
-                                (row.MachinesLastConcession(i)+1) / row.Moves.Count,
-                                (row.TurksFirst()+1)/21,
-                                (row.MachinesFirst()+1)/ 21,
-                                (row.TurksLast1(i) + 1)/ 21,
-                                (row.MachinesLast1(i) + 1)/ 21,
-                                (row.TurksLast(i) + 1)/ 21,
-                                (row.MachinesLast(i) + 1)/ 21,
-                         };
+                        var x = row.GetSubHistory(i);
                         data.Add((x, y));
                     }
 
