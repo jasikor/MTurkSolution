@@ -17,7 +17,7 @@ namespace MTurk.AI
         private INeuralNetwork _network;
         public AIManager(INetworkStorage storage)
         {
-           _storage = storage;
+            _storage = storage;
         }
         public INeuralNetwork GetNetwork()
         {
@@ -25,7 +25,7 @@ namespace MTurk.AI
                 _network = _storage.Load();
             if (_network is null)
                 return null;
-            return _network.Clone();
+            return _network;
         }
 
         public async Task<TrainingSessionResult> TrainAsync(ITrainingDataset data, ITestDataset testData)
@@ -40,7 +40,11 @@ namespace MTurk.AI
                 10, 0.9f,
                 null,
                 testDataset: testData);
-            _network = net;
+            if (result.StopReason == TrainingStopReason.EpochsCompleted)
+            {
+                _storage.Save(net);
+                _network = net;
+            }
             return result;
         }
     }
