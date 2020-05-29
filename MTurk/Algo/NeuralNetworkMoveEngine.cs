@@ -3,8 +3,11 @@ using MTurk.Data;
 using NeuralNetworkNET.APIs.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.XPath;
 
 namespace MTurk.Algo
 {
@@ -16,29 +19,64 @@ namespace MTurk.Algo
         {
             _manager = manager;
         }
-        private Random rnd = new Random();
         public int GetMachinesOffer(GameInfo g)
         {
             INeuralNetwork net = _manager.GetNetwork();
             if (net is null)
                 return 0;
-            float[] X; //  = g.GetSubHistory(g.Moves.Count-1);
-            X = new float[11] {
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                (float)rnd.NextDouble(),
-                };
-            float[] Y = net.Forward(X);
-            var max = Y.Max();
-            return Y.ToList().IndexOf(max);
+            var moves1 = GetMoves1(g.MovesToFloat());
+
+            float[] expectedPayoffs = new float[21];
+            for (int i = 0; i < expectedPayoffs.Length; i++)
+            {
+                moves1[moves1.Length - 1] = i;
+                float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
+                Debug.WriteLine(Unnormalized(X, moves1.Length));
+                float[] Y = net.Forward(X);
+                expectedPayoffs[i] = ExpectedPayoff(Y);
+
+            }
+
+
+
+            int res = Max(expectedPayoffs);
+
+            return res;
         }
+
+        private float ExpectedPayoff(float[] y)
+        {
+            float s = 0f;
+            for (int i = 0; i < y.Length; i++)
+            {
+                s += y[i] * i;
+            }
+            return s;
+        }
+
+        private static int Max(float[] v)
+        {
+            var max = v.Max();
+            return v.ToList().IndexOf(max);
+        }
+        private static float[] GetMoves1(float[] moves)
+        {
+            var res = new float[moves.Length + 1];
+            for (int i = 0; i < moves.Length; i++)
+                res[i] = moves[i];
+            return res;
+        }
+#if DEBUG
+        private static float UnNormalizeMove(float x) => 21f * x - 1;
+        private static float UnNormalizeDisValue(float x) => 20f * x;
+        private static float UnNormalizeMoveNumber(float x, int l) => x * l;
+        private static float UnNormalizeTime(float x, int i) => x * i - 1 ;
+        private static string Unnormalized(float[] x, int i)
+        {
+            return
+                $"MDis: {UnNormalizeDisValue(x[0])} MStarts:{x[1]} MNumber:{UnNormalizeMoveNumber(x[2], i)} TLCons:{UnNormalizeTime(x[3],i)} MLCons:{UnNormalizeTime(x[4],i)} T1stMove:{UnNormalizeMove(x[5])} M1stMove:{UnNormalizeMove(x[6])} T-1:{UnNormalizeMove(x[7])} M-1:{UnNormalizeMove(x[8])} TLast:{UnNormalizeMove(x[9])} MLast:{UnNormalizeMove(x[10])}";
+        }
+
+#endif
     }
 }
