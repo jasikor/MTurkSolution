@@ -43,13 +43,13 @@ namespace MTurk.Data
             if (index >= 0)
                 Moves.RemoveRange(index, Moves.Count - index);
         }
-        public int TurksLastConcession(int i)
+        public static int TurksLastConcession(int i, float[] moves)
         {
             i--;
             int res = -1;
             for (; i - 2 >= 0; i -= 2)
             {
-                if (Moves[i].ProposedAmount < Moves[i - 2].ProposedAmount)
+                if (moves[i] < moves[i - 2])
                 {
                     res = i;
                     break;
@@ -57,13 +57,14 @@ namespace MTurk.Data
             }
             return res;
         }
+        
 
-        public int MachinesLastConcession(int i)
+        public static int MachinesLastConcession(int i, float[] moves)
         {
             int res = -1;
             for (; i - 2 >= 0; i -= 2)
             {
-                if (Moves[i].ProposedAmount > Moves[i - 2].ProposedAmount)
+                if (moves[i] > moves[i - 2])
                 {
                     res = i;
                     break;
@@ -72,65 +73,66 @@ namespace MTurk.Data
             return res;
         }
 
-        public int TurksFirst()
+        public static float TurksFirst(float[] moves, bool machineStarts)
         {
-            if (Moves.Count == 1)
+            if (moves.Length == 1)
                 return -1;
-            Debug.Assert(Moves.Count > (Game.MachineStarts ? 0 : 1));
-            return Moves[Game.MachineStarts ? 1 : 0].ProposedAmount;
+            Debug.Assert(moves.Length > (machineStarts ? 0 : 1));
+            return moves[machineStarts ? 1 : 0];
         }
 
-        public int MachinesFirst()
+        public static float MachinesFirst(float[]moves, bool machineStarts)
         {
-            Debug.Assert(Moves.Count > (Game.MachineStarts ? 0 : 1));
-            return Moves[Game.MachineStarts ? 0 : 1].ProposedAmount;
+            Debug.Assert(moves.Length > (machineStarts ? 0 : 1));
+            return moves[machineStarts ? 0 : 1];
         }
 
-        public int MachinesLast(int i)
+        public static float MachinesLast(int i, float[] moves, bool machineStarts)
         {
-            Debug.Assert(Game.MachineStarts ? i % 2 == 0 : i % 2 == 1);
-            return Moves[i].ProposedAmount;
+            Debug.Assert(machineStarts ? i % 2 == 0 : i % 2 == 1);
+            return moves[i];
         }
 
-        public int TurksLast(int i)
+        public static float TurksLast(int i, float[] moves, bool machineStarts)
         {
-            if (Game.MachineStarts && i == 0)
+            if (machineStarts && i == 0)
                 return -1;
             else
-                return Moves[i - 1].ProposedAmount;
+                return moves[i - 1];
         }
 
-        internal float[] GetSubHistory(int i)
+        internal float[] GetSubHistory(int i) => GetSubHistory(i, Game.MachineDisValue, Game.MachineStarts, MovesToFloat());
+        internal static float[] GetSubHistory(int i, int machineDisValue, bool machineStarts,  float[] moves)
         {
             var x = new float[11];
-            x[0] = Game.MachineDisValue / 20f;
-            x[1] = Game.MachineStarts ? 1f : 0f;
-            x[2] = (float)i / Moves.Count;
-            x[3] = (float)(TurksLastConcession(i) + 1) / Moves.Count;
-            x[4] = (float)(MachinesLastConcession(i) + 1) / Moves.Count;
-            x[5] = (float)(TurksFirst() + 1) / 21f;
-            x[6] = (float)(MachinesFirst() + 1) / 21f;
-            x[7] = (float)(TurksLast1(i) + 1) / 21f;
-            x[8] = (float)(MachinesLast1(i) + 1) / 21f;
-            x[9] = (float)(TurksLast(i) + 1) / 21f;
-            x[10] = (float)(MachinesLast(i) + 1) / 21f;
+            x[0] = machineDisValue / 20f;
+            x[1] = machineStarts ? 1f : 0f;
+            x[2] = (float)i / moves.Length;
+            x[3] = (float)(TurksLastConcession(i, moves) + 1) / moves.Length;
+            x[4] = (float)(MachinesLastConcession(i, moves) + 1) / moves.Length;
+            x[5] = (float)(TurksFirst(moves, machineStarts) + 1) / 21f;
+            x[6] = (float)(MachinesFirst(moves, machineStarts) + 1) / 21f;
+            x[7] = (float)(TurksLast1(i,moves) + 1) / 21f;
+            x[8] = (float)(MachinesLast1(i, moves) + 1) / 21f;
+            x[9] = (float)(TurksLast(i, moves, machineStarts) + 1) / 21f;
+            x[10] = (float)(MachinesLast(i, moves, machineStarts) + 1) / 21f;
             return x;
         }
 
-        public int MachinesLast1(int i)
+        public static float MachinesLast1(int i, float[] moves)
         {
             if (i < 2)
                 return -1;
             else
-                return Moves[i - 2].ProposedAmount;
+                return moves[i - 2];
         }
 
-        public int TurksLast1(int i)
+        public static float TurksLast1(int i, float[] moves)
         {
             if (i < 3)
                 return -1;
             else
-                return Moves[i - 3].ProposedAmount;
+                return moves[i - 3];
         }
         public float[] MovesToFloat()
         {

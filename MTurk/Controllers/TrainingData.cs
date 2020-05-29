@@ -83,15 +83,16 @@ namespace MTurk.Controllers
                 i = row.Game.MachineStarts ? 0 : 1;
                 for (; i < row.Moves.Count; i += 2)
                 {
+                    var moves = row.MovesToFloat();
                     res.AppendFormat("{0,4}", i);
-                    res.AppendFormat("{0,6}", row.TurksLastConcession(i));
-                    res.AppendFormat("{0,7}", row.MachinesLastConcession(i));
-                    res.AppendFormat("{0,7}", row.TurksFirst());
-                    res.AppendFormat("{0,7}", row.MachinesFirst());
-                    res.AppendFormat("{0,7}", row.TurksLast1(i));
-                    res.AppendFormat("{0,7}", row.MachinesLast1(i));
-                    res.AppendFormat("{0,7}", row.TurksLast(i));
-                    res.AppendFormat("{0,7}", row.MachinesLast(i));
+                    res.AppendFormat("{0,6}", GameInfo.TurksLastConcession(i,moves));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesLastConcession(i,moves));
+                    res.AppendFormat("{0,7}", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesFirst(moves,row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", GameInfo.TurksLast1(i,moves));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesLast1(i, moves));
+                    res.AppendFormat("{0,7}", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesLast(i,moves, row.Game.MachineStarts));
                     res.AppendLine();
 
                 }
