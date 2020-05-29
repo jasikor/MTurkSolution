@@ -132,5 +132,12 @@ namespace MTurk.Data
             else
                 return Moves[i - 3].ProposedAmount;
         }
+        public float[] MovesToFloat()
+        {
+            var res = new float[Moves.Count];
+            for (int i = 0; i < Moves.Count; i++)
+                res[i] = Moves[i].ProposedAmount;
+            return res;
+        }
     }
 }
