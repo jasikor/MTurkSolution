@@ -23,6 +23,8 @@ namespace MTurk.Data
                 return false;
             if (Moves.Count == 0)
                 return false;
+            if (Moves.Count < 9)
+                return false;
             if (Moves.Count == 1 && !Game.MachineStarts)
                 return false;
             if (Game.TurksProfit is null)

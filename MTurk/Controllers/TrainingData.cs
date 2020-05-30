@@ -34,7 +34,7 @@ namespace MTurk.Controllers
             ITrainingDataset trainingDataset = await _trainingDataLoader.GetTrainingDatasetAsync(counter);
             TrainingSessionResult res = await _aIManager.TrainAsync(trainingDataset, null);
 
-            var content = await GetContent(counter, FileFormat.GamesAndMoves);
+            var content = await GetContent(counter, FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
