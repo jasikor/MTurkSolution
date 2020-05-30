@@ -34,7 +34,7 @@ namespace MTurk.Controllers
             ITrainingDataset trainingDataset = await _trainingDataLoader.GetTrainingDatasetAsync(counter);
             TrainingSessionResult res = await _aIManager.TrainAsync(trainingDataset, null);
 
-            var content = await GetContent(counter);
+            var content = await GetContent(counter, FileFormat.GamesAndMoves);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
@@ -52,11 +52,29 @@ namespace MTurk.Controllers
             return stream;
         }
 
-        private async Task<string> GetContent(int numberOfGames)
+        enum FileFormat
+        {
+            GamesAndMoves,
+            TrainingVectors,
+            TrainingVectorsNormalized
+        }
+        private async Task<string> GetContent(int numberOfGames, FileFormat format)
         {
             var rows = await _sessionService.GetGameInfosAsync(numberOfGames);
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
+            switch (format)
+            {
+                case FileFormat.TrainingVectorsNormalized:
+                    return TrainingNormalized(rows);
+                case FileFormat.TrainingVectors:
+                    return TrainingInt(rows);
+                default:
+                    return GamesMoves(rows);
+            }
+        }
+        private static string TrainingInt(IList<GameInfo> rows)
+        {
             StringBuilder res = new StringBuilder();
             foreach (var row in rows)
             {
@@ -85,21 +103,88 @@ namespace MTurk.Controllers
                 {
                     var moves = row.MovesToFloat();
                     res.AppendFormat("{0,4}", i);
-                    res.AppendFormat("{0,6}", GameInfo.TurksLastConcession(i,moves));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLastConcession(i,moves));
+                    res.AppendFormat("{0,6}", GameInfo.TurksLastConcession(i, moves));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesLastConcession(i, moves));
                     res.AppendFormat("{0,7}", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesFirst(moves,row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.TurksLast1(i,moves));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", GameInfo.TurksLast1(i, moves));
                     res.AppendFormat("{0,7}", GameInfo.MachinesLast1(i, moves));
                     res.AppendFormat("{0,7}", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLast(i,moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+
                     res.AppendLine();
 
                 }
             }
+
+            return res.ToString();
+
+        }
+        private static string TrainingNormalized(IList<GameInfo> rows)
+        {
+            StringBuilder res = new StringBuilder();
+            foreach (var row in rows)
+            {
+                row.TrimMoves();
+                if (!row.IsValid())
+                    continue;
+                int machProfit = row.AreLastTwoMovesEqual() ?
+                                    row.Game.Surplus - (int)row.Game.TurksProfit :
+                                    row.Game.MachineDisValue;
+                int i;
+                for (i = 0; i < row.Moves.Count; i++)
+                {
+                    var move = row.Moves[i];
+                }
+                Debug.Assert(row.Moves.Count > 0);
+                i = row.Game.MachineStarts ? 0 : 1;
+                for (; i < row.Moves.Count; i += 2)
+                {
+                    res.Append($"{row.Game.MachineDisValue} ");
+                    res.Append($"{(row.Game.MachineStarts ? 1 : 0)} ");
+
+                    var moves = row.MovesToFloat();
+                    res.AppendFormat("{0} ", i);
+                    res.AppendFormat("{0} ", GameInfo.TurksLastConcession(i, moves));
+                    res.AppendFormat("{0} ", GameInfo.MachinesLastConcession(i, moves));
+                    res.AppendFormat("{0} ", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", GameInfo.TurksLast1(i, moves));
+                    res.AppendFormat("{0} ", GameInfo.MachinesLast1(i, moves));
+                    res.AppendFormat("{0} ", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", machProfit);
+                    res.AppendLine();
+
+                }
+            }
+
+            return res.ToString();
+        }
+        private static string GamesMoves(IList<GameInfo> rows)
+        {
+            StringBuilder res = new StringBuilder();
+            foreach (var row in rows)
+            {
+                row.TrimMoves();
+                if (!row.IsValid())
+                    continue;
+                res.Append($"{row.Game.Id} AAAAAAAAAAAA {row.Game.StartTime} {row.Game.EndTime} {row.Game.Surplus} {row.Game.TurksDisValue} {row.Game.MachineDisValue} {row.Game.TimeOut} {row.Game.Stubborn} {(row.Game.MachineStarts ? 1 : 0)} ");
+                int machProfit = row.AreLastTwoMovesEqual() ?
+                                    row.Game.Surplus - (int)row.Game.TurksProfit :
+                                    row.Game.MachineDisValue;
+                int i;
+                for (i = 0; i < row.Moves.Count; i++)
+                {
+                        res.Append($"{{{row.Moves[i].MoveBy[0]},{row.Moves[i].ProposedAmount}}} ");
+
+                }
+                res.AppendLine();
+            }
+
             return res.ToString();
         }
 
-        
+
     }
 }
