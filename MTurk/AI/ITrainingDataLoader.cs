@@ -11,8 +11,8 @@ namespace MTurk.AI
 {
     public interface ITrainingDataLoader
     {
-        Task<ITrainingDataset> GetTrainingDatasetAsync(int size);
-        Task<ITestDataset> GetTestDatasetAsync([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default);
+        ITrainingDataset GetTrainingDataset(int size);
+        ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default);
 
 
     }

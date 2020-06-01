@@ -31,10 +31,11 @@ namespace MTurk.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int counter)
         {
-            ITrainingDataset trainingDataset = await _trainingDataLoader.GetTrainingDatasetAsync(counter);
-            TrainingSessionResult res = await _aIManager.TrainAsync(trainingDataset, null);
+            ITrainingDataset trainingDataset = null; ; 
+            await Task.Run(()=> trainingDataset = _trainingDataLoader.GetTrainingDataset(counter));
+            TrainingSessionResult res = _aIManager.Train(trainingDataset, null);
 
-            var content = await GetContent(counter, FileFormat.TrainingVectorsNormalized);
+            var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
@@ -58,9 +59,9 @@ namespace MTurk.Controllers
             TrainingVectors,
             TrainingVectorsNormalized
         }
-        private async Task<string> GetContent(int numberOfGames, FileFormat format)
+        private string GetContent(int numberOfGames, FileFormat format)
         {
-            var rows = await _sessionService.GetGameInfosAsync(numberOfGames);
+            var rows = _sessionService.GetGameInfos(numberOfGames);
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             switch (format)

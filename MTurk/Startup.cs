@@ -27,7 +27,8 @@ namespace MTurk
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddTransient<IMoveEngine, NeuralNetworkMoveEngine>();
+            //services.AddTransient<IMoveEngine, NeuralNetworkMoveEngine>();
+            services.AddTransient<IMoveEngine, NearestNeighbourMoveEngine>();
             services.AddTransient<ITrainingDataLoader, TrainingDataLoader>();
             services.AddTransient<INetworkStorage, DiskNetworkStorage>();
             services.AddSingleton<IAIManager, AIManager>();

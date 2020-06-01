@@ -23,14 +23,14 @@ namespace MTurk.AI
         {
             _sessionService = sessionService;
         }
-        public Task<ITestDataset> GetTestDatasetAsync([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default)
+        public ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ITrainingDataset> GetTrainingDatasetAsync(int size)
+        public ITrainingDataset GetTrainingDataset(int size)
         {
-            await LoadData();
+            LoadData();
 
             float[,] X = new float[data.Count, 11];
             float[,] Y = new float[data.Count, 21];
@@ -48,11 +48,11 @@ namespace MTurk.AI
                 : DatasetLoader.Training(d, batchSize);
         }
 
-        private async Task LoadData()
+        private void LoadData()
         {
             if (data.Count == 0)
             {
-                var rows = await _sessionService.GetGameInfosAsync(100000);
+                var rows = _sessionService.GetGameInfos(100000);
                 if (rows.Count == 0)
                     return;
                 foreach (var row in rows)

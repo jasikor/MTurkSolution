@@ -11,6 +11,6 @@ namespace MTurk.AI
     public interface IAIManager
     {
         INeuralNetwork GetNetwork();
-        Task<TrainingSessionResult> TrainAsync(ITrainingDataset data, ITestDataset testData);
+        TrainingSessionResult Train(ITrainingDataset data, ITestDataset testData);
     }
 }

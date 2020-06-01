@@ -37,7 +37,7 @@ namespace MTurk.Data
             return await _db.SaveData<SessionModel, SessionModel>(sql, sm);
         }
 
-        public Task<List<SessionInfo>> GetAHandfullOfLastSessionsAsync()
+        public List<SessionInfo> GetAHandfullOfLastSessions()
         {
             string sql =
                   @"select s.[Time], s.WorkerId, s.DollarsPerBar, g.totalProfit, g.gamesPlayed from sessions s
@@ -183,7 +183,7 @@ namespace MTurk.Data
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
-        public async Task<List<MovesWithGames>> GetMovesWithGames(int numberOfGames, int firstRow = 0)
+        public List<MovesWithGames> GetMovesWithGames(int numberOfGames, int firstRow = 0)
         {
             string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
                            from(
@@ -200,13 +200,13 @@ namespace MTurk.Data
                             order by g.Id desc, m.Id";
 
 
-            return await _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames, FirstRow = firstRow });
+            return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames, FirstRow = firstRow });
         }
 
-        public async Task<IList<GameInfo>> GetGameInfosAsync(int numberOfGames, int firstGame = 0)
+        public IList<GameInfo> GetGameInfos(int numberOfGames, int firstGame = 0)
         {
             var res = new List<GameInfo>();
-            var movesWithGames = await GetMovesWithGames(numberOfGames, firstGame);
+            var movesWithGames = GetMovesWithGames(numberOfGames, firstGame);
             if (movesWithGames.Count == 0)
                 return res;
             int currentGame = 0;

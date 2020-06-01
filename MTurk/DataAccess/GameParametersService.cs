@@ -16,15 +16,15 @@ namespace MTurk.DataAccess
             _db = db;
         }
 
-        public async Task DeleteGameParameters(int id)
+        public void DeleteGameParameters(int id)
         {
             string sql =
                 @"DELETE GameParameters WHERE Id = @Id";
 
-            await _db.SaveData<dynamic>(sql, new { Id = id });
+            _db.SaveData<dynamic>(sql, new { Id = id });
         }
 
-        public Task<List<GameParametersModel>> GetAllParametersAsync()
+        public List<GameParametersModel> GetAllParameters()
         {
             string sql = @"select * from dbo.GameParameters order by Id desc";
             return _db.LoadDataList<GameParametersModel, dynamic>(sql, new { });

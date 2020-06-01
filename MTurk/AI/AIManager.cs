@@ -28,13 +28,13 @@ namespace MTurk.AI
             return _network;
         }
 
-        public async Task<TrainingSessionResult> TrainAsync(ITrainingDataset data, ITestDataset testData)
+        public TrainingSessionResult Train(ITrainingDataset data, ITestDataset testData)
         {
             INeuralNetwork net = NetworkManager.NewSequential(TensorInfo.Linear(11),
                 NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
                 NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
                 NetworkLayers.Softmax(21));
-            TrainingSessionResult result = await NetworkManager.TrainNetworkAsync(net,
+            TrainingSessionResult result = NetworkManager.TrainNetwork(net,
                 data,
                 TrainingAlgorithms.AdaDelta(),
                 10, 0.9f,
