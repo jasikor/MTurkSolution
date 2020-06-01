@@ -3,6 +3,7 @@ using MTurk.Data;
 using NeuralNetworkNET.APIs;
 using NeuralNetworkNET.APIs.Interfaces.Data;
 using NeuralNetworkNET.SupervisedLearning.Progress;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,8 +36,6 @@ namespace MTurk.AI
             LoadData();
             float[,] X = new float[inputData.Count, 11];
             float[,] Y = new float[inputData.Count, 21];
-            try
-            {
                 for (int i = 0; i < inputData.Count; i++)
                 {
                     for (int j = 0; j < 11; j++)
@@ -47,11 +46,6 @@ namespace MTurk.AI
                     for (int j = 0; j < 21; j++)
                         Y[i, j] = data[j];
                 }
-            }
-            catch (Exception e)
-            {
-
-            }
             (float[,] X, float[,] Y) d = (X, Y);
             int batchSize = 512;
             return d.X == null || d.Y == null
@@ -89,6 +83,20 @@ namespace MTurk.AI
                 }
             }
 
+        }
+
+        public (float[,], float[]) GetRawData()
+        {
+            LoadData();
+            float[,] X = new float[inputData.Count, 11];
+            float[] Y = new float[inputData.Count];
+                for (int i = 0; i < inputData.Count; i++)
+                {
+                    for (int j = 0; j < 11; j++)
+                        X[i, j] = inputData[i][j];
+                    Y[i] = resultData[i] / 21f;
+                }
+            return (X, Y);
         }
     }
 }

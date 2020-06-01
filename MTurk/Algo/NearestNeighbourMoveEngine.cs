@@ -11,7 +11,7 @@ namespace MTurk.Algo
     public class NearestNeighbourMoveEngine : IMoveEngine
     {
         private readonly ITrainingDataLoader _dataLoader;
-        private ITrainingDataset _data;
+        private (float[,],float[]) _data;
 
         public NearestNeighbourMoveEngine(ITrainingDataLoader dataLoader)
         {
@@ -23,7 +23,7 @@ namespace MTurk.Algo
 
         private void LoadData()
         {
-            _data = _dataLoader.GetTrainingDataset(1000000);
+            _data = _dataLoader.GetRawData();
         }
 
         public int GetMachinesOffer(GameInfo g)

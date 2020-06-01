@@ -13,6 +13,7 @@ namespace MTurk.AI
     {
         ITrainingDataset GetTrainingDataset(int size);
         ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default);
+        (float[,], float[]) GetRawData();
 
 
     }
