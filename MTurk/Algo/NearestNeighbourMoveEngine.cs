@@ -51,7 +51,6 @@ namespace MTurk.Algo
         private DistIndex[] distanceIndex;
         public int GetMachinesOffer(GameInfo g)
         {
-            double s = 0.0;
             float[] p = new float[11];
             Parallel.For(0, Y.Length - 1,
                 (i) => { CalcDistance(i, p); }
