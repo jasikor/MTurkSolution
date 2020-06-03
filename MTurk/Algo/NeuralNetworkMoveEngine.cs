@@ -36,15 +36,50 @@ namespace MTurk.Algo
                 expectedPayoffs[i] = ExpectedPayoff(Y);
 
             }
+            float sum = 0.0f;
+            double lambda = g.Game.Stubborn;
+            for (int i = 0; i < expectedPayoffs.Length; i++)
+            {
+                expectedPayoffs[i] = (float)Math.Exp(lambda * expectedPayoffs[i]);
+                sum += expectedPayoffs[i];
+            }
+            for (int i = 0; i < expectedPayoffs.Length; i++)
+                expectedPayoffs[i] /= sum;
+
+            var cumDist = new double[expectedPayoffs.Length];
+            double prob = 0.0;
+            for (int i = 0; i < cumDist.Length; i++)
+            {
+                prob += expectedPayoffs[i];
+                cumDist[i] = prob;
+                Debug.WriteLine($"cumDist[{i}] = {cumDist[i]}");
+            }
+
+            Debug.Assert(Math.Abs(cumDist[cumDist.Length - 1] - 1.0) < 0.00001);
+
+            cumDist[cumDist.Length - 1] = 1.0;
+            int aIOffer = CumulativeRandom(cumDist);
 
 
 
-            int res = Max(expectedPayoffs);
+
+            int res = aIOffer;
 
             return res;
         }
 
-        private float ExpectedPayoff(float[] y)
+        private static Random rnd = new Random();
+
+        private static int CumulativeRandom(double[] cumDist)
+        {
+            var random = rnd.NextDouble();
+            int i;
+            for (i = 0; i < cumDist.Length; i++)
+                if (random <= cumDist[i])
+                    break;
+            return i;
+        }
+        private static float ExpectedPayoff(float[] y)
         {
             float s = 0f;
             for (int i = 0; i < y.Length; i++)
