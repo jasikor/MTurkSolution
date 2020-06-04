@@ -52,10 +52,17 @@ namespace MTurk.Algo
         private DistIndex[] distanceIndex;
         public int GetMachinesOffer(GameInfo g)
         {
-            var moves1 = GetMoves1(g.MovesToFloat());
+            float[] moves = g.MovesToFloat();
+            var moves1 = GetMoves1(moves);
 
             float[] expectedPayoffs = new float[21];
-            for (int i = 0; i < expectedPayoffs.Length; i++)
+            int lastMove = 0;
+            if (moves.Length > 1)
+                lastMove = (int)moves[moves.Length - 2];
+            int first = Math.Clamp(lastMove - 2, 0, 20);
+            int last = Math.Clamp(lastMove + 2, 0, 20);
+            Debug.Assert(last - first <= 5); 
+            for (int i = first; i <= last; i++)
             {
                 moves1[moves1.Length - 1] = i;
                 float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
@@ -65,9 +72,9 @@ namespace MTurk.Algo
 
             }
             float sum = 0.0f;
-            double lambda = 1.5;
-            //double lambda = g.Game.Stubborn;
-            for (int i = 0; i < expectedPayoffs.Length; i++)
+            double lambda = g.Game.Stubborn;
+            
+            for (int i = first; i <= last; i++)
             {
                 expectedPayoffs[i] = (float)Math.Exp(lambda * expectedPayoffs[i]);
                 sum += expectedPayoffs[i];
