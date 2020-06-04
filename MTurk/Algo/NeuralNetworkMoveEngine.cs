@@ -37,7 +37,8 @@ namespace MTurk.Algo
 
             }
             float sum = 0.0f;
-            double lambda = g.Game.Stubborn;
+            double lambda = 0.5;
+            //double lambda = g.Game.Stubborn;
             for (int i = 0; i < expectedPayoffs.Length; i++)
             {
                 expectedPayoffs[i] = (float)Math.Exp(lambda * expectedPayoffs[i]);
@@ -59,13 +60,7 @@ namespace MTurk.Algo
 
             cumDist[cumDist.Length - 1] = 1.0;
             int aIOffer = CumulativeRandom(cumDist);
-
-
-
-
-            int res = aIOffer;
-
-            return res;
+            return aIOffer;
         }
 
         private static Random rnd = new Random();
