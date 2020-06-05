@@ -3,6 +3,7 @@ using MTurk.Data;
 using NeuralNetworkNET.APIs;
 using NeuralNetworkNET.APIs.Interfaces.Data;
 using NeuralNetworkNET.SupervisedLearning.Progress;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
@@ -33,19 +34,20 @@ namespace MTurk.AI
 
         public ITrainingDataset GetTrainingDataset(int size)
         {
-            LoadData();
+            LoadData(inputData, resultData);
             float[,] X = new float[inputData.Count, 11];
             float[,] Y = new float[inputData.Count, 21];
-                for (int i = 0; i < inputData.Count; i++)
-                {
-                    for (int j = 0; j < 11; j++)
-                        X[i, j] = inputData[i][j];
-                    var data = new float[21];
+            for (int i = 0; i < inputData.Count; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                    X[i, j] = inputData[i][j];
+                var data = new float[21];
 
-                    data[Math.Clamp((int)resultData[i], 0, 20)] = 1f;
-                    for (int j = 0; j < 21; j++)
-                        Y[i, j] = data[j];
-                }
+                data[Math.Clamp((int)resultData[i], 0, 20)] = 1f;
+                for (int j = 0; j < 21; j++)
+                    Y[i, j] = data[j];
+            }
+            Normalize(X);
             (float[,] X, float[,] Y) d = (X, Y);
             int batchSize = 512;
             return d.X == null || d.Y == null
@@ -53,9 +55,42 @@ namespace MTurk.AI
                 : DatasetLoader.Training(d, batchSize);
         }
 
-        private void LoadData()
+        private void Normalize(float[,] x)
         {
-            if (inputData.Count == 0)
+            float[] sum = new float[x.GetLength(1)];
+            for (int i = 0; i < x.GetLength(0); i++)
+            {
+                for (int j = 0; j < x.GetLength(1); j++)
+                    sum[j] += x[i, j];
+            }
+            float[] mean = new float[x.GetLength(1)];
+            for (int j = 0; j < x.GetLength(1); j++)
+                mean[j] = sum[j] / x.GetLength(0);
+            float[] sumDist = new float[x.GetLength(1)];
+            for (int i = 0; i < x.GetLength(0); i++)
+            {
+                for (int j = 0; j < x.GetLength(1); j++)
+                {
+                    var dist = x[i, j] - mean[j];
+                    sumDist[j] += dist * dist;
+                }
+            }
+            float[] variance = new float[x.GetLength(1)];
+            for (int j = 0; j < x.GetLength(1); j++)
+                variance[j] = sumDist[j] / x.GetLength(0);
+            for (int i = 0; i < x.GetLength(0); i++)
+            {
+                for (int j = 0; j < x.GetLength(1); j++)
+                {
+                    x[i, j] = (float)((x[i, j] - mean[j]) / Math.Sqrt(variance[j]));
+                }
+            }
+
+        }
+
+        private void LoadData(List<float[]> X, List<float> Y)
+        {
+            if (X.Count == 0)
             {
                 var rows = _sessionService.GetGameInfos(100000);
                 if (rows.Count == 0)
@@ -77,8 +112,8 @@ namespace MTurk.AI
                     for (; i < row.Moves.Count; i += 2)
                     {
                         var x = row.GetSubHistory(i);
-                        inputData.Add(x);
-                        resultData.Add(machProfit);
+                        X.Add(x);
+                        Y.Add(machProfit);
                     }
                 }
             }
@@ -87,15 +122,16 @@ namespace MTurk.AI
 
         public (float[,], float[]) GetRawData()
         {
-            LoadData();
+            LoadData(inputData, resultData);
             float[,] X = new float[inputData.Count, 11];
             float[] Y = new float[inputData.Count];
-                for (int i = 0; i < inputData.Count; i++)
-                {
-                    for (int j = 0; j < 11; j++)
-                        X[i, j] = inputData[i][j];
-                    Y[i] = resultData[i] / 21f;
-                }
+            for (int i = 0; i < inputData.Count; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                    X[i, j] = inputData[i][j];
+                Y[i] = resultData[i] / 21f;
+            }
+            Normalize(X);
             return (X, Y);
         }
     }
