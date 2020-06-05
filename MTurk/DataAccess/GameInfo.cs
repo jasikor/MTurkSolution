@@ -107,17 +107,17 @@ namespace MTurk.Data
         internal static float[] GetSubHistory(int i, int machineDisValue, bool machineStarts,  float[] moves)
         {
             var x = new float[11];
-            x[0] = machineDisValue / 20f;
+            x[0] = machineDisValue;
             x[1] = machineStarts ? 1f : 0f;
-            x[2] = (float)i / moves.Length;
-            x[3] = (float)(TurksLastConcession(i, moves) + 1) / moves.Length;
-            x[4] = (float)(MachinesLastConcession(i, moves) + 1) / moves.Length;
-            x[5] = (float)(TurksFirst(moves, machineStarts) + 1) / 21f;
-            x[6] = (float)(MachinesFirst(moves, machineStarts) + 1) / 21f;
-            x[7] = (float)(TurksLast1(i,moves) + 1) / 21f;
-            x[8] = (float)(MachinesLast1(i, moves) + 1) / 21f;
-            x[9] = (float)(TurksLast(i, moves, machineStarts) + 1) / 21f;
-            x[10] = (float)(MachinesLast(i, moves, machineStarts) + 1) / 21f;
+            x[2] = i;
+            x[3] = TurksLastConcession(i, moves);
+            x[4] = MachinesLastConcession(i, moves);
+            x[5] = TurksFirst(moves, machineStarts);
+            x[6] = MachinesFirst(moves, machineStarts);
+            x[7] = TurksLast1(i,moves);
+            x[8] = MachinesLast1(i, moves) ;
+            x[9] = TurksLast(i, moves, machineStarts) ;
+            x[10] = MachinesLast(i, moves, machineStarts);
             return x;
         }
 

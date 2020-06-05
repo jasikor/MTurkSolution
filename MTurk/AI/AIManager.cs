@@ -1,4 +1,5 @@
-﻿using NeuralNetworkNET.APIs;
+﻿using MTurk.Algo;
+using NeuralNetworkNET.APIs;
 using NeuralNetworkNET.APIs.Enums;
 using NeuralNetworkNET.APIs.Interfaces;
 using NeuralNetworkNET.APIs.Interfaces.Data;
@@ -32,7 +33,7 @@ namespace MTurk.AI
         {
             INeuralNetwork net = NetworkManager.NewSequential(TensorInfo.Linear(11),
                 NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
-                NetworkLayers.Softmax(21));
+                NetworkLayers.Softmax(IMoveEngine.Payoffs));
             TrainingSessionResult result = NetworkManager.TrainNetwork(net,
                 data,
                 TrainingAlgorithms.AdaDelta(),

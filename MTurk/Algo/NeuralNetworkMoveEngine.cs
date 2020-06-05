@@ -26,12 +26,11 @@ namespace MTurk.Algo
                 return 0;
             var moves1 = GetMoves1(g.MovesToFloat());
 
-            float[] expectedPayoffs = new float[21];
+            float[] expectedPayoffs = new float[IMoveEngine.Payoffs];
             for (int i = 0; i < expectedPayoffs.Length; i++)
             {
                 moves1[moves1.Length - 1] = i;
                 float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
-                Debug.WriteLine(Unnormalized(X, moves1.Length));
                 float[] Y = net.Forward(X);
                 expectedPayoffs[i] = ExpectedPayoff(Y);
 
@@ -96,17 +95,6 @@ namespace MTurk.Algo
                 res[i] = moves[i];
             return res;
         }
-#if DEBUG
-        private static float UnNormalizeMove(float x) => 21f * x - 1;
-        private static float UnNormalizeDisValue(float x) => 20f * x;
-        private static float UnNormalizeMoveNumber(float x, int l) => x * l;
-        private static float UnNormalizeTime(float x, int i) => x * i - 1 ;
-        private static string Unnormalized(float[] x, int i)
-        {
-            return
-                $"MDis: {UnNormalizeDisValue(x[0])} MStarts:{x[1]} MNumber:{UnNormalizeMoveNumber(x[2], i)} TLCons:{UnNormalizeTime(x[3],i)} MLCons:{UnNormalizeTime(x[4],i)} T1stMove:{UnNormalizeMove(x[5])} M1stMove:{UnNormalizeMove(x[6])} T-1:{UnNormalizeMove(x[7])} M-1:{UnNormalizeMove(x[8])} TLast:{UnNormalizeMove(x[9])} MLast:{UnNormalizeMove(x[10])}";
-        }
 
-#endif
     }
 }

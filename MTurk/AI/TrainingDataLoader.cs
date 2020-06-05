@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using MTurk.Algo;
 using MTurk.Data;
 using NeuralNetworkNET.APIs;
 using NeuralNetworkNET.APIs.Interfaces.Data;
@@ -35,15 +36,15 @@ namespace MTurk.AI
         {
             LoadData(inputData, resultData);
             float[,] X = new float[inputData.Count, 11];
-            float[,] Y = new float[inputData.Count, 21];
+            float[,] Y = new float[inputData.Count, IMoveEngine.Payoffs];
             for (int i = 0; i < inputData.Count; i++)
             {
                 for (int j = 0; j < 11; j++)
                     X[i, j] = inputData[i][j];
-                var data = new float[21];
+                var data = new float[IMoveEngine.Payoffs];
 
                 data[Math.Clamp((int)resultData[i], 0, 20)] = 1f;
-                for (int j = 0; j < 21; j++)
+                for (int j = 0; j < IMoveEngine.Payoffs; j++)
                     Y[i, j] = data[j];
             }
             Normalize(X);
@@ -128,7 +129,7 @@ namespace MTurk.AI
             {
                 for (int j = 0; j < 11; j++)
                     X[i, j] = inputData[i][j];
-                Y[i] = resultData[i] / 21f;
+                Y[i] = resultData[i];
             }
             Normalize(X);
             return (X, Y);
