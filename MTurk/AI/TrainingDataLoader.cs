@@ -17,9 +17,8 @@ namespace MTurk.AI
     public class TrainingDataLoader : ITrainingDataLoader
     {
         private readonly ISessionService _sessionService;
-        List<(float[], float[])> dataa = new List<(float[], float[])>();
-        List<float[]> inputData = new List<float[]>();
-        List<float> resultData = new List<float>();
+        private readonly List<float[]> inputData = new List<float[]>();
+        private readonly List<float> resultData = new List<float>();
 
         const int testingPercentage = 80;
 
@@ -75,14 +74,14 @@ namespace MTurk.AI
                     sumDist[j] += dist * dist;
                 }
             }
-            float[] variance = new float[x.GetLength(1)];
+            float[] stdVar = new float[x.GetLength(1)];
             for (int j = 0; j < x.GetLength(1); j++)
-                variance[j] = sumDist[j] / x.GetLength(0);
+                stdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0));
             for (int i = 0; i < x.GetLength(0); i++)
             {
                 for (int j = 0; j < x.GetLength(1); j++)
                 {
-                    x[i, j] = (float)((x[i, j] - mean[j]) / Math.Sqrt(variance[j]));
+                    x[i, j] = (x[i, j] - mean[j]) / stdVar[j];
                 }
             }
 
