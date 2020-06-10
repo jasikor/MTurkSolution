@@ -61,11 +61,12 @@ namespace MTurk.Algo
                 lastMove = (int)moves[moves.Length - 2];
             int first = Math.Clamp(lastMove - 2, 0, 20);
             int last = Math.Clamp(lastMove + 2, 0, 20);
-            Debug.Assert(last - first <= 5); 
+            Debug.Assert(last - first <= 5);
             for (int i = first; i <= last; i++)
             {
                 moves1[moves1.Length - 1] = i;
                 float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
+                X[10] = i;
                 _dataLoader.Normalize(X);
                 float y = Nearest(X);
                 expectedPayoffs[i] = y;
@@ -98,6 +99,7 @@ namespace MTurk.Algo
             return aIOffer;
         }
 
+        const int K = 5;
         private float Nearest(float[] p)
         {
             Parallel.For(0, Y.Length - 1,
@@ -107,12 +109,19 @@ namespace MTurk.Algo
                 (x, y) => x.Distance.CompareTo(y.Distance));
 
             int[] votes = new int[IMoveEngine.Payoffs];
-            int K = 5;
             for (int i = 0; i < K; i++)
                 votes[
                 (int)(Y[distanceIndex[i].Index])
                 ]++;
-            return Max(votes);
+            //return Max(votes);
+            return Average(votes);
+        }
+        private static float Average(int[] votes)
+        {
+            float res = 0.0f;
+            for (int i = 0; i < votes.Length; i++)
+                res += votes[i] * i ;
+            return res / K;
         }
         private static int Max(int[] v)
         {
