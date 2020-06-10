@@ -18,11 +18,11 @@ namespace MTurk.SQLDataAccess
         {
             _config = config;
         }
-        public async Task<List<T>> LoadDataList<T, U>(string sql, U parameters)
+        public List<T> LoadDataList<T, U>(string sql, U parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
-            var data = await connection.QueryAsync<T>(sql, parameters);
+            var data = connection.Query<T>(sql, parameters);
             return data.ToList();
 
         }
