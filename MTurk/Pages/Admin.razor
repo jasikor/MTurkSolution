@@ -74,7 +74,7 @@ else
     private List<SessionInfo> sessions;
     protected override async Task OnInitializedAsync()
     {
-        sessions = await _db.GetAHandfullOfLastSessionsAsync();
+        sessions = await Task.Run(() => _db.GetAHandfullOfLastSessions());
     }
 
 }

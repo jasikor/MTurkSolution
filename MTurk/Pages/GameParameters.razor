@@ -126,10 +126,10 @@ else
         };
     }
 
-    private async void OnDeleteGame(int id)
+    private void OnDeleteGame(int id)
     {
-        await _db.DeleteGameParameters(id);
-        parameters = await _db.GetAllParametersAsync();
+        _db.DeleteGameParameters(id);
+        parameters = _db.GetAllParameters();
         ResetCurrentGame();
     }
 
@@ -156,13 +156,13 @@ else
             MachineStarts = gameE.MachineStarts,
         };
         await _db.SaveGameParameters(gp);
-        parameters = await _db.GetAllParametersAsync();
+        parameters = _db.GetAllParameters();
         ResetCurrentGame();
 
     }
     protected override async Task OnInitializedAsync()
     {
-        parameters = await _db.GetAllParametersAsync();
+        parameters = await Task.Run(() => _db.GetAllParameters());
     }
 
 }

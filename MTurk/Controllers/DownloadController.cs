@@ -18,10 +18,10 @@ namespace MTurk.Controllers
         private readonly ISessionService _sessionService;
 
         [HttpGet]
-        public async Task<ActionResult> Get(int counter)
+        public ActionResult Get(int counter)
         {
 
-            var content = await GetContent(counter);
+            var content =  GetContent(counter);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
@@ -39,9 +39,9 @@ namespace MTurk.Controllers
             return stream;
         }
 
-        private async Task<string> GetContent(int numberOfGames)
+        private string GetContent(int numberOfGames)
         {
-            List<QueryRows> rows = await _sessionService.GetGamesWithMoves(numberOfGames);
+            List<MovesWithGames> rows = _sessionService.GetMovesWithGames(numberOfGames);
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             StringBuilder res = new StringBuilder();
