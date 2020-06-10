@@ -54,8 +54,9 @@ namespace MTurk.AI
                 ? null
                 : DatasetLoader.Training(d, batchSize);
         }
-
-        private void Normalize(float[,] x)
+        public float[] Mean { get; private set; }
+        public float[] StdVar { get; private set; }
+        public void Normalize(float[,] x)
         {
             float[] sum = new float[x.GetLength(1)];
             for (int i = 0; i < x.GetLength(0); i++)
@@ -63,29 +64,34 @@ namespace MTurk.AI
                 for (int j = 0; j < x.GetLength(1); j++)
                     sum[j] += x[i, j];
             }
-            float[] mean = new float[x.GetLength(1)];
+            Mean = new float[x.GetLength(1)];
             for (int j = 0; j < x.GetLength(1); j++)
-                mean[j] = sum[j] / x.GetLength(0);
+                Mean[j] = sum[j] / x.GetLength(0);
             float[] sumDist = new float[x.GetLength(1)];
             for (int i = 0; i < x.GetLength(0); i++)
             {
                 for (int j = 0; j < x.GetLength(1); j++)
                 {
-                    var dist = x[i, j] - mean[j];
+                    var dist = x[i, j] - Mean[j];
                     sumDist[j] += dist * dist;
                 }
             }
-            float[] stdVar = new float[x.GetLength(1)];
+            StdVar = new float[x.GetLength(1)];
             for (int j = 0; j < x.GetLength(1); j++)
-                stdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0));
+                StdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0));
             for (int i = 0; i < x.GetLength(0); i++)
             {
                 for (int j = 0; j < x.GetLength(1); j++)
                 {
-                    x[i, j] = (x[i, j] - mean[j]) / stdVar[j];
+                    x[i, j] = (x[i, j] - Mean[j]) / StdVar[j];
                 }
             }
 
+        }
+        public void Normalize(float[] x)
+        {
+            for(int i = 0; i<x.Length; i++)
+                x[i] = (x[i] - Mean[i]) / StdVar[i];
         }
 
         private void LoadData(List<float[]> X, List<float> Y)

@@ -66,6 +66,7 @@ namespace MTurk.Algo
             {
                 moves1[moves1.Length - 1] = i;
                 float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
+                _dataLoader.Normalize(X);
                 float y = Nearest(X);
                 expectedPayoffs[i] = y;
 
