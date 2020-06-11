@@ -50,6 +50,8 @@ namespace MTurk.Algo
         }
 
         private DistIndex[] distanceIndex;
+        private const int deviation = 3;
+
         public int GetMachinesOffer(GameInfo g)
         {
             float[] moves = g.MovesToFloat();
@@ -59,9 +61,10 @@ namespace MTurk.Algo
             int lastMove = 0;
             if (moves.Length > 1)
                 lastMove = (int)moves[moves.Length - 2];
-            int first = Math.Clamp(lastMove - 2, 0, 20);
-            int last = Math.Clamp(lastMove + 2, 0, 20);
-            Debug.Assert(last - first <= 5);
+            int max = Math.Clamp(20 - g.Game.MachineDisValue - 1, 0, 21);
+            int first = Math.Clamp(lastMove - deviation, 0, max);
+            int last = Math.Clamp(lastMove + deviation, 0, max);
+            Debug.Assert(last - first <= 2 * deviation + 1);
             for (int i = first; i <= last; i++)
             {
                 moves1[moves1.Length - 1] = i;
