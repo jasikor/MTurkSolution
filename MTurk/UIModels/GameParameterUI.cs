@@ -18,7 +18,7 @@ namespace MTurk.UIModels
         [Required]
         public int TimeOut;
         [Required]
-        [Range(0.0, 1.0, ErrorMessage = "Stubborn must be in [0..1]")]
+        [Range(0.0, 100.0, ErrorMessage = "Stubborn must be in [0..100]")]
         public double Stubborn;
         [Required]
         public bool MachineStarts;

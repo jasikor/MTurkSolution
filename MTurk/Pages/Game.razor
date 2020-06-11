@@ -212,9 +212,7 @@ else
         await SaveMove(move);
         if (move.MoveBy == "TURK" && !move.OfferAccepted)
         {
-#if !DEBUG
             await Task.Delay((int)(1000 + rnd.NextDouble() * 4000));
-#endif
             //int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, amount, MachinesLastOffer());
             int machinesOffer = moveEngine.GetMachinesOffer(game);
             MoveModel machinesMove = new MoveModel()
