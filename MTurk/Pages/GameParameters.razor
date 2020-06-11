@@ -152,7 +152,7 @@ else
             TurksDisValue = gameE.TurksDisValue,
             MachineDisValue = gameE.MachineDisValue,
             TimeOut = gameE.TimeOut,
-            Stubborn = Math.Clamp(gameE.Stubborn, 0.0, 1.0),
+            Stubborn = gameE.Stubborn,
             MachineStarts = gameE.MachineStarts,
         };
         await _db.SaveGameParameters(gp);
