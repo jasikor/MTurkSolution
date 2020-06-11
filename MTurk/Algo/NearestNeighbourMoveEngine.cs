@@ -58,7 +58,7 @@ namespace MTurk.Algo
             var moves1 = GetMoves1(moves);
 
             float[] expectedPayoffs = new float[IMoveEngine.Payoffs];
-            int lastMove = 0;
+            int lastMove = rnd.Next(1, 10+1);
             if (moves.Length > 1)
                 lastMove = (int)moves[moves.Length - 2];
             int max = Math.Clamp(20 - g.Game.MachineDisValue - 1, 0, 21);
