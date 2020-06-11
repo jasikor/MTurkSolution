@@ -19,6 +19,10 @@ else
         <h3>
             The Game
         </h3>
+        @if(sessionId.ToUpper()[0] == 'Z')
+        {
+            <p>@(game.Game.ToString())</p>
+        }
     </div>
 
     <ModalRules @ref="modalRules" />
