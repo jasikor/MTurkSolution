@@ -61,7 +61,7 @@ namespace MTurk.Algo
             int lastMove = rnd.Next(1, 10+1);
             if (moves.Length > 1)
                 lastMove = (int)moves[moves.Length - 2];
-            int max = Math.Clamp(20 - g.Game.MachineDisValue - 1, 0, 21);
+            int max = Math.Clamp(20 - g.Game.MachineDisValue - 1, 0, 20);
             int first = Math.Clamp(lastMove - deviation, 0, max);
             int last = Math.Clamp(lastMove + deviation, 0, max);
             Debug.Assert(last - first <= 2 * deviation + 1);
