@@ -12,6 +12,7 @@
     [Stubborn] FLOAT NOT NULL, 
     [MachineStarts] BIT NOT NULL, 
     [TurksProfit] INT NULL, 
+    [ShowMachinesDisValue] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Games_ToSessions] FOREIGN KEY ([SessionId]) REFERENCES [Sessions]([Id]), 
     CONSTRAINT [FK_Games_ToGameParameters] FOREIGN KEY ([GameParameterId]) REFERENCES [GameParameters]([Id])
 )
