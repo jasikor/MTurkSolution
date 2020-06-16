@@ -18,6 +18,7 @@ namespace MTurk.Data
         public int TimeOut { get; set; }
         public double Stubborn { get; set; }
         public bool MachineStarts { get; set; }
+        public bool ShowMachinesDisValue { get; set; }
         public int? TurksProfit { get; set; }
         public override string ToString()
         {
