@@ -51,7 +51,8 @@ namespace MTurk.DataAccess
                             MachineDisValue = @MachineDisValue,
                             TimeOut = @TimeOut,
                             Stubborn = @Stubborn,
-                            MachineStarts = @MachineStarts
+                            MachineStarts = @MachineStarts,
+                            ShowMachinesDisValue = @ShowMachinesDisValue
                         WHERE Id = @Id";
             else
                 sql = @"INSERT INTO [dbo].[GameParameters](
@@ -60,7 +61,8 @@ namespace MTurk.DataAccess
                             MachineDisValue,
                             TimeOut,
                             Stubborn,
-                            MachineStarts
+                            MachineStarts,
+                            ShowMachinesDisValue
                             ) 
                         VALUES (
                             @Surplus,
@@ -68,7 +70,8 @@ namespace MTurk.DataAccess
                             @MachineDisValue,
                             @TimeOut,
                             @Stubborn,
-                            @MachineStarts
+                            @MachineStarts,
+                            @ShowMachinesDisValue
                         )";
 
             await _db.SaveData<GameParametersModel>(sql, gp);

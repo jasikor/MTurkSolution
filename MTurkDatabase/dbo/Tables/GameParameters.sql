@@ -6,5 +6,6 @@
     [MachineDisValue] INT NOT NULL, 
     [TimeOut] INT NOT NULL, 
     [Stubborn] FLOAT NOT NULL, 
-    [MachineStarts] BIT NOT NULL
+    [MachineStarts] BIT NOT NULL, 
+    [ShowMachinesDisValue] BIT NOT NULL DEFAULT 0
 )
