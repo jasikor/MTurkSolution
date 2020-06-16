@@ -72,5 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PublishLocations\LocalDBManiek.publish.xml" />
+    <None Include="PublishLocations\MTurkDatabase.publish.xml" />
   </ItemGroup>
 </Project>

@@ -14,5 +14,6 @@ namespace MTurk.Models
         public int TimeOut { get; set; }
         public double Stubborn { get; set; }
         public bool MachineStarts { get; set; }
+        public bool ShowMachinesDisValue{ get; set; }
     }
 }

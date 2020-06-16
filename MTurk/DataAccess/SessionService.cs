@@ -139,14 +139,15 @@ namespace MTurk.Data
                 TimeOut = gameParameter.TimeOut,
                 Stubborn = gameParameter.Stubborn,
                 MachineStarts = gameParameter.MachineStarts,
+                ShowMachinesDisValue = gameParameter.ShowMachinesDisValue,
             };
             sql = @"insert into dbo.Games 
                               (SessionId,
-                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts)
+                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, ShowMachinesDisValue)
                            output inserted.*
                            values 
                               ((select Id from Sessions where WorkerId = @WorkerId), 
-                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts)";
+                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @ShowMachinesDisValue)";
             try
             {
                 var res = await _db.SaveData<dynamic, GameModel>(sql, g);
@@ -228,7 +229,9 @@ namespace MTurk.Data
                         TimeOut = row.TimeOut,
                         Stubborn = row.Stubborn,
                         MachineStarts = row.MachineStarts,
-                        TurksProfit = row.TurksProfit
+                        TurksProfit = row.TurksProfit,
+                        ShowMachinesDisValue = row.ShowMachinesDisValue,
+
                     },
                     Moves = new List<MoveModel>(),
                 });;
