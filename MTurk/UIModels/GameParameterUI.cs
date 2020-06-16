@@ -22,5 +22,7 @@ namespace MTurk.UIModels
         public double Stubborn;
         [Required]
         public bool MachineStarts;
+        [Required]
+        public bool ShowMachinesDisValue;
     }
 }

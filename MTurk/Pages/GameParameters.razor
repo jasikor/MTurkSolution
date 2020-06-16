@@ -11,90 +11,93 @@
 
 @if (gameE != null)
 {
-    <EditForm Model="@gameE" OnValidSubmit="@SaveGame">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="form-group">
-            <label>Surplus:</label>
-            <InputNumber class="form-control" id="surplus" @bind-Value="gameE.Surplus"></InputNumber>
-        </div>
-        <div class="form-group">
-            <label>TurksDisValue</label>
-            <InputNumber class="form-control" id="turksDisValue" @bind-Value="gameE.TurksDisValue"></InputNumber>
-        </div>
-        <div class="form-group">
-            <label for="machineDisValue">MachineDisValue</label>
-            <InputNumber class="form-control" id="marchineDisValue" @bind-Value="gameE.MachineDisValue"></InputNumber>
-        </div>
-        <div class="form-group">
+<EditForm Model="@gameE" OnValidSubmit="@SaveGame">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Surplus:</label>
+        <InputNumber class="form-control" id="surplus" @bind-Value="gameE.Surplus"></InputNumber>
+    </div>
+    <div class="form-group">
+        <label>TurksDisValue</label>
+        <InputNumber class="form-control" id="turksDisValue" @bind-Value="gameE.TurksDisValue"></InputNumber>
+    </div>
+    <div class="form-group">
+        <label for="machineDisValue">MachineDisValue</label>
+        <InputNumber class="form-control" id="marchineDisValue" @bind-Value="gameE.MachineDisValue"></InputNumber>
+    </div>
+    <div class="form-group">
 
-            <label for="timeOut">TimeOut (secs)</label>
-            <InputNumber class="form-control" id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
+        <label for="timeOut">TimeOut (secs)</label>
+        <InputNumber class="form-control" id="timeOut" @bind-Value="gameE.TimeOut"></InputNumber>
 
-        </div>
-        <div class="form-group">
+    </div>
+    <div class="form-group">
 
-            <label for="stubborn">Stubborn</label>
-            <InputNumber class="form-control" id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
+        <label for="stubborn">Stubborn</label>
+        <InputNumber class="form-control" id="stubborn" @bind-Value="gameE.Stubborn"></InputNumber>
 
-        </div>
-        <div class="form-group">
+    </div>
+    <div class="form-group">
 
-            <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
-            <label for="machineStarts">MachineStarts</label>
+        <InputCheckbox id="machineStarts" @bind-Value="gameE.MachineStarts"></InputCheckbox>
+        <label for="machineStarts">MachineStarts</label>
 
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
-        </div>
-    </EditForm>
-}
+    </div>
+    <div class="form-group">
+
+        <InputCheckbox id="showMachineDisValue" @bind-Value="gameE.ShowMachinesDisValue"></InputCheckbox>
+        <label for="machineStarts">ShowMachinesDisValue</label>
+
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
+    </div>
+</EditForm> }
 else
 {
-    <button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnEditGame(0); })">New</button>
+<button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnEditGame(0); })">New</button>
 
-    @if (parameters == null)
-    {
-        <div class="alert-info">Loading...</div>
-    }
-    else
-    {
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>Surplus</th>
-                    <th>TurksDisValue</th>
-                    <th>MachineDisValue</th>
-                    <th>TimeOut (secs)</th>
-                    <th>Stubborn</th>
-                    <th>MachnieStarts</th>
-                    <th></th>
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var p in parameters)
+                @if (parameters == null)
                 {
-                    <tr>
-                        <td>@p.Surplus </td>
-                        <td>@p.TurksDisValue </td>
-                        <td>@p.MachineDisValue </td>
-                        <td>@p.TimeOut </td>
-                        <td>@p.Stubborn </td>
-                        <td>@p.MachineStarts</td>
-                        <td><button class="btn btn-secondary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
-                        <td><button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnDeleteGame(p.Id); })">Delete</button></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+<div class="alert-info">Loading...</div> }
+else
+{
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Surplus</th>
+            <th>TurksDisValue</th>
+            <th>MachineDisValue</th>
+            <th>TimeOut (secs)</th>
+            <th>Stubborn</th>
+            <th>MachnieStarts</th>
+            <th>ShowMachinesDisValue</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in parameters)
+        {
+<tr>
+    <td>@p.Surplus </td>
+    <td>@p.TurksDisValue </td>
+    <td>@p.MachineDisValue </td>
+    <td>@p.TimeOut </td>
+    <td>@p.Stubborn </td>
+    <td>@p.MachineStarts</td>
+    <td>@p.ShowMachinesDisValue</td>
+    <td><button class="btn btn-secondary btn-sm" @onclick="@(() => { OnEditGame(p.Id); })">Edit</button></td>
+    <td><button class="btn btn-secondary  btn-sm" @onclick="@(() => { OnDeleteGame(p.Id); })">Delete</button></td>
+</tr>
 }
+    </tbody>
+</table>}}
 
 
-@code {
-    private List<MTurk.Models.GameParametersModel> parameters;
+@code { private List<MTurk.Models.GameParametersModel> parameters;
     private GameParameterUI gameE;
 
     private void OnEditGame(int id)
@@ -110,6 +113,7 @@ else
                 TimeOut = 30,
                 Stubborn = 0.1,
                 MachineStarts = false,
+                ShowMachinesDisValue = false,
             };
         else
             gp = parameters.Find((x) => x.Id == id);
@@ -123,6 +127,7 @@ else
             TimeOut = gp.TimeOut,
             Stubborn = gp.Stubborn,
             MachineStarts = gp.MachineStarts,
+            ShowMachinesDisValue = gp.ShowMachinesDisValue,
         };
     }
 
@@ -154,6 +159,7 @@ else
             TimeOut = gameE.TimeOut,
             Stubborn = gameE.Stubborn,
             MachineStarts = gameE.MachineStarts,
+            ShowMachinesDisValue = gameE.ShowMachinesDisValue,
         };
         await _db.SaveGameParameters(gp);
         parameters = _db.GetAllParameters();
@@ -163,6 +169,4 @@ else
     protected override async Task OnInitializedAsync()
     {
         parameters = await Task.Run(() => _db.GetAllParameters());
-    }
-
-}
+    } }
