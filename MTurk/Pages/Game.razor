@@ -178,7 +178,6 @@ else
 
     private async Task MakeFirstOffer()
     {
-        //int machinesOffer = MachineAI.GetMachinesOffer(game.Game.Surplus, game.Game.Stubborn, game.Game.MachineDisValue, null, MachinesLastOffer());
         int machinesOffer = moveEngine.GetMachinesOffer(game);
 
         MoveModel move = new MoveModel()
@@ -210,7 +209,7 @@ else
         {
             MoveBy = turksOffer ? "TURK" : "SYST",
             ProposedAmount = amount,
-            OfferAccepted = turksOffer && MachinesLastOffer() == amount || amount < 0,
+            OfferAccepted = turksOffer && MachinesLastOffer() >= amount || amount < 0,
             GameId = game.Game.Id,
         };
         await SaveMove(move);
@@ -222,9 +221,11 @@ else
             {
                 MoveBy = "MACH",
                 ProposedAmount = machinesOffer,
-                OfferAccepted = machinesOffer == amount,
+                OfferAccepted = machinesOffer >= amount,
                 GameId = game.Game.Id,
             };
+            if (machinesMove.OfferAccepted)
+                machinesMove.ProposedAmount = amount;
             await Task.Delay((int)(1000 + rnd.NextDouble() * 4000));
             await SaveMove(machinesMove);
         }
