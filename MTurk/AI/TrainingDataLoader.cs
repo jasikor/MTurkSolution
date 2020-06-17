@@ -78,7 +78,7 @@ namespace MTurk.AI
             }
             StdVar = new float[x.GetLength(1)];
             for (int j = 0; j < x.GetLength(1); j++)
-                StdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0));
+                StdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0)) + 0.01f;
             for (int i = 0; i < x.GetLength(0); i++)
             {
                 for (int j = 0; j < x.GetLength(1); j++)
@@ -90,7 +90,7 @@ namespace MTurk.AI
         }
         public void Normalize(float[] x)
         {
-            for(int i = 0; i<x.Length; i++)
+            for (int i = 0; i < x.Length; i++)
                 x[i] = (x[i] - Mean[i]) / StdVar[i];
         }
 

@@ -8,21 +8,35 @@ namespace MTurk.Algo
 {
     public class SubHistory
     {
-        public const int SubHistoryLength = 11;
-        public static float[] GetSubHistory(int i, int machineDisValue, bool machineStarts,  float[] moves)
+        public const int SubHistoryLength = 12;
+
+        public const int MachineDisValueIndex = 0;
+        public const int MachineStartsIndex  = 1;
+        public const int NoOfMovesIndex  = 2;
+        public const int TurksLastConcessionIndex  = 3;
+        public const int MachinesLastConcessionIndex  = 4;
+        public const int TurksFirstOfferIndex  = 5;
+        public const int MachinesFirstOfferIndex  = 6;
+        public const int TurksLast1OfferIndex  = 7;
+        public const int MachinesLast1OfferIndex  = 8;
+        public const int TurksLastOfferIndex  = 9;
+        public const int MachinesLastOfferIndex  = 10;
+        public const int TurksDisValueIndex  = 11;
+        public static float[] GetSubHistory(int i, int machineDisValue, int turksDisValue, bool machineStarts,  float[] moves)
         {
             var x = new float[SubHistoryLength];
-            x[0] = machineDisValue;
-            x[1] = machineStarts ? 1f : 0f;
-            x[2] = i;
-            x[3] = TurksLastConcession(i, moves);
-            x[4] = MachinesLastConcession(i, moves);
-            x[5] = TurksFirst(moves, machineStarts);
-            x[6] = MachinesFirst(moves, machineStarts);
-            x[7] = TurksLast1(i,moves);
-            x[8] = MachinesLast1(i, moves) ;
-            x[9] = TurksLast(i, moves, machineStarts) ;
-            x[10] = MachinesLast(i, moves, machineStarts);
+            x[MachineDisValueIndex] = machineDisValue;
+            x[MachineStartsIndex] = machineStarts ? 1f : 0f;
+            x[NoOfMovesIndex] = i;
+            x[TurksLastConcessionIndex] = TurksLastConcession(i, moves);
+            x[MachinesLastConcessionIndex] = MachinesLastConcession(i, moves);
+            x[TurksFirstOfferIndex] = TurksFirst(moves, machineStarts);
+            x[MachinesFirstOfferIndex] = MachinesFirst(moves, machineStarts);
+            x[TurksLast1OfferIndex] = TurksLast1(i,moves);
+            x[MachinesLast1OfferIndex] = MachinesLast1(i, moves) ;
+            x[TurksLastOfferIndex] = TurksLast(i, moves, machineStarts) ;
+            x[MachinesLastOfferIndex] = MachinesLast(i, moves, machineStarts);
+            x[TurksDisValueIndex] = turksDisValue;
             return x;
         }
 

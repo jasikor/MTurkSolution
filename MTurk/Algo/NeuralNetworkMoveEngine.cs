@@ -30,7 +30,7 @@ namespace MTurk.Algo
             for (int i = 0; i < expectedPayoffs.Length; i++)
             {
                 moves1[moves1.Length - 1] = i;
-                float[] X = SubHistory.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
+                float[] X = SubHistory.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.ShowMachinesDisValue ? g.Game.TurksDisValue : -1, g.Game.MachineStarts, moves1);
                 float[] Y = net.Forward(X);
                 expectedPayoffs[i] = ExpectedPayoff(Y);
 

@@ -49,7 +49,7 @@ namespace MTurk.Data
 
 
 
-        internal float[] GetSubHistory(int i) => SubHistory.GetSubHistory(i, Game.MachineDisValue, Game.MachineStarts, MovesToFloat());
+        internal float[] GetSubHistory(int i) => SubHistory.GetSubHistory(i, Game.MachineDisValue, Game.ShowMachinesDisValue ? Game.TurksDisValue : -1, Game.MachineStarts, MovesToFloat());
 
         public float[] MovesToFloat()
         {
