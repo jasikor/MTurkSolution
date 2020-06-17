@@ -35,11 +35,11 @@ namespace MTurk.AI
         public ITrainingDataset GetTrainingDataset(int size)
         {
             LoadData(inputData, resultData);
-            float[,] X = new float[inputData.Count, 11];
+            float[,] X = new float[inputData.Count, SubHistory.SubHistoryLength];
             float[,] Y = new float[inputData.Count, IMoveEngine.Payoffs];
             for (int i = 0; i < inputData.Count; i++)
             {
-                for (int j = 0; j < 11; j++)
+                for (int j = 0; j < SubHistory.SubHistoryLength; j++)
                     X[i, j] = inputData[i][j];
                 var data = new float[IMoveEngine.Payoffs];
 
@@ -78,7 +78,7 @@ namespace MTurk.AI
             }
             StdVar = new float[x.GetLength(1)];
             for (int j = 0; j < x.GetLength(1); j++)
-                StdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0));
+                StdVar[j] = (float)Math.Sqrt(sumDist[j] / x.GetLength(0)) + 0.01f;
             for (int i = 0; i < x.GetLength(0); i++)
             {
                 for (int j = 0; j < x.GetLength(1); j++)
@@ -90,7 +90,7 @@ namespace MTurk.AI
         }
         public void Normalize(float[] x)
         {
-            for(int i = 0; i<x.Length; i++)
+            for (int i = 0; i < x.Length; i++)
                 x[i] = (x[i] - Mean[i]) / StdVar[i];
         }
 
@@ -129,11 +129,11 @@ namespace MTurk.AI
         public (float[,], float[]) GetRawData()
         {
             LoadData(inputData, resultData);
-            float[,] X = new float[inputData.Count, 11];
+            float[,] X = new float[inputData.Count, SubHistory.SubHistoryLength];
             float[] Y = new float[inputData.Count];
             for (int i = 0; i < inputData.Count; i++)
             {
-                for (int j = 0; j < 11; j++)
+                for (int j = 0; j < SubHistory.SubHistoryLength; j++)
                     X[i, j] = inputData[i][j];
                 Y[i] = resultData[i];
             }

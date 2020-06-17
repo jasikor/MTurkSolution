@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MTurk.AI;
+using MTurk.Algo;
 using MTurk.Data;
 using MTurk.Models;
 using NeuralNetworkNET.APIs.Interfaces.Data;
@@ -97,21 +98,23 @@ namespace MTurk.Controllers
                     res.Append($"{move.MoveBy[0]}:{move.ProposedAmount} ");
                 }
                 res.AppendLine();
-                res.AppendLine("Moves TConc  MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast");
+                res.AppendLine("Moves TConc  MConc  TFirst  MFirst TLast1 MLast1 TLast  MLast TDisV");
                 Debug.Assert(row.Moves.Count > 0);
                 i = row.Game.MachineStarts ? 0 : 1;
                 for (; i < row.Moves.Count; i += 2)
                 {
                     var moves = row.MovesToFloat();
+                    var s = SubHistory.GetSubHistory(i, row.Game.MachineDisValue, row.Game.ShowMachinesDisValue ? row.Game.TurksDisValue : -1, row.Game.MachineStarts, moves);
                     res.AppendFormat("{0,4}", i);
-                    res.AppendFormat("{0,6}", GameInfo.TurksLastConcession(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLastConcession(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.TurksLast1(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLast1(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,6}", s[SubHistory.TurksLastConcessionIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.MachinesLastConcessionIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.TurksFirstOfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.MachinesFirstOfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.TurksLastOfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.MachinesLast1OfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.TurksLastOfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.MachinesLastOfferIndex]);
+                    res.AppendFormat("{0,7}", s[SubHistory.TurksDisValueIndex]);
 
                     res.AppendLine();
 
@@ -145,15 +148,17 @@ namespace MTurk.Controllers
                     res.Append($"{(row.Game.MachineStarts ? 1 : 0)} ");
 
                     var moves = row.MovesToFloat();
+                    var s = SubHistory.GetSubHistory(i, row.Game.MachineDisValue, row.Game.ShowMachinesDisValue ? row.Game.TurksDisValue : -1, row.Game.MachineStarts, moves);
                     res.AppendFormat("{0} ", i);
-                    res.AppendFormat("{0} ", GameInfo.TurksLastConcession(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLastConcession(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.TurksLast1(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLast1(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", s[SubHistory.TurksLastConcessionIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.MachinesLastConcessionIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.TurksFirstOfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.MachinesFirstOfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.TurksLast1OfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.MachinesLast1OfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.TurksLastOfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.MachinesLastOfferIndex]);
+                    res.AppendFormat("{0} ", s[SubHistory.TurksDisValueIndex]);
                     res.AppendFormat("{0} ", machProfit);
                     res.AppendLine();
 
