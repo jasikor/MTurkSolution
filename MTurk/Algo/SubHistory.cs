@@ -8,9 +8,10 @@ namespace MTurk.Algo
 {
     public class SubHistory
     {
+        public const int SubHistoryLength = 11;
         public static float[] GetSubHistory(int i, int machineDisValue, bool machineStarts,  float[] moves)
         {
-            var x = new float[11];
+            var x = new float[SubHistoryLength];
             x[0] = machineDisValue;
             x[1] = machineStarts ? 1f : 0f;
             x[2] = i;
