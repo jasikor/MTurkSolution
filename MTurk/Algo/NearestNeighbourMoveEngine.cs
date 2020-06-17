@@ -34,7 +34,7 @@ namespace MTurk.Algo
         private void CalcDistance(int i, float[] p, DistIndex[] distanceIndex)
         {
             double sum = 0.0;
-            for (int j = 0; j < 11; j++)
+            for (int j = 0; j < p.Length; j++)
                 sum += (X[i, j] - p[j]) * (X[i, j] - p[j]);
             distanceIndex[i].Distance = Math.Sqrt(sum);
             distanceIndex[i].Index = i;
@@ -68,7 +68,7 @@ namespace MTurk.Algo
             for (int i = first; i <= last; i++)
             {
                 moves1[moves1.Length - 1] = i;
-                float[] X = GameInfo.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
+                float[] X = SubHistory.GetSubHistory(moves1.Length - 1, g.Game.MachineDisValue, g.Game.MachineStarts, moves1);
                 X[10] = i;
                 _dataLoader.Normalize(X);
                 float y = Nearest(X);

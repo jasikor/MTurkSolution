@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MTurk.AI;
+using MTurk.Algo;
 using MTurk.Data;
 using MTurk.Models;
 using NeuralNetworkNET.APIs.Interfaces.Data;
@@ -104,14 +105,14 @@ namespace MTurk.Controllers
                 {
                     var moves = row.MovesToFloat();
                     res.AppendFormat("{0,4}", i);
-                    res.AppendFormat("{0,6}", GameInfo.TurksLastConcession(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLastConcession(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.TurksLast1(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLast1(i, moves));
-                    res.AppendFormat("{0,7}", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0,7}", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,6}", SubHistory.TurksLastConcession(i, moves));
+                    res.AppendFormat("{0,7}", SubHistory.MachinesLastConcession(i, moves));
+                    res.AppendFormat("{0,7}", SubHistory.TurksFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", SubHistory.MachinesFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", SubHistory.TurksLast1(i, moves));
+                    res.AppendFormat("{0,7}", SubHistory.MachinesLast1(i, moves));
+                    res.AppendFormat("{0,7}", SubHistory.TurksLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0,7}", SubHistory.MachinesLast(i, moves, row.Game.MachineStarts));
 
                     res.AppendLine();
 
@@ -146,14 +147,14 @@ namespace MTurk.Controllers
 
                     var moves = row.MovesToFloat();
                     res.AppendFormat("{0} ", i);
-                    res.AppendFormat("{0} ", GameInfo.TurksLastConcession(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLastConcession(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.TurksFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.MachinesFirst(moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.TurksLast1(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLast1(i, moves));
-                    res.AppendFormat("{0} ", GameInfo.TurksLast(i, moves, row.Game.MachineStarts));
-                    res.AppendFormat("{0} ", GameInfo.MachinesLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", SubHistory.TurksLastConcession(i, moves));
+                    res.AppendFormat("{0} ", SubHistory.MachinesLastConcession(i, moves));
+                    res.AppendFormat("{0} ", SubHistory.TurksFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", SubHistory.MachinesFirst(moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", SubHistory.TurksLast1(i, moves));
+                    res.AppendFormat("{0} ", SubHistory.MachinesLast1(i, moves));
+                    res.AppendFormat("{0} ", SubHistory.TurksLast(i, moves, row.Game.MachineStarts));
+                    res.AppendFormat("{0} ", SubHistory.MachinesLast(i, moves, row.Game.MachineStarts));
                     res.AppendFormat("{0} ", machProfit);
                     res.AppendLine();
 
