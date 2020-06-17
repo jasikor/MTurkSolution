@@ -31,8 +31,8 @@ namespace MTurk.AI
 
         public TrainingSessionResult Train(ITrainingDataset data, ITestDataset testData)
         {
-            INeuralNetwork net = NetworkManager.NewSequential(TensorInfo.Linear(11),
-                NetworkLayers.FullyConnected(11, ActivationType.LeCunTanh),
+            INeuralNetwork net = NetworkManager.NewSequential(TensorInfo.Linear(SubHistory.SubHistoryLength),
+                NetworkLayers.FullyConnected(SubHistory.SubHistoryLength, ActivationType.LeCunTanh),
                 NetworkLayers.Softmax(IMoveEngine.Payoffs));
             TrainingSessionResult result = NetworkManager.TrainNetwork(net,
                 data,
