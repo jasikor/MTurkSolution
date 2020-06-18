@@ -184,6 +184,20 @@ namespace MTurk.Data
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
+        public List<MovesWithGames> GetMovesWithGames(DateTime startTime, DateTime endTime)
+        {
+            string sql = @"Select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy  
+                                from Sessions s
+                                join games g on g.SessionId = s.Id
+                                join moves m on m.GameId = g.Id
+                                where WorkerId like 'A%' and 
+                                    g.StartTime >= @StartTime and 
+                                    g.EndTime <= @EndTime
+                                order by g.Id desc, m.Id";
+
+
+            return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { EndTime = endTime, StartTime = startTime });
+        }
         public List<MovesWithGames> GetMovesWithGames(int numberOfGames, int firstRow = 0)
         {
             string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
@@ -207,7 +221,7 @@ namespace MTurk.Data
         public IList<GameInfo> GetGameInfos(int numberOfGames, int firstGame = 0)
         {
             var res = new List<GameInfo>();
-            var movesWithGames = GetMovesWithGames(numberOfGames, firstGame);
+            var movesWithGames = GetMovesWithGames(new DateTime(2020,5,10), new DateTime(2020,6,20));
             if (movesWithGames.Count == 0)
                 return res;
             int currentGame = 0;
