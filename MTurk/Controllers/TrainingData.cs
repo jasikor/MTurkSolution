@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MTurk.Controllers
 {
-    [ApiController, Route("training/{counter}")]
+    [ApiController, Route("training")]
     public class TrainingData : ControllerBase
     {
         private readonly ISessionService _sessionService;
@@ -30,9 +30,9 @@ namespace MTurk.Controllers
         }
 
         [HttpGet]
-        public ActionResult Get(int counter)
+        public ActionResult Get()
         {
-            var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
+            var content = GetContent(FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
@@ -56,9 +56,9 @@ namespace MTurk.Controllers
             TrainingVectors,
             TrainingVectorsNormalized
         }
-        private string GetContent(int numberOfGames, FileFormat format)
+        private string GetContent(FileFormat format)
         {
-            var rows = _sessionService.GetGameInfos(numberOfGames);
+            var rows = _sessionService.GetGameInfos();
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             switch (format)

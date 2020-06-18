@@ -98,7 +98,7 @@ namespace MTurk.AI
         {
             if (X.Count == 0)
             {
-                var rows = _sessionService.GetGameInfos(100000);
+                var rows = _sessionService.GetGameInfos();
                 if (rows.Count == 0)
                     return;
                 foreach (var row in rows)

@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using MTurk.Models;
 using MTurk.Pages;
 using MTurk.DataAccess;
+using System.Data.SqlTypes;
 
 namespace MTurk.Data
 {
@@ -186,6 +187,7 @@ namespace MTurk.Data
 
         public List<MovesWithGames> GetMovesWithGames(DateTime startTime, DateTime endTime)
         {
+            FixDefaults(ref startTime, ref endTime);
             string sql = @"Select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy  
                                 from Sessions s
                                 join games g on g.SessionId = s.Id
@@ -198,30 +200,20 @@ namespace MTurk.Data
 
             return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { EndTime = endTime, StartTime = startTime });
         }
-        public List<MovesWithGames> GetMovesWithGames(int numberOfGames, int firstRow = 0)
+
+        private static void FixDefaults(ref DateTime startTime, ref DateTime endTime)
         {
-            string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
-                           from(
-                            select * 
-                            from games 
-                            where EndTime is not null 
-                            order by id desc
-                            offset @FirstRow rows 
-                            fetch first @NumberOfGames row only) as g
-                           left join Sessions s 
-                            on s.Id = g.SessionId
-                           left join moves m 
-                            on m.GameId = g.Id
-                            order by g.Id desc, m.Id";
-
-
-            return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames, FirstRow = firstRow });
+            if (startTime == default(DateTime))
+                startTime = new DateTime(2020, 1, 1);
+            if (endTime == default(DateTime))
+                endTime = DateTime.UtcNow.AddYears(100);
         }
 
-        public IList<GameInfo> GetGameInfos(int numberOfGames, int firstGame = 0)
+        public IList<GameInfo> GetGameInfos(DateTime startTime, DateTime endTime)
         {
+            FixDefaults(ref startTime, ref endTime);
             var res = new List<GameInfo>();
-            var movesWithGames = GetMovesWithGames(new DateTime(2020,5,10), new DateTime(2020,6,20));
+            var movesWithGames = GetMovesWithGames(startTime, endTime);
             if (movesWithGames.Count == 0)
                 return res;
             int currentGame = 0;
