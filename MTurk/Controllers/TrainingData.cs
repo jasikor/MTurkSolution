@@ -30,7 +30,7 @@ namespace MTurk.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(int counter)
+        public ActionResult Get(int counter)
         {
             var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
