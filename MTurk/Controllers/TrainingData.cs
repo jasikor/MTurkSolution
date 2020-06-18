@@ -34,7 +34,7 @@ namespace MTurk.Controllers
         {
             ITrainingDataset trainingDataset = null; ; 
             await Task.Run(()=> trainingDataset = _trainingDataLoader.GetTrainingDataset(counter));
-            TrainingSessionResult res = _aIManager.Train(trainingDataset, null);
+            // TrainingSessionResult res = _aIManager.Train(trainingDataset, null);
 
             var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
