@@ -32,10 +32,6 @@ namespace MTurk.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(int counter)
         {
-            ITrainingDataset trainingDataset = null; ; 
-            await Task.Run(()=> trainingDataset = _trainingDataLoader.GetTrainingDataset(counter));
-            // TrainingSessionResult res = _aIManager.Train(trainingDataset, null);
-
             var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
 
