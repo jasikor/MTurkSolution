@@ -21,15 +21,10 @@ namespace MTurk.AI
         private readonly List<float[]> inputData = new List<float[]>();
         private readonly List<float> resultData = new List<float>();
         private IHistoricalGamesService _gs;
-        const int testingPercentage = 80;
 
         public TrainingDataLoader(IHistoricalGamesService gs)
         {
             _gs = gs;
-        }
-        public ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
         }
 
         public ITrainingDataset GetTrainingDataset(int size)

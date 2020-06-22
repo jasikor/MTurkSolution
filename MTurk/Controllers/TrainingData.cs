@@ -20,13 +20,11 @@ namespace MTurk.Controllers
     public class TrainingData : ControllerBase
     {
         private readonly IHistoricalGamesService _gs;
-        private readonly ITrainingDataLoader _trainingDataLoader;
         private readonly IAIManager _aIManager;
 
-        public TrainingData(ISessionService sessionService, ITrainingDataLoader trainingDataLoader, IAIManager aIManager, IHistoricalGamesService gs)
+        public TrainingData(ISessionService sessionService, IAIManager aIManager, IHistoricalGamesService gs)
         {
             _gs = gs;
-            _trainingDataLoader = trainingDataLoader;
             _aIManager = aIManager;
         }
 
