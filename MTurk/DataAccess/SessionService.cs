@@ -10,17 +10,21 @@ using MTurk.Models;
 using MTurk.Pages;
 using MTurk.DataAccess;
 using System.Data.SqlTypes;
+using MTurk.AI;
+using MTurk.Algo;
 
 namespace MTurk.Data
 {
     public class SessionService : ISessionService
     {
-        public SessionService(ISqlDataAccess db)
+        public SessionService(ISqlDataAccess db, IMoveEngine me)
         {
             _db = db;
+            _me = me;
         }
 
         private readonly ISqlDataAccess _db;
+        private readonly IMoveEngine _me;
 
         public async Task<SessionModel> StartNewSession(string workerId)
         {
@@ -141,14 +145,15 @@ namespace MTurk.Data
                 Stubborn = gameParameter.Stubborn,
                 MachineStarts = gameParameter.MachineStarts,
                 ShowMachinesDisValue = gameParameter.ShowMachinesDisValue,
+                AlgoVersion = _me.AlgoVersion,
             };
             sql = @"insert into dbo.Games 
                               (SessionId,
-                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, ShowMachinesDisValue)
+                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, ShowMachinesDisValue, AlgoVersion)
                            output inserted.*
                            values 
                               ((select Id from Sessions where WorkerId = @WorkerId), 
-                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @ShowMachinesDisValue)";
+                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @ShowMachinesDisValue, @AlgoVersion)";
             try
             {
                 var res = await _db.SaveData<dynamic, GameModel>(sql, g);
@@ -185,85 +190,11 @@ namespace MTurk.Data
             await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
-        public List<MovesWithGames> GetMovesWithGames(DateTime startTime, DateTime endTime)
-        {
-            FixDefaults(ref startTime, ref endTime);
-            string sql = @"Select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy  
-                                from Sessions s
-                                join games g on g.SessionId = s.Id
-                                join moves m on m.GameId = g.Id
-                                where WorkerId like 'A%' and 
-                                    g.StartTime >= @StartTime and 
-                                    g.EndTime <= @EndTime
-                                order by g.Id desc, m.Id";
+        
 
+        
 
-            return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { EndTime = endTime, StartTime = startTime });
-        }
-
-        private static void FixDefaults(ref DateTime startTime, ref DateTime endTime)
-        {
-            if (startTime == default(DateTime))
-                startTime = new DateTime(2020, 1, 1);
-            if (endTime == default(DateTime))
-                endTime = DateTime.UtcNow.AddYears(100);
-        }
-
-        public IList<GameInfo> GetGameInfos(DateTime startTime, DateTime endTime)
-        {
-            FixDefaults(ref startTime, ref endTime);
-            var res = new List<GameInfo>();
-            var movesWithGames = GetMovesWithGames(startTime, endTime);
-            if (movesWithGames.Count == 0)
-                return res;
-            int currentGame = 0;
-            while (currentGame < movesWithGames.Count - 1)
-            {
-                var row = movesWithGames[currentGame];
-                res.Add(new GameInfo()
-                {
-                    WorkerId = row.WorkerId,
-                    Game = new GameModel()
-                    {
-                        Id = row.Id,
-                        SessionId = row.SessionId,
-                        StartTime = row.StartTime,
-                        EndTime = row.EndTime,
-                        Surplus = row.Surplus,
-                        TurksDisValue = row.TurksDisValue,
-                        MachineDisValue = row.MachineDisValue,
-                        TimeOut = row.TimeOut,
-                        Stubborn = row.Stubborn,
-                        MachineStarts = row.MachineStarts,
-                        TurksProfit = row.TurksProfit,
-                        ShowMachinesDisValue = row.ShowMachinesDisValue,
-
-                    },
-                    Moves = new List<MoveModel>(),
-                });;
-
-                for (int i = currentGame; ; i++)
-                {
-                    if (i >= movesWithGames.Count)
-                        return res;
-                    if (movesWithGames[currentGame].Id == movesWithGames[i].Id)
-                        res[res.Count - 1].Moves.Add(
-                            new MoveModel()
-                            {
-                                MoveBy = movesWithGames[i].MoveBy,
-                                ProposedAmount = movesWithGames[i].ProposedAmount,
-                            }
-                            );
-                    else
-                    {
-                        currentGame = i;
-                        break;
-                    }
-                }
-            }
-            return res;
-        }
-
+        
         private async Task<double> GetDollarsPerBar()
         {
             string sql = @"select * from Settings where [Key] = 'DollarsPerBar'";

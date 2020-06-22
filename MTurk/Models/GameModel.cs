@@ -20,6 +20,7 @@ namespace MTurk.Data
         public bool MachineStarts { get; set; }
         public bool ShowMachinesDisValue { get; set; }
         public int? TurksProfit { get; set; }
+        public string AlgoVersion { get; set; }
         public override string ToString()
         {
             return $"TDis:{TurksDisValue} MDis:{MachineDisValue} Stub:{Stubborn}"; 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MTurk.Data;
+using MTurk.DataAccess;
 using MTurk.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace MTurk.Controllers
     [ApiController, Route("dwn/")]
     public class DownloadController : ControllerBase
     {
-        private readonly ISessionService _sessionService;
+        private readonly IHistoricalGamesService _gs;
 
         [HttpGet]
         public ActionResult Get()
@@ -41,7 +42,7 @@ namespace MTurk.Controllers
 
         private string GetContent()
         {
-            List<MovesWithGames> rows = _sessionService.GetMovesWithGames();
+            List<MovesWithGames> rows = _gs.GetMovesWithGames();
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             StringBuilder res = new StringBuilder();
@@ -66,9 +67,9 @@ namespace MTurk.Controllers
             return res.ToString();
         }
 
-        public DownloadController(ISessionService sessionService)
+        public DownloadController(IHistoricalGamesService gs)
         {
-            _sessionService = sessionService;
+            _gs = gs;
         }
 
     }

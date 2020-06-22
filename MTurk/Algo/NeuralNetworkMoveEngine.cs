@@ -64,6 +64,8 @@ namespace MTurk.Algo
 
         private static Random rnd = new Random();
 
+        public string AlgoVersion => "Neural Network";
+
         private static int CumulativeRandom(double[] cumDist)
         {
             var random = rnd.NextDouble();

@@ -27,6 +27,7 @@ namespace MTurk
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddTransient<IHistoricalGamesService, HistoricalGamesService>();
             //services.AddTransient<IMoveEngine, NeuralNetworkMoveEngine>();
             services.AddTransient<IMoveEngine, NearestNeighbourMoveEngine>();
             services.AddTransient<ITrainingDataLoader, TrainingDataLoader>();

@@ -2,6 +2,7 @@
 using MTurk.AI;
 using MTurk.Algo;
 using MTurk.Data;
+using MTurk.DataAccess;
 using MTurk.Models;
 using NeuralNetworkNET.APIs.Interfaces.Data;
 using NeuralNetworkNET.APIs.Results;
@@ -18,13 +19,13 @@ namespace MTurk.Controllers
     [ApiController, Route("training")]
     public class TrainingData : ControllerBase
     {
-        private readonly ISessionService _sessionService;
+        private readonly IHistoricalGamesService _gs;
         private readonly ITrainingDataLoader _trainingDataLoader;
         private readonly IAIManager _aIManager;
 
-        public TrainingData(ISessionService sessionService, ITrainingDataLoader trainingDataLoader, IAIManager aIManager)
+        public TrainingData(ISessionService sessionService, ITrainingDataLoader trainingDataLoader, IAIManager aIManager, IHistoricalGamesService gs)
         {
-            _sessionService = sessionService;
+            _gs = gs;
             _trainingDataLoader = trainingDataLoader;
             _aIManager = aIManager;
         }
@@ -58,7 +59,7 @@ namespace MTurk.Controllers
         }
         private string GetContent(FileFormat format)
         {
-            var rows = _sessionService.GetGameInfos();
+            var rows = _gs.GetGameInfos();
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             switch (format)
