@@ -41,7 +41,11 @@ namespace MTurk.DataAccess
 
         public void SetSetting(string key, string value)
         {
+            string sql = @"update [dbo].[settings]
+                           set [Value] = @Value
+                           where [Key] = @Key";
 
+            _db.SaveData<dynamic>(sql, new { Key = key, Value = value });
         }
 
         public void SetSetting(string key, DateTime value)
