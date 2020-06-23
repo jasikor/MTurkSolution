@@ -9,6 +9,9 @@ using System.Data.SqlClient;
 using MTurk.Models;
 using MTurk.Pages;
 using MTurk.DataAccess;
+using System.Data.SqlTypes;
+using MTurk.AI;
+using MTurk.Algo;
 
 namespace MTurk.Data
 {
@@ -24,7 +27,7 @@ namespace MTurk.Data
         public async Task<SessionModel> StartNewSession(string workerId)
         {
             string sql = @"select * from Sessions where WorkerId = @WorkerId";
-            SessionModel sm = await _db.LoadDataSingle<dynamic, SessionModel>(sql, new { WorkerId = workerId });
+            SessionModel sm = await _db.LoadDataSingleAsync<dynamic, SessionModel>(sql, new { WorkerId = workerId });
             if (sm != null)
                 return sm;
             var dollarsPerBar = await GetDollarsPerBar();
@@ -56,7 +59,7 @@ namespace MTurk.Data
         /// </summary>
         /// <param name="workerId"></param>
         /// <returns>null if all games have been played, new game if all games so far are finished, or unfinished game</returns>
-        public async Task<GameInfo> GetCurrentGame(string workerId)
+        public async Task<GameInfo> GetCurrentGame(string workerId, string algoVersion)
         {
             string sql = @"select Top 1 g.* 
                            from Games g, Sessions s
@@ -66,7 +69,7 @@ namespace MTurk.Data
             GameModel gm = null;
             try
             {
-                gm = await _db.LoadDataSingle<dynamic, GameModel>(sql, new { WorkerId = workerId });
+                gm = await _db.LoadDataSingleAsync<dynamic, GameModel>(sql, new { WorkerId = workerId });
             }
             catch (SqlException e)
             {
@@ -80,7 +83,7 @@ namespace MTurk.Data
             }
 
             if (gm is null)
-                return await StartNewGame(workerId);
+                return await StartNewGame(workerId, algoVersion);
             else
                 return new GameInfo()
                 {
@@ -95,7 +98,7 @@ namespace MTurk.Data
         /// </summary>
         /// <param name="workerId"></param>
         /// <returns>new game or null if there are no more unused GameParameters</returns>
-        public async Task<GameInfo> StartNewGame(string workerId)
+        public async Task<GameInfo> StartNewGame(string workerId, string algoVersion)
         {
             string sql =
                 @"select Top 1 gp.* from GameParameters gp
@@ -111,7 +114,7 @@ namespace MTurk.Data
             GameParametersModel gameParameter = null;
             try
             {
-                gameParameter = await _db.LoadDataSingle<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
+                gameParameter = await _db.LoadDataSingleAsync<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
             }
             catch (SqlException e)
             {
@@ -140,14 +143,15 @@ namespace MTurk.Data
                 Stubborn = gameParameter.Stubborn,
                 MachineStarts = gameParameter.MachineStarts,
                 ShowMachinesDisValue = gameParameter.ShowMachinesDisValue,
+                AlgoVersion = algoVersion,
             };
             sql = @"insert into dbo.Games 
                               (SessionId,
-                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, ShowMachinesDisValue)
+                               GameParameterId, StartTime, Surplus, TurksDisValue, MachineDisValue, TimeOut, Stubborn, MachineStarts, ShowMachinesDisValue, AlgoVersion)
                            output inserted.*
                            values 
                               ((select Id from Sessions where WorkerId = @WorkerId), 
-                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @ShowMachinesDisValue)";
+                               @GameParameterId, @StartTime, @Surplus, @TurksDisValue, @MachineDisValue, @TimeOut, @Stubborn, @MachineStarts, @ShowMachinesDisValue, @AlgoVersion)";
             try
             {
                 var res = await _db.SaveData<dynamic, GameModel>(sql, g);
@@ -171,7 +175,7 @@ namespace MTurk.Data
                            values 
                             (@Time, @GameId, @MoveBy, @ProposedAmount, @OfferAccepted)";
 
-            await _db.SaveData<MoveModel>(sql, move);
+            await _db.SaveDataAsync<MoveModel>(sql, move);
         }
 
         public async Task FinishGame(GameModel game)
@@ -181,87 +185,18 @@ namespace MTurk.Data
                            set EndTime = @EndTime, TurksProfit = @TurksProfit
                            where Id = @GameId";
 
-            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
+            await _db.SaveDataAsync<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
-        public List<MovesWithGames> GetMovesWithGames(int numberOfGames, int firstRow = 0)
-        {
-            string sql = @"select g.*, s.WorkerId, m.ProposedAmount, m.MoveBy 
-                           from(
-                            select * 
-                            from games 
-                            where EndTime is not null 
-                            order by id desc
-                            offset @FirstRow rows 
-                            fetch first @NumberOfGames row only) as g
-                           left join Sessions s 
-                            on s.Id = g.SessionId
-                           left join moves m 
-                            on m.GameId = g.Id
-                            order by g.Id desc, m.Id";
+        
 
+        
 
-            return _db.LoadDataList<MovesWithGames, dynamic>(sql, new { NumberOfGames = numberOfGames, FirstRow = firstRow });
-        }
-
-        public IList<GameInfo> GetGameInfos(int numberOfGames, int firstGame = 0)
-        {
-            var res = new List<GameInfo>();
-            var movesWithGames = GetMovesWithGames(numberOfGames, firstGame);
-            if (movesWithGames.Count == 0)
-                return res;
-            int currentGame = 0;
-            while (currentGame < movesWithGames.Count - 1)
-            {
-                var row = movesWithGames[currentGame];
-                res.Add(new GameInfo()
-                {
-                    WorkerId = row.WorkerId,
-                    Game = new GameModel()
-                    {
-                        Id = row.Id,
-                        SessionId = row.SessionId,
-                        StartTime = row.StartTime,
-                        EndTime = row.EndTime,
-                        Surplus = row.Surplus,
-                        TurksDisValue = row.TurksDisValue,
-                        MachineDisValue = row.MachineDisValue,
-                        TimeOut = row.TimeOut,
-                        Stubborn = row.Stubborn,
-                        MachineStarts = row.MachineStarts,
-                        TurksProfit = row.TurksProfit,
-                        ShowMachinesDisValue = row.ShowMachinesDisValue,
-
-                    },
-                    Moves = new List<MoveModel>(),
-                });;
-
-                for (int i = currentGame; ; i++)
-                {
-                    if (i >= movesWithGames.Count)
-                        return res;
-                    if (movesWithGames[currentGame].Id == movesWithGames[i].Id)
-                        res[res.Count - 1].Moves.Add(
-                            new MoveModel()
-                            {
-                                MoveBy = movesWithGames[i].MoveBy,
-                                ProposedAmount = movesWithGames[i].ProposedAmount,
-                            }
-                            );
-                    else
-                    {
-                        currentGame = i;
-                        break;
-                    }
-                }
-            }
-            return res;
-        }
-
+        
         private async Task<double> GetDollarsPerBar()
         {
             string sql = @"select * from Settings where [Key] = 'DollarsPerBar'";
-            var dollarsPerBar = await _db.LoadDataSingle<dynamic, SettingsModel>(sql, new { });
+            var dollarsPerBar = await _db.LoadDataSingleAsync<dynamic, SettingsModel>(sql, new { });
             double res;
             if (Double.TryParse(dollarsPerBar.Value, out res))
                 return res;

@@ -2,6 +2,7 @@
 using MTurk.AI;
 using MTurk.Algo;
 using MTurk.Data;
+using MTurk.DataAccess;
 using MTurk.Models;
 using NeuralNetworkNET.APIs.Interfaces.Data;
 using NeuralNetworkNET.APIs.Results;
@@ -15,28 +16,22 @@ using System.Threading.Tasks;
 
 namespace MTurk.Controllers
 {
-    [ApiController, Route("training/{counter}")]
+    [ApiController, Route("training")]
     public class TrainingData : ControllerBase
     {
-        private readonly ISessionService _sessionService;
-        private readonly ITrainingDataLoader _trainingDataLoader;
+        private readonly IHistoricalGamesService _gs;
         private readonly IAIManager _aIManager;
 
-        public TrainingData(ISessionService sessionService, ITrainingDataLoader trainingDataLoader, IAIManager aIManager)
+        public TrainingData(ISessionService sessionService, IAIManager aIManager, IHistoricalGamesService gs)
         {
-            _sessionService = sessionService;
-            _trainingDataLoader = trainingDataLoader;
+            _gs = gs;
             _aIManager = aIManager;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(int counter)
+        public ActionResult Get()
         {
-            ITrainingDataset trainingDataset = null; ; 
-            await Task.Run(()=> trainingDataset = _trainingDataLoader.GetTrainingDataset(counter));
-            TrainingSessionResult res = _aIManager.Train(trainingDataset, null);
-
-            var content = GetContent(counter, FileFormat.TrainingVectorsNormalized);
+            var content = GetContent(FileFormat.TrainingVectorsNormalized);
             var stream = GenerateStreamFromString(content);
 
             var result = new FileStreamResult(stream, "text/plain");
@@ -60,9 +55,9 @@ namespace MTurk.Controllers
             TrainingVectors,
             TrainingVectorsNormalized
         }
-        private string GetContent(int numberOfGames, FileFormat format)
+        private string GetContent(FileFormat format)
         {
-            var rows = _sessionService.GetGameInfos(numberOfGames);
+            var rows = _gs.GetGameInfos();
             if (rows.Count == 0)
                 return "Nothing to see here, there were no finished games";
             switch (format)

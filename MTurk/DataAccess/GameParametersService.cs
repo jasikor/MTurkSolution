@@ -21,7 +21,7 @@ namespace MTurk.DataAccess
             string sql =
                 @"DELETE GameParameters WHERE Id = @Id";
 
-            _db.SaveData<dynamic>(sql, new { Id = id });
+            _db.SaveDataAsync<dynamic>(sql, new { Id = id });
         }
 
         public List<GameParametersModel> GetAllParameters()
@@ -74,7 +74,7 @@ namespace MTurk.DataAccess
                             @ShowMachinesDisValue
                         )";
 
-            await _db.SaveData<GameParametersModel>(sql, gp);
+            await _db.SaveDataAsync<GameParametersModel>(sql, gp);
         }
 
     }

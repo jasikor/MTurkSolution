@@ -170,7 +170,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        game = await sessionService.GetCurrentGame(sessionId);
+        game = await sessionService.GetCurrentGame(sessionId, moveEngine.AlgoVersion);
         await InitializeGame();
     }
 
@@ -264,7 +264,7 @@ else
     }
     private async void OnNextGame()
     {
-        var g = await sessionService.StartNewGame(sessionId);
+        var g = await sessionService.StartNewGame(sessionId, moveEngine.AlgoVersion);
         game = g;
         await InitializeGame();
     }

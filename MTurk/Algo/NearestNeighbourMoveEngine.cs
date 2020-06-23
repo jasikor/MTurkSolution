@@ -16,7 +16,7 @@ namespace MTurk.Algo
         private readonly ITrainingDataLoader _dataLoader;
         private float[,] X;
         private float[] Y;
-
+        public string AlgoVersion => $"NNeighbour(K={K},Games:[{_dataLoader.LearningRangeStart}..{_dataLoader.LearningRangeEnd}])";
         public NearestNeighbourMoveEngine(ITrainingDataLoader dataLoader)
         {
             _dataLoader = dataLoader;
