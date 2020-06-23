@@ -17,14 +17,12 @@ namespace MTurk.Data
 {
     public class SessionService : ISessionService
     {
-        public SessionService(ISqlDataAccess db, IMoveEngine me)
+        public SessionService(ISqlDataAccess db)
         {
             _db = db;
-            _me = me;
         }
 
         private readonly ISqlDataAccess _db;
-        private readonly IMoveEngine _me;
 
         public async Task<SessionModel> StartNewSession(string workerId)
         {
@@ -61,7 +59,7 @@ namespace MTurk.Data
         /// </summary>
         /// <param name="workerId"></param>
         /// <returns>null if all games have been played, new game if all games so far are finished, or unfinished game</returns>
-        public async Task<GameInfo> GetCurrentGame(string workerId)
+        public async Task<GameInfo> GetCurrentGame(string workerId, string algoVersion)
         {
             string sql = @"select Top 1 g.* 
                            from Games g, Sessions s
@@ -85,7 +83,7 @@ namespace MTurk.Data
             }
 
             if (gm is null)
-                return await StartNewGame(workerId);
+                return await StartNewGame(workerId, algoVersion);
             else
                 return new GameInfo()
                 {
@@ -100,7 +98,7 @@ namespace MTurk.Data
         /// </summary>
         /// <param name="workerId"></param>
         /// <returns>new game or null if there are no more unused GameParameters</returns>
-        public async Task<GameInfo> StartNewGame(string workerId)
+        public async Task<GameInfo> StartNewGame(string workerId, string algoVersion)
         {
             string sql =
                 @"select Top 1 gp.* from GameParameters gp
@@ -145,7 +143,7 @@ namespace MTurk.Data
                 Stubborn = gameParameter.Stubborn,
                 MachineStarts = gameParameter.MachineStarts,
                 ShowMachinesDisValue = gameParameter.ShowMachinesDisValue,
-                AlgoVersion = _me.AlgoVersion,
+                AlgoVersion = algoVersion,
             };
             sql = @"insert into dbo.Games 
                               (SessionId,
