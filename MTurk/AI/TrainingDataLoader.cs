@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using MTurk.Algo;
 using MTurk.Data;
+using MTurk.DataAccess;
 using NeuralNetworkNET.APIs;
 using NeuralNetworkNET.APIs.Interfaces.Data;
 using NeuralNetworkNET.SupervisedLearning.Progress;
@@ -17,19 +18,15 @@ namespace MTurk.AI
 {
     public class TrainingDataLoader : ITrainingDataLoader
     {
-        private readonly ISessionService _sessionService;
         private readonly List<float[]> inputData = new List<float[]>();
         private readonly List<float> resultData = new List<float>();
+        private IHistoricalGamesService _gs;
+        private readonly ISettingsService _settings;
 
-        const int testingPercentage = 80;
-
-        public TrainingDataLoader(ISessionService sessionService)
+        public TrainingDataLoader(IHistoricalGamesService gs, ISettingsService settings)
         {
-            _sessionService = sessionService;
-        }
-        public ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
+            _gs = gs;
+            _settings = settings;
         }
 
         public ITrainingDataset GetTrainingDataset(int size)
@@ -56,6 +53,9 @@ namespace MTurk.AI
         }
         public float[] Mean { get; private set; }
         public float[] StdVar { get; private set; }
+        public int? LearningRangeStart { get; private set; }
+        public int? LearningRangeEnd { get; private set; }
+
         public void Normalize(float[,] x)
         {
             float[] sum = new float[x.GetLength(1)];
@@ -96,17 +96,24 @@ namespace MTurk.AI
 
         private void LoadData(List<float[]> X, List<float> Y)
         {
+            LearningRangeStart = null;
+            LearningRangeEnd = null;
             if (X.Count == 0)
             {
-                var rows = _sessionService.GetGameInfos(100000);
+                DateTime startDate = _settings.GetSettingDateTime("LearnDStart");
+                DateTime endDate = _settings.GetSettingDateTime("LearnDEnd");
+                var rows = _gs.GetGameInfos(startDate,endDate);
                 if (rows.Count == 0)
                     return;
+                
                 foreach (var row in rows)
                 {
                     row.TrimMoves();
                     if (!row.IsValid())
                         continue;
-
+                    if (LearningRangeEnd is null)
+                        LearningRangeEnd = row.Game.Id;
+                    LearningRangeStart = row.Game.Id;
 
                     int i;
                     Debug.Assert(row.Moves.Count > 0);

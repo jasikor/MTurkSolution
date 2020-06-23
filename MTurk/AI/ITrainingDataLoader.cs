@@ -13,9 +13,10 @@ namespace MTurk.AI
     {
         float[] Mean { get; }
         float[] StdVar { get; }
+        int? LearningRangeStart { get; }
+        int? LearningRangeEnd { get; }
 
         ITrainingDataset GetTrainingDataset(int size);
-        ITestDataset GetTestDataset([CanBeNull] Action<TrainingProgressEventArgs> progress = null, CancellationToken token = default);
         (float[,], float[]) GetRawData();
         void Normalize(float[] x);
         void Normalize(float[,] x);

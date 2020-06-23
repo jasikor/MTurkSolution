@@ -25,7 +25,7 @@ namespace MTurk.Models
 
         public override string ToString()
         {
-            return $"{Id} {WorkerId} {StartTime} {EndTime} {Surplus} {TurksDisValue} {MachineDisValue} {TimeOut} {Stubborn} {(MachineStarts ? 1 : 0)} {(ShowMachinesDisValue ? 1 : 0)}";
+            return $"{Id} {WorkerId} {StartTime} {EndTime} {Surplus} {TurksDisValue} {MachineDisValue} {TimeOut} {Stubborn} {(MachineStarts ? 1 : 0)} {(ShowMachinesDisValue ? 1 : 0)} ";
         }
     }
 }

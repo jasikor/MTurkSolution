@@ -13,6 +13,7 @@
     [MachineStarts] BIT NOT NULL, 
     [TurksProfit] INT NULL, 
     [ShowMachinesDisValue] BIT NOT NULL DEFAULT 0, 
+    [AlgoVersion] NTEXT NULL, 
     CONSTRAINT [FK_Games_ToSessions] FOREIGN KEY ([SessionId]) REFERENCES [Sessions]([Id]), 
     CONSTRAINT [FK_Games_ToGameParameters] FOREIGN KEY ([GameParameterId]) REFERENCES [GameParameters]([Id])
 )
