@@ -11,10 +11,12 @@ namespace MTurk.DataAccess
     public class HistoricalGamesService : IHistoricalGamesService
     {
         private readonly ISqlDataAccess _db;
+        private readonly ISettingsService _settings;
 
-        public HistoricalGamesService(ISqlDataAccess db)
+        public HistoricalGamesService(ISqlDataAccess db, ISettingsService settings)
         {
             _db = db;
+            _settings = settings;
         }
         public List<MovesWithGames> GetMovesWithGames(DateTime startTime, DateTime endTime)
         {

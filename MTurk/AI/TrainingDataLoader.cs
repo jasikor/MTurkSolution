@@ -21,10 +21,12 @@ namespace MTurk.AI
         private readonly List<float[]> inputData = new List<float[]>();
         private readonly List<float> resultData = new List<float>();
         private IHistoricalGamesService _gs;
+        private readonly ISettingsService _settings;
 
-        public TrainingDataLoader(IHistoricalGamesService gs)
+        public TrainingDataLoader(IHistoricalGamesService gs, ISettingsService settings)
         {
             _gs = gs;
+            _settings = settings;
         }
 
         public ITrainingDataset GetTrainingDataset(int size)
@@ -98,7 +100,9 @@ namespace MTurk.AI
             LearningRangeEnd = null;
             if (X.Count == 0)
             {
-                var rows = _gs.GetGameInfos();
+                DateTime startDate = _settings.GetSettingDateTime("LearnDStart");
+                DateTime endDate = _settings.GetSettingDateTime("LearnDEnd");
+                var rows = _gs.GetGameInfos(startDate,endDate);
                 if (rows.Count == 0)
                     return;
                 

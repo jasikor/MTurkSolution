@@ -27,7 +27,7 @@ namespace MTurk.Data
         public async Task<SessionModel> StartNewSession(string workerId)
         {
             string sql = @"select * from Sessions where WorkerId = @WorkerId";
-            SessionModel sm = await _db.LoadDataSingle<dynamic, SessionModel>(sql, new { WorkerId = workerId });
+            SessionModel sm = await _db.LoadDataSingleAsync<dynamic, SessionModel>(sql, new { WorkerId = workerId });
             if (sm != null)
                 return sm;
             var dollarsPerBar = await GetDollarsPerBar();
@@ -69,7 +69,7 @@ namespace MTurk.Data
             GameModel gm = null;
             try
             {
-                gm = await _db.LoadDataSingle<dynamic, GameModel>(sql, new { WorkerId = workerId });
+                gm = await _db.LoadDataSingleAsync<dynamic, GameModel>(sql, new { WorkerId = workerId });
             }
             catch (SqlException e)
             {
@@ -114,7 +114,7 @@ namespace MTurk.Data
             GameParametersModel gameParameter = null;
             try
             {
-                gameParameter = await _db.LoadDataSingle<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
+                gameParameter = await _db.LoadDataSingleAsync<dynamic, GameParametersModel>(sql, new { WorkerId = workerId });
             }
             catch (SqlException e)
             {
@@ -196,7 +196,7 @@ namespace MTurk.Data
         private async Task<double> GetDollarsPerBar()
         {
             string sql = @"select * from Settings where [Key] = 'DollarsPerBar'";
-            var dollarsPerBar = await _db.LoadDataSingle<dynamic, SettingsModel>(sql, new { });
+            var dollarsPerBar = await _db.LoadDataSingleAsync<dynamic, SettingsModel>(sql, new { });
             double res;
             if (Double.TryParse(dollarsPerBar.Value, out res))
                 return res;
