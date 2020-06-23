@@ -230,7 +230,7 @@ else
             };
             if (machinesMove.OfferAccepted)
                 machinesMove.ProposedAmount = amount;
-            await Task.Delay((int)(1000 + rnd.NextDouble() * 4000));
+            await Task.Delay((int)(rnd.NextDouble() * 3000));
             await SaveMove(machinesMove);
         }
         Debug.Assert(game.Moves.Count > 0);
