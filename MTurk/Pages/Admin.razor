@@ -5,7 +5,9 @@
 
 @inject ISessionService _db
 
-<h3>Admin</h3>
+                
+    <h3>Admin, v: @(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())</h3>
+
 @if (sessions == null)
 {
     <p><em>Loading...</em></p>
