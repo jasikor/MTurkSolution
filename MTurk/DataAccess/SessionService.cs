@@ -175,7 +175,7 @@ namespace MTurk.Data
                            values 
                             (@Time, @GameId, @MoveBy, @ProposedAmount, @OfferAccepted)";
 
-            await _db.SaveData<MoveModel>(sql, move);
+            await _db.SaveDataAsync<MoveModel>(sql, move);
         }
 
         public async Task FinishGame(GameModel game)
@@ -185,7 +185,7 @@ namespace MTurk.Data
                            set EndTime = @EndTime, TurksProfit = @TurksProfit
                            where Id = @GameId";
 
-            await _db.SaveData<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
+            await _db.SaveDataAsync<dynamic>(sql, new { EndTime = endTime, GameId = game.Id, TurksProfit = game.TurksProfit });
         }
 
         

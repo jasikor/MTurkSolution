@@ -32,7 +32,7 @@ namespace MTurk.SQLDataAccess
             using IDbConnection connection = new SqlConnection(connectionString);
             return await connection.QuerySingleOrDefaultAsync<U>(sql, parameters);
         }
-        public async Task SaveData<T>(string sql, T parameters)
+        public async Task SaveDataAsync<T>(string sql, T parameters)
         {
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
@@ -50,6 +50,21 @@ namespace MTurk.SQLDataAccess
             string connectionString = _config.GetConnectionString(ConnectionStringName);
             using IDbConnection connection = new SqlConnection(connectionString);
             return connection.QuerySingleOrDefault<U>(sql, parameters);
+        }
+
+        public void SaveData<T>(string sql, T parameters)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            using IDbConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Execute(sql, parameters);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }
