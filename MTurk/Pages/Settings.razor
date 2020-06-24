@@ -1,0 +1,98 @@
+﻿@page "/asettings"
+
+@using MTurk.UIModels
+@using MTurk.Models
+
+@inject ISettingsService SettingsService
+@inject NavigationManager NavigationManager
+
+
+<h3>Settings</h3>
+
+@if (settingE != null)
+{
+<EditForm Model="@settingE" OnValidSubmit="@SaveSetting">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>@(settingE.Key):</label>
+        <InputText id="WorkerId" @bind-Value="settingE.Value" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary" @onclick="@CancelEdits">Cancel</button>
+    </div>
+</EditForm> }
+            else
+            {
+
+@if (settings == null)
+{
+<div class="alert-info">Loading...</div> }
+else
+{
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Setting</th>
+            <th>Value</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in settings)
+        {
+<tr>
+    <td>@p.Key </td>
+    <td>@p.Value </td>
+    <td><button class="btn btn-secondary btn-sm" @onclick="@(() => { OnEditSetting(p.Key); })">Edit</button></td>
+</tr>}
+    </tbody>
+</table>}}
+
+
+@code { 
+    private List<SettingModel> settings;
+    private SettingUI settingE;
+
+    private void OnEditSetting(string key)
+    {
+        SettingModel sm;
+        if (key is null || key == "")
+            sm = new SettingModel();
+        else
+            sm = settings.Find((x) => x.Key == key);
+
+        settingE = new SettingUI()
+        {
+            Key = sm.Key,
+            Value = sm.Value,
+        };
+    }
+
+    private void ResetCurrentSetting()
+    {
+        settingE = null;
+        StateHasChanged();
+    }
+    private void CancelEdits()
+    {
+        ResetCurrentSetting();
+    }
+
+    private void SaveSetting()
+    {
+        SettingModel se = new SettingModel()
+        {
+            Key = settingE.Key,
+            Value = settingE.Value,
+        };
+        SettingsService.SetSetting(settingE.Key, settingE.Value);
+        settings = SettingsService.GetAllSettings();
+        ResetCurrentSetting();
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        settings = await Task.Run(() => SettingsService.GetAllSettings());
+    } }
