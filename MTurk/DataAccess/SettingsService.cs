@@ -15,11 +15,18 @@ namespace MTurk.DataAccess
         {
             _db = db;
         }
+
+        public List<SettingModel> GetAllSettings()
+        {
+            string sql = @"select * from dbo.Settings order by [Key]";
+            return _db.LoadDataList<SettingModel, dynamic>(sql, new { });
+        }
+
         /// <inheritdoc/>
         public string GetSetting(string key)
         {
             string sql = @"select * from Settings where [Key] = @Key";
-            var res = _db.LoadDataSingle<dynamic, SettingsModel>(sql, new { Key = key });
+            var res = _db.LoadDataSingle<dynamic, SettingModel>(sql, new { Key = key });
             if (res is null)
                 return null;
             else
