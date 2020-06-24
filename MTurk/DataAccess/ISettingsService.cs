@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTurk.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,5 +22,6 @@ namespace MTurk.DataAccess
         /// <returns>date or default(DateTime) if <paramref name="key"/> not found</returns>
         DateTime GetSettingDateTime(string key);
         void SetSetting(string key, DateTime value);
+        List<SettingModel> GetAllSettings();
     }
 }

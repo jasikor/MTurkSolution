@@ -196,7 +196,7 @@ namespace MTurk.Data
         private async Task<double> GetDollarsPerBar()
         {
             string sql = @"select * from Settings where [Key] = 'DollarsPerBar'";
-            var dollarsPerBar = await _db.LoadDataSingleAsync<dynamic, SettingsModel>(sql, new { });
+            var dollarsPerBar = await _db.LoadDataSingleAsync<dynamic, SettingModel>(sql, new { });
             double res;
             if (Double.TryParse(dollarsPerBar.Value, out res))
                 return res;
